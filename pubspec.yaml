@@ -1,0 +1,71 @@
+name: andersen
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  
+  # router
+  go_router: ^16.1.0
+
+  # ui
+  flutter_screenutil: ^5.9.3
+  mask_text_input_formatter: ^2.9.0
+  modal_bottom_sheet: ^3.0.0
+  flutter_svg: ^2.0.13
+  equatable: ^2.0.7
+  google_fonts: ^6.3.0
+
+  # network & utils
+  dio: ^5.9.0
+  logger: ^2.6.1
+  dartz: ^0.10.1
+  json_annotation: ^4.9.0
+  get_it: ^8.2.0
+  intl: ^0.20.2
+  flutter_bloc: ^9.1.1
+
+  # local db
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.0.15
+
+  # device
+  device_info_plus: ^11.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_gen_runner: ^5.11.0
+  json_serializable: ^6.10.0
+
+  flutter_lints: ^5.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/vectors/
+
+flutter_gen:
+  output: lib/gen/
+  line_length: 80
+  integrations:
+    image: true
+    flutter_svg: true
+    # lottie: true
+  assets:
+    enabled: true
+  fonts:
+    enabled: true
