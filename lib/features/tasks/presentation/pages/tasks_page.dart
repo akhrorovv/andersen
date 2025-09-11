@@ -78,13 +78,22 @@ class _TasksPageState extends State<TasksPage> {
                   return Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: ListView.separated(
-                        padding: EdgeInsets.symmetric(vertical: 24.h),
-                        itemBuilder: (context, index) {
-                          return TaskCard(task: tasks[index]);
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (scrollInfo) {
+                          if (scrollInfo.metrics.pixels >=
+                              scrollInfo.metrics.maxScrollExtent - 200) {
+                            context.read<TasksCubit>().loadMore();
+                          }
+                          return false;
                         },
-                        separatorBuilder: (_, __) => BasicDivider(),
-                        itemCount: tasks.length,
+                        child: ListView.separated(
+                          padding: EdgeInsets.symmetric(vertical: 24.h),
+                          itemBuilder: (context, index) {
+                            return TaskCard(task: tasks[index]);
+                          },
+                          separatorBuilder: (_, __) => BasicDivider(),
+                          itemCount: tasks.length,
+                        ),
                       ),
                     ),
                   );

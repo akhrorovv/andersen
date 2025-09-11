@@ -10,9 +10,15 @@ class TasksRepositoryImpl implements TasksRepository {
   TasksRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, TasksEntity>> getTasks() async {
+  Future<Either<Failure, TasksEntity>> getTasks({
+    required int offset,
+    required int limit,
+  }) async {
     try {
-      final result = await remoteDataSource.getTasks();
+      final result = await remoteDataSource.getTasks(
+        offset: offset,
+        limit: limit,
+      );
       return Right(result);
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));

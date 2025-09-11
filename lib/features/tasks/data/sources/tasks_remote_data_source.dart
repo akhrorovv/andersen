@@ -5,7 +5,7 @@ import 'package:andersen/features/tasks/data/models/tasks_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class TasksRemoteDataSource {
-  Future<TasksModel> getTasks();
+  Future<TasksModel> getTasks({required int offset, required int limit});
 }
 
 class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
@@ -14,9 +14,12 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
   TasksRemoteDataSourceImpl(this._client);
 
   @override
-  Future<TasksModel> getTasks() async {
+  Future<TasksModel> getTasks({required int offset, required int limit}) async {
     try {
-      final response = await _client.get(ApiUrls.tasks);
+      final response = await _client.get(
+        ApiUrls.tasks,
+        queryParameters: {"offset": offset, "limit": limit},
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TasksModel.fromJson(response.data);

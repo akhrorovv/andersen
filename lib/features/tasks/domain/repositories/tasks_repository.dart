@@ -3,5 +3,8 @@ import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
 import 'package:dartz/dartz.dart';
 
 abstract interface class TasksRepository {
-  Future<Either<Failure, TasksEntity>> getTasks();
+  Future<Either<Failure, TasksEntity>> getTasks({
+    required int limit,
+    required int offset,
+  });
 }

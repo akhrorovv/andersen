@@ -8,7 +8,10 @@ class GetTasksUseCase {
 
   GetTasksUseCase(this.repository);
 
-  Future<Either<Failure, TasksEntity>> call() {
-    return repository.getTasks();
+  Future<Either<Failure, TasksEntity>> call({
+    required int limit,
+    required int offset,
+  }) async {
+    return await repository.getTasks(limit: limit, offset: offset);
   }
 }
