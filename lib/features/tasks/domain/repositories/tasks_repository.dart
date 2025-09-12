@@ -6,5 +6,7 @@ abstract interface class TasksRepository {
   Future<Either<Failure, TasksEntity>> getTasks({
     required int limit,
     required int offset,
+    String? status,
+    String? search,
   });
 }

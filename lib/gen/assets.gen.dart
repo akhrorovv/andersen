@@ -69,6 +69,9 @@ class $AssetsVectorsGen {
   SvgGenImage get notification =>
       const SvgGenImage('assets/vectors/notification.svg');
 
+  /// File path: assets/vectors/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/vectors/search.svg');
+
   /// File path: assets/vectors/setting.svg
   SvgGenImage get setting => const SvgGenImage('assets/vectors/setting.svg');
 
@@ -94,6 +97,7 @@ class $AssetsVectorsGen {
     kpi,
     kpiActive,
     notification,
+    search,
     setting,
     show,
     tasks,

@@ -35,16 +35,18 @@ class TaskCard extends StatelessWidget {
       if (dueAt == null) return "Due Date - ";
 
       final now = DateTime.now();
+      final localDueAt = dueAt.toLocal();
+
       final isToday =
-          now.year == dueAt.year &&
-          now.month == dueAt.month &&
-          now.day == dueAt.day;
+          now.year == localDueAt.year &&
+          now.month == localDueAt.month &&
+          now.day == localDueAt.day;
 
       final dayFormat = DateFormat('EEE, MMM d');
-      final formattedDate = dayFormat.format(dueAt);
+      final formattedDate = dayFormat.format(dueAt.toLocal());
 
       if (isToday) {
-        return "Due Today, ${DateFormat('MMM d').format(dueAt)}";
+        return "Due Today, ${DateFormat('MMM d').format(dueAt.toLocal())}";
       } else {
         return "Due $formattedDate";
       }
@@ -120,6 +122,7 @@ class TaskCard extends StatelessWidget {
           // status & description
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
                 child: Text(

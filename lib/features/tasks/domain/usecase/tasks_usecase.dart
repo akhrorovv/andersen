@@ -11,7 +11,14 @@ class GetTasksUseCase {
   Future<Either<Failure, TasksEntity>> call({
     required int limit,
     required int offset,
+    String? status,
+    String? search,
   }) async {
-    return await repository.getTasks(limit: limit, offset: offset);
+    return await repository.getTasks(
+      limit: limit,
+      offset: offset,
+      status: status,
+      search: search,
+    );
   }
 }

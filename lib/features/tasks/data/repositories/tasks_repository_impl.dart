@@ -13,11 +13,15 @@ class TasksRepositoryImpl implements TasksRepository {
   Future<Either<Failure, TasksEntity>> getTasks({
     required int offset,
     required int limit,
+    String? status,
+    String? search,
   }) async {
     try {
       final result = await remoteDataSource.getTasks(
         offset: offset,
         limit: limit,
+        status: status,
+        search: search,
       );
       return Right(result);
     } catch (e) {
