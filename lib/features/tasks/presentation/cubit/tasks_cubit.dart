@@ -1,6 +1,6 @@
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
-import 'package:andersen/features/tasks/domain/usecase/tasks_usecase.dart';
+import 'package:andersen/features/tasks/domain/usecase/get_tasks_usecase.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_state.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

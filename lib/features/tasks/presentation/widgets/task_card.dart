@@ -8,9 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class TaskCard extends StatelessWidget {
+  final VoidCallback onTap;
   final TaskEntity task;
 
-  const TaskCard({super.key, required this.task});
+  const TaskCard({super.key, required this.task, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -54,100 +55,103 @@ class TaskCard extends StatelessWidget {
 
     final status = TaskStatusX.fromString(task.status);
 
-    return ShadowContainer(
-      child: Column(
-        spacing: 8.h,
-        children: [
-          // type & activities time
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                task.type?.name ?? "Unknown Type",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: task.type?.name != null
-                      ? FontWeight.w600
-                      : FontWeight.w500,
-                  color: task.type?.name != null
-                      ? AppColors.colorPrimaryText
-                      : null,
-                  letterSpacing: 0,
-                ),
-              ),
-              Text(
-                formatDurationFromActivities(task.activities),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                  letterSpacing: 0,
-                ),
-              ),
-            ],
-          ),
-
-          // matter
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  task.matter?.name ?? "No description",
+    return GestureDetector(
+      onTap: onTap,
+      child: ShadowContainer(
+        child: Column(
+          spacing: 8.h,
+          children: [
+            // type & activities time
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  task.type?.name ?? "Unknown Type",
                   style: TextStyle(
                     fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
+                    fontWeight: task.type?.name != null
+                        ? FontWeight.w600
+                        : FontWeight.w500,
+                    color: task.type?.name != null
+                        ? AppColors.colorPrimaryText
+                        : null,
                     letterSpacing: 0,
                   ),
                 ),
-              ),
-            ],
-          ),
-
-          // due time
-          Row(
-            children: [
-              Text(
-                formatDueDate(task.dueAt),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.primary,
-                  letterSpacing: 0,
-                ),
-              ),
-            ],
-          ),
-
-          // status & description
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Text(
-                  task.description ?? "No description",
+                Text(
+                  formatDurationFromActivities(task.activities),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.black,
+                    color: AppColors.primary,
                     letterSpacing: 0,
                   ),
                 ),
-              ),
-              SizedBox(width: 18.w),
-              Text(
-                status.label,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: status.color,
-                  letterSpacing: 0,
+              ],
+            ),
+
+            // matter
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    task.matter?.name ?? "No description",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.black,
+                      letterSpacing: 0,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+
+            // due time
+            Row(
+              children: [
+                Text(
+                  formatDueDate(task.dueAt),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.primary,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ],
+            ),
+
+            // status & description
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    task.description ?? "No description",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.black,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 18.w),
+                Text(
+                  status.label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: status.color,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

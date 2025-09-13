@@ -5,10 +5,13 @@ import 'package:andersen/features/calendar_page.dart';
 import 'package:andersen/features/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
+import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dart';
+import 'package:andersen/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:andersen/features/tasks/presentation/pages/tasks_page.dart';
 import 'package:andersen/features/main_page.dart';
+import 'package:andersen/service_locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -16,8 +19,7 @@ final GoRouter router = GoRouter(
   initialLocation: SplashPage.path,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) =>
-          MainPage(navigationShell: navigationShell),
+      builder: (context, state, navigationShell) => MainPage(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
           routes: [
@@ -61,26 +63,17 @@ final GoRouter router = GoRouter(
     GoRoute(path: SplashPage.path, builder: (context, state) => SplashPage()),
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
     GoRoute(
-      path: SettingsPage.path,
-      pageBuilder: (context, state) {
-        return CustomTransitionPage(
-          key: state.pageKey,
-          child: const SettingsPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1), // pastdan chiqadi
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-          barrierDismissible: true,
-          // tashqariga bosganda yopiladi
-          opaque: false, // orqa sahifa ko‘rinib turadi
+      path: TaskDetailPage.path,
+      builder: (context, state) {
+        final taskId = state.extra as int;
+        return BlocProvider.value(
+          value: sl<TaskDetailCubit>()..getTaskDetail(taskId),
+          child: TaskDetailPage(taskId: taskId),
         );
       },
     ),
+
+
   ],
 );
 

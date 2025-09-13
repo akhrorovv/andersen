@@ -4,14 +4,15 @@ import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_cubit.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_state.dart';
 import 'package:andersen/features/tasks/presentation/pages/create_task_page.dart';
+import 'package:andersen/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_card.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class TasksPage extends StatefulWidget {
   static String path = '/tasks';
@@ -165,7 +166,15 @@ class _TasksPageState extends State<TasksPage> {
                             child: ListView.separated(
                               padding: EdgeInsets.symmetric(vertical: 24.h),
                               itemBuilder: (context, index) {
-                                return TaskCard(task: tasks[index]);
+                                return TaskCard(
+                                  task: tasks[index],
+                                  onTap: () {
+                                    context.push(
+                                      TaskDetailPage.path,
+                                      extra: tasks[index].id,
+                                    );
+                                  },
+                                );
                               },
                               separatorBuilder: (_, __) => BasicDivider(),
                               itemCount: tasks.length,
