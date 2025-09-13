@@ -17,6 +17,10 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/border_none.png
+  AssetGenImage get borderNone =>
+      const AssetGenImage('assets/images/border_none.png');
+
   /// File path: assets/images/login.png
   AssetGenImage get login => const AssetGenImage('assets/images/login.png');
 
@@ -27,7 +31,7 @@ class $AssetsImagesGen {
   AssetGenImage get title => const AssetGenImage('assets/images/title.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [login, splash, title];
+  List<AssetGenImage> get values => [borderNone, login, splash, title];
 }
 
 class $AssetsVectorsGen {
@@ -41,12 +45,23 @@ class $AssetsVectorsGen {
   SvgGenImage get activitiesActive =>
       const SvgGenImage('assets/vectors/activities_active.svg');
 
+  /// File path: assets/vectors/border_none.svg
+  SvgGenImage get borderNone =>
+      const SvgGenImage('assets/vectors/border_none.svg');
+
+  /// File path: assets/vectors/briefcase.svg
+  SvgGenImage get briefcase =>
+      const SvgGenImage('assets/vectors/briefcase.svg');
+
   /// File path: assets/vectors/calendar.svg
   SvgGenImage get calendar => const SvgGenImage('assets/vectors/calendar.svg');
 
   /// File path: assets/vectors/calendar_active.svg
   SvgGenImage get calendarActive =>
       const SvgGenImage('assets/vectors/calendar_active.svg');
+
+  /// File path: assets/vectors/clock.svg
+  SvgGenImage get clock => const SvgGenImage('assets/vectors/clock.svg');
 
   /// File path: assets/vectors/hide.svg
   SvgGenImage get hide => const SvgGenImage('assets/vectors/hide.svg');
@@ -64,6 +79,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/kpi_active.svg
   SvgGenImage get kpiActive =>
       const SvgGenImage('assets/vectors/kpi_active.svg');
+
+  /// File path: assets/vectors/more.svg
+  SvgGenImage get more => const SvgGenImage('assets/vectors/more.svg');
 
   /// File path: assets/vectors/notification.svg
   SvgGenImage get notification =>
@@ -85,23 +103,32 @@ class $AssetsVectorsGen {
   SvgGenImage get tasksActive =>
       const SvgGenImage('assets/vectors/tasks_active.svg');
 
+  /// File path: assets/vectors/text_align_left.svg
+  SvgGenImage get textAlignLeft =>
+      const SvgGenImage('assets/vectors/text_align_left.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     activities,
     activitiesActive,
+    borderNone,
+    briefcase,
     calendar,
     calendarActive,
+    clock,
     hide,
     home,
     homeActive,
     kpi,
     kpiActive,
+    more,
     notification,
     search,
     setting,
     show,
     tasks,
     tasksActive,
+    textAlignLeft,
   ];
 }
 

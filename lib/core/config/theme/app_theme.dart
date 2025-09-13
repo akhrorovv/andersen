@@ -10,8 +10,11 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.background,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.colorPrimaryText,
-      titleTextStyle: TextStyle(color: AppColors.colorTextWhite),
+      titleTextStyle: GoogleFonts.montserrat(
+        color: AppColors.colorTextWhite,
+      ),
     ),
+
     brightness: Brightness.light,
     textTheme: GoogleFonts.montserratTextTheme(),
     textSelectionTheme: TextSelectionThemeData(

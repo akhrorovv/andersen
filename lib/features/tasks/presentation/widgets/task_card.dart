@@ -1,4 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/format_date.dart';
+import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/tasks/domain/entities/activity_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
@@ -15,44 +17,6 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formatDurationFromActivities(List<ActivityEntity>? activities) {
-      if (activities == null || activities.isEmpty) return "00:00:00";
-
-      final totalSeconds = activities.fold<int>(
-        0,
-        (sum, activity) => sum + (activity.userEnteredTimeInSeconds ?? 0),
-      );
-
-      final duration = Duration(seconds: totalSeconds);
-
-      final hours = duration.inHours.toString().padLeft(2, '0');
-      final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
-      final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-
-      return "$hours:$minutes:$seconds";
-    }
-
-    String formatDueDate(DateTime? dueAt) {
-      if (dueAt == null) return "Due Date - ";
-
-      final now = DateTime.now();
-      final localDueAt = dueAt.toLocal();
-
-      final isToday =
-          now.year == localDueAt.year &&
-          now.month == localDueAt.month &&
-          now.day == localDueAt.day;
-
-      final dayFormat = DateFormat('EEE, MMM d');
-      final formattedDate = dayFormat.format(dueAt.toLocal());
-
-      if (isToday) {
-        return "Due Today, ${DateFormat('MMM d').format(dueAt.toLocal())}";
-      } else {
-        return "Due $formattedDate";
-      }
-    }
-
     final status = TaskStatusX.fromString(task.status);
 
     return GestureDetector(
@@ -66,7 +30,7 @@ class TaskCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  task.type?.name ?? "Unknown Type",
+                  task.type?.name ?? "-",
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: task.type?.name != null
@@ -95,7 +59,7 @@ class TaskCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    task.matter?.name ?? "No description",
+                    task.matter?.name ?? "-",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
@@ -129,7 +93,7 @@ class TaskCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    task.description ?? "No description",
+                    task.description ?? "-",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
