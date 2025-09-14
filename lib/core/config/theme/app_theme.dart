@@ -12,6 +12,8 @@ class AppTheme {
       backgroundColor: AppColors.colorPrimaryText,
       titleTextStyle: GoogleFonts.montserrat(
         color: AppColors.colorTextWhite,
+        height: 1.2,
+        letterSpacing: 0,
       ),
     ),
 

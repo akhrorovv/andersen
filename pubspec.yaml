@@ -22,6 +22,7 @@ dependencies:
   flutter_svg: ^2.0.13
   equatable: ^2.0.7
   google_fonts: ^6.3.0
+  dropdown_search: ^6.0.2
 
   # network & utils
   dio: ^5.9.0

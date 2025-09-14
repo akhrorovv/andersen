@@ -2,8 +2,7 @@ import 'package:andersen/features/home/data/models/user_model.dart';
 import 'package:andersen/features/tasks/data/models/activity_model.dart';
 import 'package:andersen/features/tasks/data/models/matter_model.dart';
 import 'package:andersen/features/tasks/data/models/task_type_model.dart';
-
-import '../../domain/entities/task_entity.dart';
+import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 
 class TaskModel extends TaskEntity {
   const TaskModel({

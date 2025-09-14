@@ -1,5 +1,3 @@
-import 'package:andersen/features/home/domain/entities/active_status_entity.dart';
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
 import 'package:equatable/equatable.dart';
 

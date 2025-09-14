@@ -16,11 +16,23 @@ import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dar
 import 'package:get_it/get_it.dart';
 
 import 'core/api/dio_client.dart';
+import 'features/activities/data/repositories/activity_repository_impl.dart';
+import 'features/activities/data/sources/activities_remote_data_source.dart';
+import 'features/activities/domain/repositories/activity_repository.dart';
+import 'features/activities/domain/usecase/get_activities_usecase.dart';
+import 'features/activities/presentation/cubit/activities_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/tasks/data/repositories/matters_repository_impl.dart';
+import 'features/tasks/data/sources/matters_remote_data_source.dart';
+import 'features/tasks/domain/repositories/matters_repository.dart';
 import 'features/tasks/domain/repositories/task_detail_repository.dart';
+import 'features/tasks/domain/usecase/get_matters_usecase.dart';
 import 'features/tasks/domain/usecase/get_task_detail_usecase.dart';
 import 'features/tasks/domain/usecase/get_tasks_usecase.dart';
+import 'features/tasks/domain/usecase/update_task_usecase.dart';
+import 'features/tasks/presentation/cubit/matter_cubit.dart';
 import 'features/tasks/presentation/cubit/task_detail_cubit.dart';
+import 'features/tasks/presentation/cubit/task_update_cubit.dart';
 import 'features/tasks/presentation/cubit/tasks_cubit.dart';
 
 final sl = GetIt.instance;
@@ -50,8 +62,10 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(
       () => GetTaskDetailUseCase(sl<TaskDetailRepository>()),
     )
+    ..registerLazySingleton(() => UpdateTaskUsecase(sl<TaskDetailRepository>()))
     ..registerLazySingleton(() => TasksCubit(sl<GetTasksUseCase>()))
     ..registerLazySingleton(() => TaskDetailCubit(sl<GetTaskDetailUseCase>()))
+    ..registerLazySingleton(() => TaskUpdateCubit(sl<UpdateTaskUsecase>()))
     /// Home
     ..registerLazySingleton<HomeRemoteDataSource>(
       () => HomeRemoteDataSourceImpl(sl<DioClient>()),
@@ -72,5 +86,25 @@ Future<void> _initAuth() async {
       () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
     )
     ..registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()))
-    ..registerLazySingleton(() => AuthCubit(sl<LoginUseCase>()));
+    ..registerLazySingleton(() => AuthCubit(sl<LoginUseCase>()))
+    /// Matters
+    ..registerLazySingleton<MattersRemoteDataSource>(
+      () => MattersRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<MattersRepository>(
+      () => MattersRepositoryImpl(sl<MattersRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => GetMattersUsecase(sl<MattersRepository>()))
+    ..registerLazySingleton(() => MatterCubit(sl<GetMattersUsecase>()))
+    /// Activities
+    ..registerLazySingleton<ActivitiesRemoteDataSource>(
+      () => ActivitiesRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<ActivityRepository>(
+      () => ActivityRepositoryImpl(sl<ActivitiesRemoteDataSource>()),
+    )
+    ..registerLazySingleton(
+      () => GetActivitiesUsecase(sl<ActivityRepository>()),
+    )
+    ..registerLazySingleton(() => ActivitiesCubit(sl<GetActivitiesUsecase>()));
 }

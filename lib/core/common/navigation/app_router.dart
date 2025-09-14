@@ -1,6 +1,6 @@
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
-import 'package:andersen/features/activities_page.dart';
+import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
 import 'package:andersen/features/calendar_page.dart';
 import 'package:andersen/features/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
@@ -19,7 +19,8 @@ final GoRouter router = GoRouter(
   initialLocation: SplashPage.path,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) => MainPage(navigationShell: navigationShell),
+      builder: (context, state, navigationShell) =>
+          MainPage(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
           routes: [
@@ -72,8 +73,6 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-
-
   ],
 );
 

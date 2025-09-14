@@ -4,14 +4,19 @@ import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/format_date.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
+import 'package:andersen/core/widgets/default_widget.dart';
+import 'package:andersen/core/widgets/loading_page.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/tasks/domain/entities/activity_entity.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_state.dart';
+import 'package:andersen/features/tasks/presentation/cubit/task_update_cubit.dart';
 import 'package:andersen/features/tasks/presentation/pages/task_activities_page.dart';
+import 'package:andersen/features/tasks/presentation/pages/update_task_page.dart';
 import 'package:andersen/features/tasks/presentation/widgets/activity_item.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_detail_item.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,48 +32,58 @@ class TaskDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: context.pop,
-          icon: Icon(Icons.arrow_back, color: AppColors.white),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Edit",
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0,
-                height: 1.4,
+    return BlocBuilder<TaskDetailCubit, TaskDetailState>(
+      builder: (context, state) {
+        if (state is TaskDetailInitial || state is TaskDetailLoading) {
+          return SizedBox.expand(
+            child: LoadingPage(),
+          );
+        } else if (state is TaskDetailError) {
+          return Center(
+            child: Text(state.message, style: TextStyle(color: Colors.red)),
+          );
+        } else if (state is TaskDetailLoaded) {
+          final task = state.task;
+          final status = TaskStatusX.fromString(task.status);
+
+          final activities = state.task.activities ?? [];
+          final limited = activities.take(3).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: context.pop,
+                icon: Icon(Icons.arrow_back, color: AppColors.white),
               ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    final updated = await context.pushCupertinoSheet<bool>(
+                      BlocProvider(
+                        create: (_) => sl<TaskUpdateCubit>(),
+                        child: UpdateTaskPage(task: task),
+                      ),
+                    );
+
+                    if (!context.mounted) return;
+
+                    if (updated == true) {
+                      context.read<TaskDetailCubit>().getTaskDetail(task.id);
+                    }
+                  },
+
+                  child: Text(
+                    "Edit",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: BlocBuilder<TaskDetailCubit, TaskDetailState>(
-        builder: (context, state) {
-          if (state is TaskDetailInitial || state is TaskDetailLoading) {
-            return SizedBox.expand(
-              child: Center(
-                child: CircularProgressIndicator(color: AppColors.primary),
-              ),
-            );
-          } else if (state is TaskDetailError) {
-            return Center(
-              child: Text(state.message, style: TextStyle(color: Colors.red)),
-            );
-          } else if (state is TaskDetailLoaded) {
-            final task = state.task;
-            final status = TaskStatusX.fromString(task.status);
-
-            final activities = state.task.activities ?? [];
-            final limited = activities.take(3).toList();
-
-            return Column(
+            body: Column(
               children: [
                 Container(
                   padding: EdgeInsets.only(
@@ -169,11 +184,11 @@ class TaskDetailPage extends StatelessWidget {
                   ),
                 ),
               ],
-            );
-          }
-          return SizedBox.shrink();
-        },
-      ),
+            ),
+          );
+        }
+        return DefaultWidget();
+      },
     );
   }
 

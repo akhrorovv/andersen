@@ -4,4 +4,9 @@ import 'package:dartz/dartz.dart';
 
 abstract interface class TaskDetailRepository {
   Future<Either<Failure, TaskEntity>> getTaskDetail({required int taskId});
+
+  Future<Either<Failure, TaskEntity>> updateTask(
+    int taskId,
+    Map<String, dynamic> body,
+  );
 }

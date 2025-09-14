@@ -1,15 +1,16 @@
+import 'package:andersen/features/tasks/data/models/matter_model.dart';
 import 'package:andersen/core/common/models/meta_model.dart';
 import 'package:andersen/features/tasks/data/models/task_model.dart';
-import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
+import 'package:andersen/features/tasks/domain/entities/matters_entity.dart';
 
-class TasksModel extends TasksEntity {
-  const TasksModel({required super.meta, required super.results});
+class MattersModel extends MattersEntity {
+  const MattersModel({required super.meta, required super.results});
 
-  factory TasksModel.fromJson(Map<String, dynamic> json) {
-    return TasksModel(
+  factory MattersModel.fromJson(Map<String, dynamic> json) {
+    return MattersModel(
       meta: MetaModel.fromJson(json['meta']),
       results: (json['results'] as List<dynamic>? ?? [])
-          .map((t) => TaskModel.fromJson(t))
+          .map((t) => MatterModel.fromJson(t))
           .toList(),
     );
   }
