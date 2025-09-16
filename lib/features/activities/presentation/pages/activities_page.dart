@@ -1,12 +1,15 @@
+import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/features/activities/presentation/cubit/activities_cubit.dart';
 import 'package:andersen/features/activities/presentation/cubit/activities_state.dart';
+import 'package:andersen/features/activities/presentation/pages/activity_detail_page.dart';
 import 'package:andersen/features/activities/presentation/widgets/activity_card.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ActivitiesPage extends StatelessWidget {
   static String path = '/activities';
@@ -44,8 +47,7 @@ class ActivitiesPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (scrollInfo) {
-                    if (scrollInfo.metrics.pixels >=
-                        scrollInfo.metrics.maxScrollExtent - 200) {
+                    if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200) {
                       context.read<ActivitiesCubit>().loadMore();
                     }
                     return false;
@@ -54,7 +56,13 @@ class ActivitiesPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 24.h),
                     itemBuilder: (context, index) {
                       return ActivityCard(
-                        onTap: () {},
+                        onTap: () {
+                          context.pushCupertinoSheet(
+                            ActivityDetailPage(
+                              activityId: activities[index].id,
+                            ),
+                          );
+                        },
                         activity: activities[index],
                       );
                     },

@@ -13,6 +13,7 @@ class TasksRepositoryImpl implements TasksRepository {
   Future<Either<Failure, TasksEntity>> getTasks({
     required int offset,
     required int limit,
+    required int assignedStaffId,
     String? status,
     String? search,
   }) async {
@@ -20,6 +21,7 @@ class TasksRepositoryImpl implements TasksRepository {
       final result = await remoteDataSource.getTasks(
         offset: offset,
         limit: limit,
+        assignedStaffId: assignedStaffId,
         status: status,
         search: search,
       );

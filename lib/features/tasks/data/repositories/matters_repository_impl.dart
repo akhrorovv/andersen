@@ -14,12 +14,14 @@ class MattersRepositoryImpl implements MattersRepository {
     required int limit,
     required int offset,
     String? search,
+    bool? taskCreatable,
   }) async {
     try {
       final result = await remoteDataSource.getMatters(
         offset: offset,
         limit: limit,
         search: search,
+        taskCreatable: taskCreatable,
       );
       return Right(result);
     } catch (e) {

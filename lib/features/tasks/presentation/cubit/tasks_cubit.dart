@@ -1,3 +1,4 @@
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
 import 'package:andersen/features/tasks/domain/usecase/get_tasks_usecase.dart';
@@ -72,6 +73,7 @@ class TasksCubit extends Cubit<TasksState> {
     final result = await getTasksUseCase(
       limit: _limit,
       offset: _offset,
+      assignedStaffId: DBService.user!.id,
       status: (status ?? _selectedStatus)?.apiValue,
       search: search ?? _searchQuery,
     );

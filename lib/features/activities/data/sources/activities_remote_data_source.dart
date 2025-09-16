@@ -1,6 +1,7 @@
 import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
 import 'package:andersen/core/error/exceptions.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/activities/data/models/activities_model.dart';
 import 'package:dio/dio.dart';
 
@@ -8,6 +9,7 @@ abstract class ActivitiesRemoteDataSource {
   Future<ActivitiesModel> getActivities({
     required int offset,
     required int limit,
+    int? createdById,
   });
 }
 
@@ -20,11 +22,16 @@ class ActivitiesRemoteDataSourceImpl implements ActivitiesRemoteDataSource {
   Future<ActivitiesModel> getActivities({
     required int offset,
     required int limit,
+    int? createdById,
   }) async {
     try {
       final response = await _client.get(
         ApiUrls.activities,
-        queryParameters: {"offset": offset, "limit": limit},
+        queryParameters: {
+          "offset": offset,
+          "limit": limit,
+          "createdById": DBService.user?.id,
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

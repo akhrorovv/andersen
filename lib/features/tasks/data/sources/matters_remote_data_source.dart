@@ -9,6 +9,7 @@ abstract class MattersRemoteDataSource {
     required int offset,
     required int limit,
     String? search,
+    bool? taskCreatable,
   });
 }
 
@@ -22,6 +23,7 @@ class MattersRemoteDataSourceImpl implements MattersRemoteDataSource {
     required int offset,
     required int limit,
     String? search,
+    bool? taskCreatable,
   }) async {
     try {
       final response = await _client.get(
@@ -30,6 +32,7 @@ class MattersRemoteDataSourceImpl implements MattersRemoteDataSource {
           "offset": offset,
           "limit": limit,
           if (search != null) "s": search,
+          if (taskCreatable != null) "task_createable": taskCreatable,
         },
       );
 

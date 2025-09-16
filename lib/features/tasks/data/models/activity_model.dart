@@ -7,6 +7,7 @@ class ActivityModel extends ActivityEntity {
     super.lastEndTime,
     required super.runTimeInSeconds,
     required super.userEnteredTimeInSeconds,
+    super.description,
   });
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,7 @@ class ActivityModel extends ActivityEntity {
           : null,
       runTimeInSeconds: json['runTimeInSeconds'] ?? 0,
       userEnteredTimeInSeconds: json['userEnteredTimeInSeconds'] ?? 0,
+      description: json['description'] as String?,
     );
   }
 
@@ -29,6 +31,7 @@ class ActivityModel extends ActivityEntity {
       'lastStartTime': lastStartTime?.toIso8601String(),
       'lastEndTime': lastEndTime?.toIso8601String(),
       'runTimeInSeconds': runTimeInSeconds,
+      'description': description,
     };
   }
 }

@@ -11,7 +11,12 @@ class GetActivitiesUsecase {
   Future<Either<Failure, ActivitiesEntity>> call({
     required int limit,
     required int offset,
+    int? createdById,
   }) async {
-    return await repository.getActivities(limit: limit, offset: offset);
+    return await repository.getActivities(
+      limit: limit,
+      offset: offset,
+      createdById: createdById,
+    );
   }
 }

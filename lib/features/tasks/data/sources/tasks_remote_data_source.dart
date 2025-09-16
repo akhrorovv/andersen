@@ -8,6 +8,7 @@ abstract class TasksRemoteDataSource {
   Future<TasksModel> getTasks({
     required int offset,
     required int limit,
+    required int assignedStaffId,
     String? status,
     String? search,
   });
@@ -22,6 +23,7 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
   Future<TasksModel> getTasks({
     required int offset,
     required int limit,
+    required int assignedStaffId,
     String? status,
     String? search,
   }) async {
@@ -31,6 +33,7 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
         queryParameters: {
           "offset": offset,
           "limit": limit,
+          "assignedStaffId": assignedStaffId,
           if (status != null) "status": status,
           if (search != null) "s": search,
         },

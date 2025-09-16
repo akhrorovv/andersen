@@ -14,68 +14,72 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadowContainer(
-      child: Row(
-        spacing: 8.w,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            backgroundColor: AppColors.primary,
-            radius: 16.r,
-            child: Text(
-              getInitials(activity.matter?.name),
-              style: TextStyle(
-                color: AppColors.colorTextWhite,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
-                height: 1,
-                letterSpacing: 0,
+    return GestureDetector(
+      onTap: onTap,
+      child: ShadowContainer(
+        child: Row(
+          spacing: 8.w,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: AppColors.primary,
+              radius: 16.r,
+              child: Text(
+                getInitials(activity.matter?.name),
+                style: TextStyle(
+                  color: AppColors.colorTextWhite,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 1,
+                  letterSpacing: 0,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      activity.matter?.name ?? '-',
-                      style: TextStyle(
-                        color: AppColors.colorBgMask,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        height: 1.2,
-                        letterSpacing: 0,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4.h,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        activity.matter?.name ?? '-',
+                        style: TextStyle(
+                          color: AppColors.colorBgMask,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          height: 1.2,
+                          letterSpacing: 0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      formatDuration(activity.userEnteredTimeInSeconds ?? 0),
-                      style: TextStyle(
-                        color: AppColors.colorBgMask,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        height: 1.2,
-                        letterSpacing: 0,
+                      Text(
+                        formatDuration(activity.userEnteredTimeInSeconds ?? 0),
+                        style: TextStyle(
+                          color: AppColors.colorBgMask,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          height: 1.2,
+                          letterSpacing: 0,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  activity.description ?? '-',
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    height: 1.2,
-                    letterSpacing: 0,
+                    ],
                   ),
-                ),
-              ],
+                  Text(
+                    activity.description ?? '-',
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 1.2,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

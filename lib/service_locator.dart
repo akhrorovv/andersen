@@ -1,3 +1,4 @@
+import 'package:andersen/features/activities/presentation/cubit/activity_detail_cubit.dart';
 import 'package:andersen/features/auth/data/repositories/auth_repository.dart';
 import 'package:andersen/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:andersen/features/auth/domain/repositories/auth_repository.dart';
@@ -13,13 +14,18 @@ import 'package:andersen/features/tasks/data/repositories/tasks_repository_impl.
 import 'package:andersen/features/tasks/data/sources/task_detail_remote_data_source.dart';
 import 'package:andersen/features/tasks/data/sources/tasks_remote_data_source.dart';
 import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
+import 'package:andersen/features/tasks/domain/usecase/get_task_activities_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/api/dio_client.dart';
+import 'features/activities/data/repositories/activity_detail_repository_impl.dart';
 import 'features/activities/data/repositories/activity_repository_impl.dart';
 import 'features/activities/data/sources/activities_remote_data_source.dart';
+import 'features/activities/data/sources/activity_detail_remote_data_source.dart';
+import 'features/activities/domain/repositories/activity_detail_repository.dart';
 import 'features/activities/domain/repositories/activity_repository.dart';
 import 'features/activities/domain/usecase/get_activities_usecase.dart';
+import 'features/activities/domain/usecase/get_activity_detail_usecase.dart';
 import 'features/activities/presentation/cubit/activities_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
@@ -31,6 +37,7 @@ import 'features/tasks/domain/usecase/get_task_detail_usecase.dart';
 import 'features/tasks/domain/usecase/get_tasks_usecase.dart';
 import 'features/tasks/domain/usecase/update_task_usecase.dart';
 import 'features/tasks/presentation/cubit/matter_cubit.dart';
+import 'features/tasks/presentation/cubit/task_activities_cubit.dart';
 import 'features/tasks/presentation/cubit/task_detail_cubit.dart';
 import 'features/tasks/presentation/cubit/task_update_cubit.dart';
 import 'features/tasks/presentation/cubit/tasks_cubit.dart';
@@ -45,27 +52,6 @@ Future<void> setupServiceLocator() async {
 
 Future<void> _initAuth() async {
   sl
-    /// Tasks
-    ..registerLazySingleton<TasksRemoteDataSource>(
-      () => TasksRemoteDataSourceImpl(sl<DioClient>()),
-    )
-    ..registerLazySingleton<TaskDetailRemoteDataSource>(
-      () => TaskDetailRemoteDataSourceImpl(sl<DioClient>()),
-    )
-    ..registerLazySingleton<TasksRepository>(
-      () => TasksRepositoryImpl(sl<TasksRemoteDataSource>()),
-    )
-    ..registerLazySingleton<TaskDetailRepository>(
-      () => TaskDetailRepositoryImpl(sl<TaskDetailRemoteDataSource>()),
-    )
-    ..registerLazySingleton(() => GetTasksUseCase(sl<TasksRepository>()))
-    ..registerLazySingleton(
-      () => GetTaskDetailUseCase(sl<TaskDetailRepository>()),
-    )
-    ..registerLazySingleton(() => UpdateTaskUsecase(sl<TaskDetailRepository>()))
-    ..registerLazySingleton(() => TasksCubit(sl<GetTasksUseCase>()))
-    ..registerLazySingleton(() => TaskDetailCubit(sl<GetTaskDetailUseCase>()))
-    ..registerLazySingleton(() => TaskUpdateCubit(sl<UpdateTaskUsecase>()))
     /// Home
     ..registerLazySingleton<HomeRemoteDataSource>(
       () => HomeRemoteDataSourceImpl(sl<DioClient>()),
@@ -86,7 +72,7 @@ Future<void> _initAuth() async {
       () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
     )
     ..registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()))
-    ..registerLazySingleton(() => AuthCubit(sl<LoginUseCase>()))
+    ..registerFactory(() => AuthCubit(sl<LoginUseCase>()))
     /// Matters
     ..registerLazySingleton<MattersRemoteDataSource>(
       () => MattersRemoteDataSourceImpl(sl<DioClient>()),
@@ -96,15 +82,51 @@ Future<void> _initAuth() async {
     )
     ..registerLazySingleton(() => GetMattersUsecase(sl<MattersRepository>()))
     ..registerLazySingleton(() => MatterCubit(sl<GetMattersUsecase>()))
+    /// Tasks
+    ..registerLazySingleton<TasksRemoteDataSource>(
+      () => TasksRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<TaskDetailRemoteDataSource>(
+      () => TaskDetailRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<TasksRepository>(
+      () => TasksRepositoryImpl(sl<TasksRemoteDataSource>()),
+    )
+    ..registerLazySingleton<TaskDetailRepository>(
+      () => TaskDetailRepositoryImpl(sl<TaskDetailRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => GetTasksUseCase(sl<TasksRepository>()))
+    ..registerLazySingleton(
+      () => GetTaskDetailUseCase(sl<TaskDetailRepository>()),
+    )
+    ..registerLazySingleton(
+          () => GetTaskActivitiesUsecase(sl<TaskDetailRepository>()),
+    )
+    ..registerLazySingleton(() => UpdateTaskUsecase(sl<TaskDetailRepository>()))
+
+    ..registerLazySingleton(() => TasksCubit(sl<GetTasksUseCase>()))
+    ..registerLazySingleton(() => TaskDetailCubit(sl<GetTaskDetailUseCase>()))
+    ..registerFactory(() => TaskActivitiesCubit(sl<GetTaskActivitiesUsecase>()))
+    ..registerLazySingleton(() => TaskUpdateCubit(sl<UpdateTaskUsecase>()))
     /// Activities
     ..registerLazySingleton<ActivitiesRemoteDataSource>(
       () => ActivitiesRemoteDataSourceImpl(sl<DioClient>()),
     )
+    ..registerLazySingleton<ActivityDetailRemoteDataSource>(
+      () => ActivityDetailRemoteDataSourceImpl(sl<DioClient>()),
+    )
     ..registerLazySingleton<ActivityRepository>(
       () => ActivityRepositoryImpl(sl<ActivitiesRemoteDataSource>()),
+    )
+    ..registerLazySingleton<ActivityDetailRepository>(
+      () => ActivityDetailRepositoryImpl(sl<ActivityDetailRemoteDataSource>()),
     )
     ..registerLazySingleton(
       () => GetActivitiesUsecase(sl<ActivityRepository>()),
     )
-    ..registerLazySingleton(() => ActivitiesCubit(sl<GetActivitiesUsecase>()));
+    ..registerLazySingleton(
+      () => GetActivityDetailUsecase(sl<ActivityDetailRepository>()),
+    )
+    ..registerLazySingleton(() => ActivitiesCubit(sl<GetActivitiesUsecase>()))
+    ..registerFactory(() => ActivityDetailCubit(sl<GetActivityDetailUsecase>()));
 }

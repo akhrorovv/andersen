@@ -11,4 +11,3 @@ class ActivitiesEntity extends Equatable {
   @override
   List<Object?> get props => [meta, results];
 }
-

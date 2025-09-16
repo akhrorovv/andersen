@@ -6,5 +6,6 @@ abstract interface class ActivityRepository {
   Future<Either<Failure, ActivitiesEntity>> getActivities({
     required int limit,
     required int offset,
+    int? createdById,
   });
 }

@@ -41,7 +41,7 @@ class ActivityModel extends ActivityEntity {
           ? DateTime.tryParse(json['lastStartTime'])
           : null,
       runTimeInSeconds: json['runTimeInSeconds'] as int,
-      userEnteredTimeInSeconds: json['userEnteredTimeInSeconds'] as int,
+      userEnteredTimeInSeconds: json["userEnteredTimeInSeconds"] as int?,
       description: json['description'] as String?,
       typeId: json['typeId'] as int?,
       billingPeriodId: json['billingPeriodId'] as int?,

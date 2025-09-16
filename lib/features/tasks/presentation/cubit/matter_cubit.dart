@@ -31,6 +31,7 @@ class MatterCubit extends Cubit<MatterState> {
     final result = await getMattersUsecase(
       limit: _limit,
       offset: _offset,
+      taskCreatable: true,
       search: search ?? _searchQuery,
     );
 

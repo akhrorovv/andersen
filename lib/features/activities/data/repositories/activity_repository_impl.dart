@@ -13,11 +13,13 @@ class ActivityRepositoryImpl implements ActivityRepository {
   Future<Either<Failure, ActivitiesEntity>> getActivities({
     required int offset,
     required int limit,
+    int? createdById,
   }) async {
     try {
       final result = await remoteDataSource.getActivities(
         offset: offset,
         limit: limit,
+        createdById: createdById,
       );
       return Right(result);
     } catch (e) {

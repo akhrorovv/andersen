@@ -6,6 +6,7 @@ class ActivityEntity extends Equatable {
   final DateTime? lastEndTime;
   final int runTimeInSeconds;
   final int userEnteredTimeInSeconds;
+  final String? description;
 
   const ActivityEntity({
     required this.id,
@@ -13,6 +14,7 @@ class ActivityEntity extends Equatable {
     this.lastEndTime,
     required this.runTimeInSeconds,
     required this.userEnteredTimeInSeconds,
+    this.description,
   });
 
   @override

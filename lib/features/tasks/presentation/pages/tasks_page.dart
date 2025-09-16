@@ -176,7 +176,7 @@ class _TasksPageState extends State<TasksPage> {
                                   },
                                 );
                               },
-                              separatorBuilder: (_, __) => BasicDivider(),
+                              separatorBuilder: (_, __) => BasicDivider(marginTop: 12, marginBottom: 12),
                               itemCount: tasks.length,
                             ),
                           ),

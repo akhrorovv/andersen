@@ -174,20 +174,21 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                spacing: 4.h,
+                                // spacing: 4.h,
                                 children: [
-                                  Text(
-                                    "Related case",
-                                    style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.2,
-                                      letterSpacing: 0,
-                                    ),
-                                  ),
+                                  // Text(
+                                  //   "Related case",
+                                  //   style: TextStyle(
+                                  //     color: AppColors.grey,
+                                  //     fontSize: 12.sp,
+                                  //     fontWeight: FontWeight.w400,
+                                  //     height: 1.2,
+                                  //     letterSpacing: 0,
+                                  //   ),
+                                  // ),
                                   BlocProvider(
-                                    create: (_) => sl<MatterCubit>()..getMatters(),
+                                    create: (_) =>
+                                        sl<MatterCubit>()..getMatters(),
                                     child: BlocBuilder<MatterCubit, MatterState>(
                                       builder: (context, state) {
                                         if (state is MatterLoading) {
@@ -231,7 +232,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                             decoratorProps:
                                                 DropDownDecoratorProps(
                                                   decoration: InputDecoration(
-                                                    // label: Text("Related case"),
+                                                    label: Text("Related case"),
                                                     labelStyle: TextStyle(
                                                       color: AppColors.grey,
                                                       fontWeight:

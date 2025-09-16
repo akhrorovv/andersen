@@ -1,18 +1,21 @@
-import 'dart:developer';
-
 import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/format_date.dart';
+import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/default_widget.dart';
 import 'package:andersen/core/widgets/loading_page.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/activity_entity.dart';
+import 'package:andersen/features/tasks/presentation/cubit/task_activities_cubit.dart';
+import 'package:andersen/features/tasks/presentation/cubit/task_activities_state.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_state.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_update_cubit.dart';
 import 'package:andersen/features/tasks/presentation/pages/task_activities_page.dart';
 import 'package:andersen/features/tasks/presentation/pages/update_task_page.dart';
 import 'package:andersen/features/tasks/presentation/widgets/activity_item.dart';
+import 'package:andersen/features/tasks/presentation/widgets/activity_start_modal_bottomsheet.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_detail_item.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
 import 'package:andersen/gen/assets.gen.dart';
@@ -21,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../cubit/task_detail_cubit.dart';
 
 class TaskDetailPage extends StatelessWidget {
@@ -35,9 +38,7 @@ class TaskDetailPage extends StatelessWidget {
     return BlocBuilder<TaskDetailCubit, TaskDetailState>(
       builder: (context, state) {
         if (state is TaskDetailInitial || state is TaskDetailLoading) {
-          return SizedBox.expand(
-            child: LoadingPage(),
-          );
+          return SizedBox.expand(child: LoadingPage());
         } else if (state is TaskDetailError) {
           return Center(
             child: Text(state.message, style: TextStyle(color: Colors.red)),
@@ -47,7 +48,7 @@ class TaskDetailPage extends StatelessWidget {
           final status = TaskStatusX.fromString(task.status);
 
           final activities = state.task.activities ?? [];
-          final limited = activities.take(3).toList();
+          // final limited = activities.take(3).toList();
 
           return Scaffold(
             appBar: AppBar(
@@ -112,27 +113,86 @@ class TaskDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _relatedTimesText(context, activities),
-                          ShadowContainer(
-                            child: activities.isNotEmpty
-                                ? Column(
-                                    children: List.generate(limited.length, (
-                                      index,
-                                    ) {
-                                      final activity = limited[index];
+                          BlocProvider(
+                            create: (_) =>
+                                sl<TaskActivitiesCubit>()
+                                  ..getTaskActivities(taskId: taskId),
+                            child:
+                                BlocBuilder<
+                                  TaskActivitiesCubit,
+                                  TaskActivitiesState
+                                >(
+                                  builder: (context, state) {
+                                    if (state is TaskActivitiesInitial ||
+                                        state is TaskActivitiesLoading) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primary,
+                                        ),
+                                      );
+                                    } else if (state is TaskActivitiesError) {
+                                      return Center(
+                                        child: Text(
+                                          state.message,
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      );
+                                    } else if (state is TaskActivitiesLoaded) {
+                                      final allActivities =
+                                          state.activities.results;
+
+                                      final limited = allActivities
+                                          .take(3)
+                                          .toList();
+
                                       return Column(
                                         children: [
-                                          ActivityItem(
-                                            description: "Description",
-                                            duration: activity.runTimeInSeconds,
+                                          _relatedTimesText(
+                                            context: context,
+                                            activities: state.activities,
+                                            taskId: taskId,
                                           ),
-                                          if (index != limited.length - 1)
-                                            BasicDivider(),
+                                          ShadowContainer(
+                                            child: activities.isNotEmpty
+                                                ? Column(
+                                                    children: List.generate(
+                                                      limited.length,
+                                                      (index) {
+                                                        final activity =
+                                                            limited[index];
+                                                        return Column(
+                                                          children: [
+                                                            ActivityItem(
+                                                              description:
+                                                                  activity
+                                                                      .description ??
+                                                                  '-',
+                                                              duration:
+                                                                  activity
+                                                                      .userEnteredTimeInSeconds ??
+                                                                  0,
+                                                            ),
+                                                            if (index !=
+                                                                limited.length -
+                                                                    1)
+                                                              BasicDivider(),
+                                                          ],
+                                                        );
+                                                      },
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Text(
+                                                      "No activities",
+                                                    ),
+                                                  ),
+                                          ),
                                         ],
                                       );
-                                    }),
-                                  )
-                                : Center(child: Text("No activities")),
+                                    }
+                                    return SizedBox.shrink();
+                                  },
+                                ),
                           ),
                           SizedBox(height: 16.h),
                           _taskDetailText(),
@@ -163,6 +223,9 @@ class TaskDetailPage extends StatelessWidget {
                                   iconPath: Assets.vectors.borderNone.path,
                                   value: task.assignedStaff?.name,
                                   isMatter: true,
+                                  initialName: getInitials(
+                                    task.assignedStaff?.name,
+                                  ),
                                 ),
                                 TaskDetailItem(
                                   title: "Task type",
@@ -185,6 +248,22 @@ class TaskDetailPage extends StatelessWidget {
                 ),
               ],
             ),
+
+            floatingActionButton:
+                context.read<TaskDetailCubit>().isActivityCreatable(task)
+                ? FloatingActionButton(
+                    backgroundColor: AppColors.primary,
+                    shape: CircleBorder(),
+                    onPressed: () async {
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        topRadius: Radius.circular(16.r),
+                        builder: (context) => activityStartModalBottomSheet(),
+                      );
+                    },
+                    child: Icon(Icons.add, color: AppColors.white),
+                  )
+                : null,
           );
         }
         return DefaultWidget();
@@ -231,10 +310,11 @@ class TaskDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _relatedTimesText(
-    BuildContext context,
-    List<ActivityEntity> activities,
-  ) {
+  Widget _relatedTimesText({
+    required BuildContext context,
+    required ActivitiesEntity activities,
+    required int taskId,
+  }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
@@ -250,7 +330,7 @@ class TaskDetailPage extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
-          if (activities.length > 3)
+          if (activities.results.length > 3)
             GestureDetector(
               onTap: () {
                 context.pushCupertinoSheet(

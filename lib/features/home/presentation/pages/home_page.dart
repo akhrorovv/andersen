@@ -1,4 +1,4 @@
-import 'package:andersen/core/common/navigation/navigation_helper.dart';
+import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Hello, ${DBService.user!.name}",
+                              "Hello, ${DBService.user?.name}",
                               style: TextStyle(
                                 color: AppColors.colorPrimaryText,
                                 fontSize: 24.sp,

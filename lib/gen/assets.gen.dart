@@ -63,6 +63,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/vectors/clock.svg');
 
+  /// File path: assets/vectors/file.svg
+  SvgGenImage get file => const SvgGenImage('assets/vectors/file.svg');
+
   /// File path: assets/vectors/hide.svg
   SvgGenImage get hide => const SvgGenImage('assets/vectors/hide.svg');
 
@@ -86,6 +89,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/notification.svg
   SvgGenImage get notification =>
       const SvgGenImage('assets/vectors/notification.svg');
+
+  /// File path: assets/vectors/play.svg
+  SvgGenImage get play => const SvgGenImage('assets/vectors/play.svg');
 
   /// File path: assets/vectors/search.svg
   SvgGenImage get search => const SvgGenImage('assets/vectors/search.svg');
@@ -116,6 +122,7 @@ class $AssetsVectorsGen {
     calendar,
     calendarActive,
     clock,
+    file,
     hide,
     home,
     homeActive,
@@ -123,6 +130,7 @@ class $AssetsVectorsGen {
     kpiActive,
     more,
     notification,
+    play,
     search,
     setting,
     show,

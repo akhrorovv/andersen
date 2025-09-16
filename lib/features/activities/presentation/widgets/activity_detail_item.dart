@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TaskDetailItem extends StatelessWidget {
+class ActivityDetailItem extends StatelessWidget {
   final String title;
   final String iconPath;
   final String? value;
   final Color? color;
   final bool? isMatter;
   final bool? hasDivider;
+  final bool? isInvoice;
   final String? initialName;
 
-  const TaskDetailItem({
+  const ActivityDetailItem({
     super.key,
     required this.title,
     required this.iconPath,
@@ -22,6 +23,7 @@ class TaskDetailItem extends StatelessWidget {
     this.color,
     this.isMatter = false,
     this.hasDivider = true,
+    this.isInvoice,
     this.initialName,
   });
 
@@ -74,16 +76,33 @@ class TaskDetailItem extends StatelessWidget {
                   letterSpacing: 0,
                 ),
               ),
-              Text(
-                value ?? "-",
-                style: TextStyle(
-                  color: valueColor(value, isMatter!, color),
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                  letterSpacing: 0,
+              if (isInvoice == null)
+                Text(
+                  value ?? "-",
+                  style: TextStyle(
+                    color: valueColor(value, isMatter!, color),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
+                    letterSpacing: 0,
+                  ),
                 ),
-              ),
+              if (isInvoice != null && isInvoice == true)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                  decoration: BoxDecoration(
+                    color: Color(0xff08979C),
+                    borderRadius: BorderRadius.circular(24.r),
+                  ),
+                  child: Text(
+                    "Unbilled",
+                    style: TextStyle(
+                      color: AppColors.colorTextWhite,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
               if (hasDivider!) BasicDivider(marginBottom: 0, marginTop: 8),
             ],
           ),

@@ -7,7 +7,6 @@ sealed class Failure extends Equatable {
   final String message;
   final int statusCode;
 
-  // getter for error message
   String get errorMessage => "$statusCode Error: $message";
 
   @override

@@ -12,11 +12,13 @@ class GetMattersUsecase {
     required int limit,
     required int offset,
     String? search,
+    bool? taskCreatable,
   }) async {
     return await repository.getMatters(
       limit: limit,
       offset: offset,
       search: search,
+      taskCreatable: taskCreatable,
     );
   }
 }
