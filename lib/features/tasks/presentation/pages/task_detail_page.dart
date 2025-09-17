@@ -18,6 +18,7 @@ import 'package:andersen/features/tasks/presentation/widgets/activity_item.dart'
 import 'package:andersen/features/tasks/presentation/widgets/activity_start_modal_bottomsheet.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_detail_item.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
+import 'package:andersen/features/tasks/presentation/widgets/task_status_filter.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
