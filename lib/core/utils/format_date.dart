@@ -17,6 +17,6 @@ String formatDueDate(DateTime? dueAt) {
   if (isToday) {
     return "Today, ${DateFormat('MMM d').format(dueAt.toLocal())}";
   } else {
-    return "$formattedDate";
+    return formattedDate;
   }
 }

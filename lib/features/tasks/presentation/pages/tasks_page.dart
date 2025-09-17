@@ -9,7 +9,6 @@ import 'package:andersen/features/tasks/presentation/cubit/tasks_state.dart';
 import 'package:andersen/features/tasks/presentation/pages/create_task_page.dart';
 import 'package:andersen/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_card.dart';
-import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_filter.dart';
 import 'package:andersen/features/tasks/presentation/widgets/tasks_app_bar.dart';
 import 'package:andersen/service_locator.dart';

@@ -198,7 +198,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                             items: (f, cs) =>
                                                 state.matters.results,
                                             itemAsString: (MatterEntity m) =>
-                                                m.name ?? "",
+                                                m.name,
                                             compareFn:
                                                 (
                                                   MatterEntity a,

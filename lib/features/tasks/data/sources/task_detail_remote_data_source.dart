@@ -4,7 +4,6 @@ import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/activities/data/models/activities_model.dart';
 import 'package:andersen/features/tasks/data/models/task_model.dart';
-import 'package:andersen/features/tasks/data/models/tasks_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class TaskDetailRemoteDataSource {

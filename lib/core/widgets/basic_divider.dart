@@ -6,7 +6,7 @@ class BasicDivider extends StatelessWidget {
   final double marginTop;
   final double marginBottom;
 
-  const BasicDivider({super.key, this.marginTop = 16, this.marginBottom = 16});
+  const BasicDivider({super.key, this.marginTop = 12, this.marginBottom = 12});
 
   @override
   Widget build(BuildContext context) {

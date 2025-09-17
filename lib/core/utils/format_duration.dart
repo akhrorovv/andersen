@@ -5,7 +5,7 @@ String formatDurationFromActivities(List<ActivityEntity>? activities) {
 
   final totalSeconds = activities.fold<int>(
     0,
-    (sum, activity) => sum + (activity.userEnteredTimeInSeconds ?? 0),
+    (sum, activity) => sum + (activity.userEnteredTimeInSeconds),
   );
 
   final duration = Duration(seconds: totalSeconds);

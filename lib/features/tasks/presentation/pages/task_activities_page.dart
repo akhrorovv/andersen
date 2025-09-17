@@ -2,7 +2,7 @@ import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
-import 'package:andersen/features/tasks/presentation/widgets/activity_item.dart';
+import 'package:andersen/features/tasks/presentation/widgets/detail/activity_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
