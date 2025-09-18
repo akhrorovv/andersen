@@ -70,69 +70,6 @@ class _TasksPageState extends State<TasksPage> {
                   },
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownSearch<TaskEntity>(
-                    // items: (filter, cs) => matters,
-                    items: (String? filter, props) async {
-                      final result = await sl<TasksRepository>().getTasks(
-                        limit: 5,
-                        offset: 0,
-                        assignedStaffId: 1,
-                        search: (filter != null && filter.length >= 2) ? filter : null,
-                      );
-
-                      return result.fold((failure) => [], (tasksEntity) => tasksEntity.results);
-                    },
-
-                    compareFn: (a, b) => a.id == b.id,
-                    itemAsString: (TaskEntity m) => m.description ?? '-',
-
-                    // onChanged: (matter) => matterId = matter?.id,
-                    decoratorProps: DropDownDecoratorProps(
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4),
-                        hintText: "Select Case",
-                        hintStyle: TextStyle(color: AppColors.black45),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(color: AppColors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(color: AppColors.primary),
-                        ),
-                      ),
-                    ),
-
-                    popupProps: PopupProps.menu(
-                      fit: FlexFit.loose,
-                      showSearchBox: true,
-                      showSelectedItems: true,
-                      menuProps: MenuProps(
-                        backgroundColor: AppColors.background,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      searchFieldProps: TextFieldProps(
-                        decoration: InputDecoration(
-                          hintText: "Search...",
-                          contentPadding: EdgeInsets.zero,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.grey),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.primary),
-                          ),
-                        ),
-                        // onChanged: (value) {
-                        //   context.read<MatterCubit>().getMatters(refresh: true, search: value);
-                        // },
-                      ),
-                    ),
-                  ),
-                ),
-
                 /// Tasks
                 BlocBuilder<TasksCubit, TasksState>(
                   builder: (context, state) {

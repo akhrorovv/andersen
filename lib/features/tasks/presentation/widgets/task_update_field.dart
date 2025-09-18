@@ -54,7 +54,7 @@ class TaskUpdateField extends StatelessWidget {
                 ),
               ),
               child,
-              // if(hasDivider != null && hasDivider == true)
+              if(hasDivider == true)
               BasicDivider(marginTop: 0),
             ],
           ),

@@ -12,6 +12,9 @@ class ApiUrls {
   static String taskDetail(int taskId) => '${apiV}tasks/$taskId';
   static String taskUpdate(int taskId) => '${apiV}tasks/$taskId';
 
+  /// Task Types
+  static const taskTypes = '${apiV}task-types';
+
   /// Matters
   static const matters = '${apiV}matters';
 
