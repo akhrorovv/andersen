@@ -13,6 +13,7 @@ class MattersRepositoryImpl implements MattersRepository {
   Future<Either<Failure, MattersEntity>> getMatters({
     required int limit,
     required int offset,
+    required int clientId,
     String? search,
     bool? taskCreatable,
   }) async {
@@ -20,6 +21,7 @@ class MattersRepositoryImpl implements MattersRepository {
       final result = await remoteDataSource.getMatters(
         offset: offset,
         limit: limit,
+        clientId: clientId,
         search: search,
         taskCreatable: taskCreatable,
       );

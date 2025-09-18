@@ -11,12 +11,14 @@ class GetMattersUsecase {
   Future<Either<Failure, MattersEntity>> call({
     required int limit,
     required int offset,
+    required int clientId,
     String? search,
     bool? taskCreatable,
   }) async {
     return await repository.getMatters(
       limit: limit,
       offset: offset,
+      clientId: clientId,
       search: search,
       taskCreatable: taskCreatable,
     );

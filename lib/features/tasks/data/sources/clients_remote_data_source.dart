@@ -1,46 +1,40 @@
 import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
+import 'package:andersen/core/common/models/clients_model.dart';
 import 'package:andersen/core/error/exceptions.dart';
-import 'package:andersen/features/tasks/data/models/matters_model.dart';
 import 'package:dio/dio.dart';
 
-abstract class MattersRemoteDataSource {
-  Future<MattersModel> getMatters({
+abstract class ClientsRemoteDataSource {
+  Future<ClientsModel> getClients({
     required int offset,
     required int limit,
-    required int clientId,
     String? search,
-    bool? taskCreatable,
   });
 }
 
-class MattersRemoteDataSourceImpl implements MattersRemoteDataSource {
+class ClientsRemoteDataSourceImpl implements ClientsRemoteDataSource {
   final DioClient _client;
 
-  MattersRemoteDataSourceImpl(this._client);
+  ClientsRemoteDataSourceImpl(this._client);
 
   @override
-  Future<MattersModel> getMatters({
+  Future<ClientsModel> getClients({
     required int offset,
     required int limit,
-    required int clientId,
     String? search,
-    bool? taskCreatable,
   }) async {
     try {
       final response = await _client.get(
-        ApiUrls.matters,
+        ApiUrls.clients,
         queryParameters: {
           "offset": offset,
           "limit": limit,
-          "clientId": clientId,
           if (search != null) "s": search,
-          if (taskCreatable != null) "task_createable": taskCreatable,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return MattersModel.fromJson(response.data);
+        return ClientsModel.fromJson(response.data);
       } else {
         throw ServerException(
           message: response.statusMessage ?? "Fetch tasks failed",

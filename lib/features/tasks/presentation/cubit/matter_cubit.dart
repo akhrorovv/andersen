@@ -17,7 +17,7 @@ class MatterCubit extends Cubit<MatterState> {
   List<MatterEntity> _matters = [];
   bool _hasMore = true;
 
-  Future<void> getMatters({bool refresh = false, String? search}) async {
+  Future<void> getMatters({bool refresh = false, String? search, required int clientId}) async {
     if (refresh) {
       _offset = 0;
       _matters = [];
@@ -31,6 +31,7 @@ class MatterCubit extends Cubit<MatterState> {
     final result = await getMattersUsecase(
       limit: _limit,
       offset: _offset,
+      clientId: clientId,
       taskCreatable: true,
       search: search ?? _searchQuery,
     );
@@ -43,32 +44,27 @@ class MatterCubit extends Cubit<MatterState> {
         _matters = [..._matters, ...tasksEntity.results];
         _hasMore = _offset + _limit < tasksEntity.meta.total;
 
-        emit(
-          MatterLoaded(MattersEntity(results: _matters, meta: tasksEntity.meta)),
-        );
+        emit(MatterLoaded(MattersEntity(results: _matters, meta: tasksEntity.meta)));
 
         _offset += _limit;
       },
     );
   }
 
-  Future<void> searchTasks(String query) async {
+  Future<void> searchTasks(String query, int clientId) async {
     _offset = 0;
     _matters = [];
     _hasMore = true;
     _searchQuery = query.isEmpty ? null : query;
 
     emit(MatterLoading());
-    await getMatters(
-      refresh: true,
-      search: _searchQuery,
-    );
+    await getMatters(refresh: true, search: _searchQuery, clientId: clientId);
   }
 
-  Future<void> loadMore() async {
+  Future<void> loadMore(int clientId) async {
     if (_isLoadingMore || !_hasMore) return;
     _isLoadingMore = true;
-    await getMatters();
+    await getMatters(clientId: clientId);
     _isLoadingMore = false;
   }
 }

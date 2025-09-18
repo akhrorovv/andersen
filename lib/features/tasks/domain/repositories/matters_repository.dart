@@ -6,6 +6,7 @@ abstract interface class MattersRepository {
   Future<Either<Failure, MattersEntity>> getMatters({
     required int limit,
     required int offset,
+    required int clientId,
     bool? taskCreatable,
     String? search,
   });

@@ -4,6 +4,8 @@ import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
+import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
+import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_cubit.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_state.dart';
 import 'package:andersen/features/tasks/presentation/pages/create_task_page.dart';
@@ -12,6 +14,7 @@ import 'package:andersen/features/tasks/presentation/widgets/task_card.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_filter.dart';
 import 'package:andersen/features/tasks/presentation/widgets/tasks_app_bar.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,11 +66,71 @@ class _TasksPageState extends State<TasksPage> {
                   selected: selected,
                   onChanged: (status) {
                     setState(() => selected = status);
-                    context.read<TasksCubit>().getTasks(
-                      refresh: true,
-                      status: status,
-                    );
+                    context.read<TasksCubit>().getTasks(refresh: true, status: status);
                   },
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownSearch<TaskEntity>(
+                    // items: (filter, cs) => matters,
+                    items: (String? filter, props) async {
+                      final result = await sl<TasksRepository>().getTasks(
+                        limit: 5,
+                        offset: 0,
+                        assignedStaffId: 1,
+                        search: (filter != null && filter.length >= 2) ? filter : null,
+                      );
+
+                      return result.fold((failure) => [], (tasksEntity) => tasksEntity.results);
+                    },
+
+                    compareFn: (a, b) => a.id == b.id,
+                    itemAsString: (TaskEntity m) => m.description ?? '-',
+
+                    // onChanged: (matter) => matterId = matter?.id,
+                    decoratorProps: DropDownDecoratorProps(
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4),
+                        hintText: "Select Case",
+                        hintStyle: TextStyle(color: AppColors.black45),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide(color: AppColors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide(color: AppColors.primary),
+                        ),
+                      ),
+                    ),
+
+                    popupProps: PopupProps.menu(
+                      fit: FlexFit.loose,
+                      showSearchBox: true,
+                      showSelectedItems: true,
+                      menuProps: MenuProps(
+                        backgroundColor: AppColors.background,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          hintText: "Search...",
+                          contentPadding: EdgeInsets.zero,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.primary),
+                          ),
+                        ),
+                        // onChanged: (value) {
+                        //   context.read<MatterCubit>().getMatters(refresh: true, search: value);
+                        // },
+                      ),
+                    ),
+                  ),
                 ),
 
                 /// Tasks
@@ -99,10 +162,7 @@ class _TasksPageState extends State<TasksPage> {
                                   return TaskCard(
                                     task: tasks[index],
                                     onTap: () {
-                                      context.push(
-                                        TaskDetailPage.path,
-                                        extra: tasks[index].id,
-                                      );
+                                      context.push(TaskDetailPage.path, extra: tasks[index].id);
                                     },
                                   );
                                 },

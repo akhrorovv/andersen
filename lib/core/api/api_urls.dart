@@ -15,6 +15,9 @@ class ApiUrls {
   /// Matters
   static const matters = '${apiV}matters';
 
+  /// Clients
+  static const clients = '${apiV}clients';
+
   /// Activities
   static const activities = '${apiV}activities';
   static String activityDetail(int activityId) => '${apiV}activities/$activityId';
