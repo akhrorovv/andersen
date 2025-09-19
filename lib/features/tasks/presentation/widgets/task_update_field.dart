@@ -6,35 +6,35 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class TaskUpdateField extends StatelessWidget {
   final String? title;
-  final String iconPath;
+  final String? iconPath;
   final Widget child;
   final bool? hasDivider;
+  final bool? hasIcon;
 
   const TaskUpdateField({
     super.key,
     this.title,
-    required this.iconPath,
+    this.iconPath,
     required this.child,
     this.hasDivider,
+    this.hasIcon = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.w,
+      spacing: (hasIcon == true) ? 8.w : 0,
       children: [
+        if(hasIcon == true)
         CircleAvatar(
           radius: 16.r,
           backgroundColor: AppColors.primary,
           child: SvgPicture.asset(
-            iconPath,
+            iconPath!,
             width: 16.w,
             height: 16.w,
-            colorFilter: const ColorFilter.mode(
-              AppColors.colorTextWhite,
-              BlendMode.srcIn,
-            ),
+            colorFilter: const ColorFilter.mode(AppColors.colorTextWhite, BlendMode.srcIn),
           ),
         ),
         Expanded(
@@ -42,20 +42,20 @@ class TaskUpdateField extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 4.h,
             children: [
-              if(title != null)
-              Text(
-                title!,
-                style: TextStyle(
-                  color: AppColors.grey,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  height: 1.2,
-                  letterSpacing: 0,
+              if (title != null)
+                Text(
+                  title!,
+                  style: TextStyle(
+                    color: AppColors.grey,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.2,
+                    letterSpacing: 0,
+                  ),
                 ),
-              ),
               child,
-              if(hasDivider == true)
-              BasicDivider(marginTop: 0),
+              if (hasDivider == true) BasicDivider(marginTop: 0),
+              if (hasDivider == false) SizedBox(height: 12.h),
             ],
           ),
         ),

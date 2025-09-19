@@ -107,37 +107,41 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                           child: Column(
                             children: [
                               /// Clients
-                              CustomDropdownField<ClientEntity>(
+                              TaskUpdateField(
                                 title: "Select Client",
                                 iconPath: Assets.vectors.briefcase.path,
-                                selectedItem: null,
-                                compareFn: (a, b) => a.id == b.id,
-                                itemAsString: (client) {
-                                  if (client.type == "COMPANY") return client.name ?? "";
-                                  if (client.type == "PERSON") {
-                                    final last = client.lastname ?? "";
-                                    final first = client.name ?? "";
-                                    final middle = client.middlename ?? "";
-                                    return "$last $first $middle".trim();
-                                  }
-                                  return "-";
-                                },
-                                items: (filter) async {
-                                  final result = await sl<ClientsRepository>().getClients(
-                                    limit: 10,
-                                    offset: 0,
-                                    search: (filter != null && filter.length >= 2) ? filter : null,
-                                  );
-                                  return result.fold((failure) => [], (res) => res.clients);
-                                },
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      clientId = value.id;
-                                    });
-                                    log("Selected Client: ${value.name}");
-                                  }
-                                },
+                                hasDivider: false,
+                                child: CustomDropdownField<ClientEntity>(
+                                  hint: "Select Client",
+                                  selectedItem: null,
+                                  compareFn: (a, b) => a.id == b.id,
+                                  itemAsString: (client) {
+                                    if (client.type == "COMPANY") return client.name ?? "";
+                                    if (client.type == "PERSON") {
+                                      final last = client.lastname ?? "";
+                                      final first = client.name ?? "";
+                                      final middle = client.middlename ?? "";
+                                      return "$last $first $middle".trim();
+                                    }
+                                    return "-";
+                                  },
+                                  items: (filter) async {
+                                    final result = await sl<ClientsRepository>().getClients(
+                                      limit: 10,
+                                      offset: 0,
+                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                    );
+                                    return result.fold((failure) => [], (res) => res.clients);
+                                  },
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        clientId = value.id;
+                                      });
+                                      log("Selected Client: ${value.name}");
+                                    }
+                                  },
+                                ),
                               ),
 
                               /// Description
@@ -212,56 +216,63 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                               ),
 
                               /// Task Types
-                              CustomDropdownField<TaskTypeEntity>(
+                              TaskUpdateField(
                                 title: "Task type",
-                                iconPath: Assets.vectors.more.path,
-                                selectedItem: widget.task.type,
-                                compareFn: (a, b) => a.id == b.id,
-                                itemAsString: (type) => type.name ?? '-',
-                                items: (filter) async {
-                                  final result = await sl<TaskTypesRepository>().getTypes(
-                                    limit: 15,
-                                    offset: 0,
-                                    search: (filter != null && filter.length >= 2) ? filter : null,
-                                  );
-                                  return result.fold((failure) => [], (res) => res.types);
-                                },
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      typeId = value.id;
-                                    });
-                                    log("Selected Type: ${value.name}");
-                                  }
-                                },
+                                iconPath: Assets.vectors.briefcase.path,
+                                hasDivider: false,
+                                child: CustomDropdownField<TaskTypeEntity>(
+                                  hint: "Task type",
+                                  selectedItem: widget.task.type,
+                                  compareFn: (a, b) => a.id == b.id,
+                                  itemAsString: (type) => type.name ?? '-',
+                                  items: (filter) async {
+                                    final result = await sl<TaskTypesRepository>().getTypes(
+                                      limit: 15,
+                                      offset: 0,
+                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                    );
+                                    return result.fold((failure) => [], (res) => res.types);
+                                  },
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        typeId = value.id;
+                                      });
+                                      log("Selected Type: ${value.name}");
+                                    }
+                                  },
+                                ),
                               ),
 
                               /// Matters
-                              CustomDropdownField<MatterEntity>(
+                              TaskUpdateField(
                                 title: "Related Case",
                                 hasDivider: false,
                                 iconPath: Assets.vectors.briefcase.path,
-                                selectedItem: widget.task.matter,
-                                compareFn: (a, b) => a.id == b.id,
-                                itemAsString: (matter) => matter.name,
-                                items: (filter) async {
-                                  if (clientId == null) return [];
-                                  final result = await sl<MattersRepository>().getMatters(
-                                    limit: 10,
-                                    offset: 0,
-                                    clientId: clientId!,
-                                    search: (filter != null && filter.length >= 2) ? filter : null,
-                                  );
-                                  return result.fold((failure) => [], (res) => res.results);
-                                },
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      matterId = value.id;
-                                    });
-                                    log("Selected Case: ${value.name}");
-                                  }
-                                },
+                                child: CustomDropdownField<MatterEntity>(
+                                  hint: "Related Case",
+                                  selectedItem: widget.task.matter,
+                                  compareFn: (a, b) => a.id == b.id,
+                                  itemAsString: (matter) => matter.name,
+                                  items: (filter) async {
+                                    if (clientId == null) return [];
+                                    final result = await sl<MattersRepository>().getMatters(
+                                      limit: 10,
+                                      offset: 0,
+                                      clientId: clientId!,
+                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                    );
+                                    return result.fold((failure) => [], (res) => res.results);
+                                  },
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        matterId = value.id;
+                                      });
+                                      log("Selected Case: ${value.name}");
+                                    }
+                                  },
+                                ),
                               ),
 
                               // /// Assigned to

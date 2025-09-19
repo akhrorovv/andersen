@@ -36,10 +36,7 @@ class TasksAppBar extends StatelessWidget implements PreferredSizeWidget {
               textInputAction: TextInputAction.search,
               onSubmitted: onSubmitted,
             )
-          : Text(
-              "Tasks",
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-            ),
+          : Text("Tasks"),
       actions: [
         isSearching
             ? GestureDetector(
