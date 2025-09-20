@@ -6,6 +6,7 @@ import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
+import 'package:andersen/features/tasks/presentation/cubit/create_task_cubit.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_cubit.dart';
 import 'package:andersen/features/tasks/presentation/cubit/tasks_state.dart';
 import 'package:andersen/features/tasks/presentation/pages/create_task_page.dart';
@@ -121,7 +122,12 @@ class _TasksPageState extends State<TasksPage> {
               backgroundColor: AppColors.primary,
               shape: CircleBorder(),
               onPressed: () async {
-                context.pushCupertinoSheet(CreateTaskPage());
+                final created = await context.pushCupertinoSheet<bool>(
+                  BlocProvider(create: (_) => sl<CreateTaskCubit>(), child: CreateTaskPage()),
+                );
+                if (context.mounted && created == true) {
+                  context.read<TasksCubit>().getTasks(refresh: true);
+                }
               },
               child: Icon(Icons.add, color: AppColors.white),
             ),

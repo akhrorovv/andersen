@@ -11,6 +11,7 @@ import 'package:andersen/features/home/domain/usecases/activity_usecase.dart';
 import 'package:andersen/features/home/domain/usecases/profile_usecase.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/tasks/data/repositories/clients_repository_impl.dart';
+import 'package:andersen/features/tasks/data/repositories/create_task_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/task_detail_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/task_types_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/tasks_repository_impl.dart';
@@ -18,6 +19,7 @@ import 'package:andersen/features/tasks/data/sources/task_detail_remote_data_sou
 import 'package:andersen/features/tasks/data/sources/tasks_remote_data_source.dart';
 import 'package:andersen/features/tasks/domain/repositories/clients_repository.dart';
 import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
+import 'package:andersen/features/tasks/domain/usecase/create_task_usecase.dart';
 import 'package:andersen/features/tasks/domain/usecase/get_task_activities_usecase.dart';
 import 'package:get_it/get_it.dart';
 
@@ -38,8 +40,10 @@ import 'features/calendar/domain/usecase/get_events_usecase.dart';
 import 'features/calendar/presentation/cubit/events_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
 import 'features/tasks/data/sources/clients_remote_data_source.dart';
+import 'features/tasks/data/sources/create_task_remote_data_source.dart';
 import 'features/tasks/data/sources/matters_remote_data_source.dart';
 import 'features/tasks/data/sources/task_types_remote_data_source.dart';
+import 'features/tasks/domain/repositories/create_task_repository.dart';
 import 'features/tasks/domain/repositories/matters_repository.dart';
 import 'features/tasks/domain/repositories/task_detail_repository.dart';
 import 'features/tasks/domain/repositories/task_types_repository.dart';
@@ -47,6 +51,7 @@ import 'features/tasks/domain/usecase/get_matters_usecase.dart';
 import 'features/tasks/domain/usecase/get_task_detail_usecase.dart';
 import 'features/tasks/domain/usecase/get_tasks_usecase.dart';
 import 'features/tasks/domain/usecase/update_task_usecase.dart';
+import 'features/tasks/presentation/cubit/create_task_cubit.dart';
 import 'features/tasks/presentation/cubit/matter_cubit.dart';
 import 'features/tasks/presentation/cubit/task_activities_cubit.dart';
 import 'features/tasks/presentation/cubit/task_detail_cubit.dart';
@@ -140,5 +145,14 @@ Future<void> _initAuth() async {
       () => EventsRepositoryImpl(sl<EventsRemoteDataSource>()),
     )
     ..registerLazySingleton(() => GetEventsUsecase(sl<EventsRepository>()))
-    ..registerFactory(() => EventsCubit(sl<GetEventsUsecase>()));
+    ..registerFactory(() => EventsCubit(sl<GetEventsUsecase>()))
+    /// Create Task
+    ..registerLazySingleton<CreateTaskRemoteDataSource>(
+      () => CreateTaskRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<CreateTaskRepository>(
+      () => CreateTaskRepositoryImpl(sl<CreateTaskRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => CreateTaskUsecase(sl<CreateTaskRepository>()))
+    ..registerFactory(() => CreateTaskCubit(sl<CreateTaskUsecase>()));
 }

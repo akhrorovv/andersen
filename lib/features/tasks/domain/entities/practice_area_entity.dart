@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class PracticeAreaEntity extends Equatable {
-  final String? prefix;
+  final int? id;
   final String? name;
+  final String? prefix;
 
-  const PracticeAreaEntity({this.prefix, this.name});
+  const PracticeAreaEntity({this.id, this.prefix, this.name});
 
   @override
-  List<Object?> get props => [prefix, name];
+  List<Object?> get props => [id, prefix, name];
 }

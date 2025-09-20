@@ -3,6 +3,7 @@ import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
 import 'package:andersen/features/calendar/domain/usecase/get_events_usecase.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EventsCubit extends Cubit<EventsState> {
@@ -45,8 +46,8 @@ class EventsCubit extends Cubit<EventsState> {
       limit: _limit,
       offset: _offset,
       attendeeId: DBService.user!.id,
-      dateMin: dateMin,
-      dateMax: dateMax,
+      dateMin: '${dateMin.toIso8601String()}Z',
+      dateMax: '${dateMax.toIso8601String()}Z',
       search: _searchQuery,
       target: _target,
       matterId: _target == "CASE_MEETING" ? _matterId : null,
@@ -64,4 +65,28 @@ class EventsCubit extends Cubit<EventsState> {
       },
     );
   }
+
+  Map<DateTime, List<EventEntity>> groupEventsByDay(List<EventEntity> events) {
+    final Map<DateTime, List<EventEntity>> result = {};
+
+    for (final e in events) {
+      // startsAt bo'lmasa createdAt yoki updatedAt dan foydalanamiz
+      final DateTime? raw = e.startsAt ?? e.createdAt ?? e.updatedAt;
+      if (raw == null) continue; // sana yo'q bo'lsa o'tkazib yuborish
+
+      final day = _dateOnly(raw.toLocal()); // local time ga o'tkazib normalizatsiya qilamiz
+      result.putIfAbsent(day, () => []).add(e);
+    }
+
+    return result;
+  }
+
+  DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+}
+
+class DayEvents {
+  final DateTime day;
+  final List<EventEntity> events;
+
+  DayEvents({required this.day, required this.events});
 }

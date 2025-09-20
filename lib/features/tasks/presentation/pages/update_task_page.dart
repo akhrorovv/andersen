@@ -260,6 +260,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       limit: 10,
                                       offset: 0,
                                       clientId: clientId!,
+                                      taskCreatable: true,
                                       search: (filter != null && filter.length >= 2) ? filter : null,
                                     );
                                     return result.fold((failure) => [], (res) => res.results);

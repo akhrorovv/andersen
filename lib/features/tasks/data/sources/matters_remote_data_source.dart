@@ -43,7 +43,7 @@ class MattersRemoteDataSourceImpl implements MattersRemoteDataSource {
         return MattersModel.fromJson(response.data);
       } else {
         throw ServerException(
-          message: response.statusMessage ?? "Fetch tasks failed",
+          message: response.statusMessage ?? "Fetch matters failed",
           statusCode: response.statusCode ?? 500,
         );
       }

@@ -1,4 +1,5 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,6 +70,9 @@ class CustomDropdownField<T> extends StatelessWidget {
           backgroundColor: AppColors.background,
           borderRadius: BorderRadius.circular(8.r),
         ),
+        // emptyBuilder: (context, searchEntry) {
+        //   return Center(child: Text(T == MatterEntity ? "Select Client first" : "No data found"));
+        // },
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
             hintText: "Search...",

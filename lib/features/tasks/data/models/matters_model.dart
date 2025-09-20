@@ -1,6 +1,5 @@
 import 'package:andersen/features/tasks/data/models/matter_model.dart';
 import 'package:andersen/core/common/models/meta_model.dart';
-import 'package:andersen/features/tasks/data/models/task_model.dart';
 import 'package:andersen/features/tasks/domain/entities/matters_entity.dart';
 
 class MattersModel extends MattersEntity {
@@ -18,7 +17,7 @@ class MattersModel extends MattersEntity {
   Map<String, dynamic> toJson() {
     return {
       'meta': (meta as MetaModel).toJson(),
-      'results': results.map((t) => (t as TaskModel).toJson()).toList(),
+      'results': results.map((t) => (t as MatterModel).toJson()).toList(),
     };
   }
 }

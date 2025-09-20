@@ -20,7 +20,6 @@ class TaskDetailCubit extends Cubit<TaskDetailState> {
     );
   }
 
-
   bool isActivityCreatable(TaskEntity task) {
     if (task.matter?.contract?.status == 'CLOSED' ||
         task.matter?.status != "IN_PROGRESS" ||
