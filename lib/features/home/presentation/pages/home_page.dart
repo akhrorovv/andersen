@@ -1,16 +1,20 @@
 import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
+import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
+import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
@@ -55,11 +59,11 @@ class HomePage extends StatelessWidget {
                 child: BlocBuilder<HomeCubit, HomeState>(
                   builder: (context, state) {
                     if (state is HomeLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
+                    } else if (state is HomeError) {
+                      return ErrorWidget(state.message);
                     } else if (state is HomeLoaded) {
-                      final label = state.status.isActive
-                          ? "Has Left"
-                          : "Has Come";
+                      final label = state.status.isActive ? "Has Left" : "Has Come";
                       return ShadowContainer(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,37 +91,44 @@ class HomePage extends StatelessWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 10.h,
-                                  ),
-                                  margin: EdgeInsets.only(top: 12.h),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    color: state.status.isActive
-                                        ? Color(0xffFFD8BF)
-                                        : Color(0xffD9F7BE),
-                                  ),
-                                  child: Text(
-                                    label,
-                                    style: TextStyle(
+                                GestureDetector(
+                                  onTap: () {
+                                    if (state.status.isActive) {
+                                      context.pushCupertinoSheet(const ReasonPage());
+                                      // Has Left bo'lsa
+                                      // context.read<HomeCubit>().leave();
+                                    } else {
+                                      context.pushCupertinoSheet(const ReasonPage());
+                                      // Has Come bo'lsa
+                                      // context.read<HomeCubit>().arrive();
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                                    margin: EdgeInsets.only(top: 12.h),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.r),
                                       color: state.status.isActive
-                                          ? Color(0xffFF7A45)
-                                          : Color(0xff389E0D),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.25.h,
-                                      letterSpacing: 0,
+                                          ? Color(0xffFFD8BF)
+                                          : Color(0xffD9F7BE),
+                                    ),
+                                    child: Text(
+                                      label,
+                                      style: TextStyle(
+                                        color: state.status.isActive
+                                            ? Color(0xffFF7A45)
+                                            : Color(0xff389E0D),
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.25.h,
+                                        letterSpacing: 0,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 if (state.status.isActive)
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.w,
-                                      top: 12.h,
-                                    ),
+                                    padding: EdgeInsets.only(left: 12.w, top: 12.h),
                                     child: Text(
                                       "Getting started - ${DateFormat.Hm().format(state.status.arrivedAt!.toLocal())}",
                                       style: TextStyle(
@@ -148,11 +159,6 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                       );
-                    } else if (state is HomeError) {
-                      return Text(
-                        state.message,
-                        style: TextStyle(color: Colors.red),
-                      );
                     }
                     return SizedBox.shrink();
                   },
@@ -167,7 +173,7 @@ class HomePage extends StatelessWidget {
 
               ShadowContainer(child: Column()),
 
-              _kpiForWeekText(),
+              _kpiForWeekText(context),
 
               ShadowContainer(child: Column()),
 
@@ -186,11 +192,7 @@ class HomePage extends StatelessWidget {
       padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
       child: Text(
         'Upcoming event',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-          color: AppColors.colorText,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
       ),
     );
   }
@@ -200,16 +202,12 @@ class HomePage extends StatelessWidget {
       padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
       child: Text(
         'Tasks',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-          color: AppColors.colorText,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
       ),
     );
   }
 
-  Widget _kpiForWeekText() {
+  Widget _kpiForWeekText(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
       child: Row(
@@ -223,13 +221,18 @@ class HomePage extends StatelessWidget {
               color: AppColors.colorText,
             ),
           ),
-          Text(
-            'More',
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 13.sp,
-              decoration: TextDecoration.underline,
-              color: AppColors.colorText,
+          GestureDetector(
+            onTap: (){
+              context.go(KpiPage.path);
+            },
+            child: Text(
+              'More',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 13.sp,
+                decoration: TextDecoration.underline,
+                color: AppColors.colorText,
+              ),
             ),
           ),
         ],
@@ -242,11 +245,7 @@ class HomePage extends StatelessWidget {
       padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
       child: Text(
         'Schedule',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-          color: AppColors.colorText,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
       ),
     );
   }

@@ -99,7 +99,7 @@ class _TasksPageState extends State<TasksPage> {
                                 itemBuilder: (context, index) {
                                   return TaskCard(
                                     task: tasks[index],
-                                    onTap: () {
+                                    onTap: () async {
                                       context.push(TaskDetailPage.path, extra: tasks[index].id);
                                     },
                                   );

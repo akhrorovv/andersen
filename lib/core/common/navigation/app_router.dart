@@ -4,6 +4,7 @@ import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
 import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
+import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dart';
@@ -64,6 +65,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(path: SplashPage.path, builder: (context, state) => SplashPage()),
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
+    GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(
       path: TaskDetailPage.path,
       builder: (context, state) {

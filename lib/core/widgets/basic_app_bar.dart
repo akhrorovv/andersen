@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BasicAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final VoidCallback? onClose;
 
-  const BasicAppBar({super.key, required this.title, this.onClose});
+  const BasicAppBar({super.key, this.title, this.onClose});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
-      title: Text(
-        title,
+      title: title != null ? Text(
+        title!,
         style: TextStyle(
           color: AppColors.colorTextWhite,
           fontSize: 14.sp,
@@ -22,7 +22,7 @@ class BasicAppBar extends StatelessWidget implements PreferredSizeWidget {
           height: 1.h,
           letterSpacing: 0,
         ),
-      ),
+      ) : null,
       actions: [
         IconButton(
           onPressed: onClose ?? () => Navigator.of(context).pop(),
