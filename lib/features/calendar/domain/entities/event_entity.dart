@@ -5,18 +5,18 @@ import 'package:equatable/equatable.dart';
 
 class EventEntity extends Equatable {
   final int id;
-  final String? location;
   final String? description;
+  final String? target;
+  final String? location;
   final DateTime? endsAt;
   final DateTime? startsAt;
-  final String? target;
-  final int? matterId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final int? createdById;
-  final List<AttendeeEntity>? attendees;
   final MatterEntity? matter;
-  final UserEntity? createdBy;
+  // final int? matterId;
+  // final DateTime? createdAt;
+  // final DateTime? updatedAt;
+  // final int? createdById;
+  // final List<AttendeeEntity>? attendees;
+  // final UserEntity? createdBy;
 
   const EventEntity({
     required this.id,
@@ -25,13 +25,13 @@ class EventEntity extends Equatable {
     this.endsAt,
     this.startsAt,
     this.target,
-    this.matterId,
-    this.createdAt,
-    this.updatedAt,
-    this.createdById,
-    this.attendees,
     this.matter,
-    this.createdBy,
+    // this.matterId,
+    // this.createdAt,
+    // this.updatedAt,
+    // this.createdById,
+    // this.attendees,
+    // this.createdBy,
   });
 
   @override
@@ -42,12 +42,12 @@ class EventEntity extends Equatable {
     endsAt,
     startsAt,
     target,
-    matterId,
-    createdAt,
-    updatedAt,
-    createdById,
-    attendees,
     matter,
-    createdBy,
+    // matterId,
+    // createdAt,
+    // updatedAt,
+    // createdById,
+    // attendees,
+    // createdBy,
   ];
 }

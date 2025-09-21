@@ -3,6 +3,7 @@ import 'package:andersen/features/activities/presentation/pages/activity_detail_
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
 import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
+import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
@@ -21,45 +22,35 @@ final GoRouter router = GoRouter(
   initialLocation: SplashPage.path,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) =>
-          MainPage(navigationShell: navigationShell),
+      builder: (context, state, navigationShell) => MainPage(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: HomePage.path,
-              builder: (context, state) => HomePage(),
-            ),
-          ],
+          routes: [GoRoute(path: HomePage.path, builder: (context, state) => HomePage())],
         ),
         StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: TasksPage.path,
-              builder: (context, state) => TasksPage(),
-            ),
-          ],
+          routes: [GoRoute(path: TasksPage.path, builder: (context, state) => TasksPage())],
         ),
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: CalendarPage.path,
-              builder: (context, state) => CalendarPage(),
+              builder: (context, state) {
+                return BlocProvider(
+                  create: (_) => sl<EventsCubit>()..getEvents(focusedDay: DateTime.now()),
+                  child: CalendarPage(),
+                );
+              },
             ),
           ],
         ),
+
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: ActivitiesPage.path,
-              builder: (context, state) => ActivitiesPage(),
-            ),
+            GoRoute(path: ActivitiesPage.path, builder: (context, state) => ActivitiesPage()),
           ],
         ),
         StatefulShellBranch(
-          routes: [
-            GoRoute(path: KpiPage.path, builder: (context, state) => KpiPage()),
-          ],
+          routes: [GoRoute(path: KpiPage.path, builder: (context, state) => KpiPage())],
         ),
       ],
     ),
@@ -91,9 +82,6 @@ final GoRouter router = GoRouter(
 
 extension CupertinoSheetExtension on BuildContext {
   Future<T?> pushCupertinoSheet<T>(Widget page) {
-    return Navigator.of(
-      this,
-      rootNavigator: true,
-    ).push(CupertinoSheetRoute(builder: (_) => page));
+    return Navigator.of(this, rootNavigator: true).push(CupertinoSheetRoute(builder: (_) => page));
   }
 }

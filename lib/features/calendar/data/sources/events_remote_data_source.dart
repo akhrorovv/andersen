@@ -50,13 +50,32 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return EventsModel.fromJson(response.data);
+        try {
+          print("✅ RAW RESPONSE DATA: ${response.data}");
+          final model = EventsModel.fromJson(response.data);
+          print("✅ PARSED SUCCESSFULLY: ${model.events.length} events");
+          return model;
+        } catch (e, stack) {
+          print("❌ PARSING ERROR: $e");
+          print(stack);
+          throw ServerException(message: "Parsing error: $e", statusCode: 500);
+        }
       } else {
         throw ServerException(
           message: response.statusMessage ?? "Fetch events failed",
           statusCode: response.statusCode ?? 500,
         );
       }
+
+
+      // if (response.statusCode == 200 || response.statusCode == 201) {
+      //   return EventsModel.fromJson(response.data);
+      // } else {
+      //   throw ServerException(
+      //     message: response.statusMessage ?? "Fetch events failed",
+      //     statusCode: response.statusCode ?? 500,
+      //   );
+      // }
     } on DioException catch (e) {
       throw ServerException(
         message: e.message ?? e.toString(),

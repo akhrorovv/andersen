@@ -5,6 +5,7 @@ import 'package:andersen/features/calendar/domain/usecase/get_events_usecase.dar
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class EventsCubit extends Cubit<EventsState> {
   final GetEventsUsecase getEventsUsecase;
@@ -61,27 +62,30 @@ class EventsCubit extends Cubit<EventsState> {
         _events = [..._events, ...result.events];
         _offset += _limit;
 
-        emit(EventsLoaded(EventsEntity(events: _events, meta: result.meta)));
+        emit(
+          EventsLoaded(
+            EventsEntity(events: _events, meta: result.meta),
+            _mapEventsToDays(_focusedDay, _events),
+          ),
+        );
       },
     );
   }
 
-  Map<DateTime, List<EventEntity>> groupEventsByDay(List<EventEntity> events) {
-    final Map<DateTime, List<EventEntity>> result = {};
+  List<DayEvents> _mapEventsToDays(DateTime focusedDay, List<EventEntity> events) {
+    final daysInMonth = DateUtils.getDaysInMonth(focusedDay.year, focusedDay.month);
 
-    for (final e in events) {
-      // startsAt bo'lmasa createdAt yoki updatedAt dan foydalanamiz
-      final DateTime? raw = e.startsAt ?? e.createdAt ?? e.updatedAt;
-      if (raw == null) continue; // sana yo'q bo'lsa o'tkazib yuborish
+    return List.generate(daysInMonth, (index) {
+      final day = DateTime(focusedDay.year, focusedDay.month, index + 1);
 
-      final day = _dateOnly(raw.toLocal()); // local time ga o'tkazib normalizatsiya qilamiz
-      result.putIfAbsent(day, () => []).add(e);
-    }
+      final dayEvents = events.where((e) {
+        final start = e.startsAt;
+        return start!.year == day.year && start.month == day.month && start.day == day.day;
+      }).toList();
 
-    return result;
+      return DayEvents(day: day, events: dayEvents);
+    });
   }
-
-  DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 }
 
 class DayEvents {

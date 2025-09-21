@@ -11,13 +11,13 @@ class EventModel extends EventEntity {
     super.endsAt,
     super.startsAt,
     super.target,
-    super.matterId,
-    super.createdAt,
-    super.updatedAt,
-    super.createdById,
-    super.attendees,
     super.matter,
-    super.createdBy,
+    // super.matterId,
+    // super.createdAt,
+    // super.updatedAt,
+    // super.createdById,
+    // super.attendees,
+    // super.createdBy,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
@@ -28,15 +28,17 @@ class EventModel extends EventEntity {
       endsAt: json['endsAt'] != null ? DateTime.tryParse(json['endsAt']) : null,
       startsAt: json['startsAt'] != null ? DateTime.tryParse(json['startsAt']) : null,
       target: json["target"] as String?,
-      matterId: json["matterId"] as int?,
-      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
-      createdById: json["createdById"] as int?,
-      attendees: (json['attendees'] as List<dynamic>? ?? [])
-          .map((t) => AttendeeModel.fromJson(t))
-          .toList(),
-      matter: json['matter'] != null ? MatterModel.fromJson(json['matter']) : null,
-      createdBy: json["createdBy"] != null ? UserModel.fromJson(json["createdBy"]) : null,
+      matter: json['matter'] != null
+          ? MatterModel.fromJson(json['matter'] as Map<String, dynamic>)
+          : null,
+      // matterId: json["matterId"] as int?,
+      // createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
+      // updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
+      // createdById: json["createdById"] as int?,
+      // attendees: (json['attendees'] as List<dynamic>? ?? [])
+      //     .map((t) => AttendeeModel.fromJson(t))
+      //     .toList(),
+      // createdBy: json["createdBy"] != null ? UserModel.fromJson(json["createdBy"]) : null,
     );
   }
 
@@ -44,15 +46,15 @@ class EventModel extends EventEntity {
     "id": id,
     "location": location,
     "description": description,
-    "endsAt": endsAt?.toIso8601String(),
-    "startsAt": startsAt?.toIso8601String(),
+    "endsAt": endsAt,
+    "startsAt": startsAt,
     "target": target,
-    "matterId": matterId,
-    "createdAt": createdAt?.toIso8601String(),
-    "updatedAt": updatedAt?.toIso8601String(),
-    "createdById": createdById,
-    "attendees": attendees?.map((x) => (x as AttendeeModel).toJson()).toList(),
-    'matter': (matter as MatterModel?)?.toJson(),
-    "createdBy": (createdBy as UserModel?)?.toJson(),
+    'matter': matter is MatterModel ? (matter as MatterModel).toJson() : null,
+    // "matterId": matterId,
+    // "createdAt": createdAt?.toIso8601String(),
+    // "updatedAt": updatedAt?.toIso8601String(),
+    // "createdById": createdById,
+    // "attendees": attendees?.map((x) => (x as AttendeeModel).toJson()).toList(),
+    // "createdBy": (createdBy as UserModel?)?.toJson(),
   };
 }

@@ -5,7 +5,7 @@ class MatterModel extends MatterEntity {
   const MatterModel({
     required super.id,
     required super.name,
-    required super.status,
+     super.status,
     super.contract,
   });
 
@@ -13,7 +13,7 @@ class MatterModel extends MatterEntity {
     return MatterModel(
       id: json['id'] as int,
       name: json['name'] as String,
-      status: json['status'] as String,
+      status: json['status'] as String?,
       contract: json['contract'] != null
           ? ContractModel.fromJson(json['contract'] as Map<String, dynamic>)
           : null,
