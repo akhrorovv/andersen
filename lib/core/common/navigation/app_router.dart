@@ -3,8 +3,10 @@ import 'package:andersen/features/activities/presentation/pages/activity_detail_
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
 import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
+import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
+import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
@@ -64,6 +66,16 @@ final GoRouter router = GoRouter(
         return BlocProvider.value(
           value: sl<TaskDetailCubit>()..getTaskDetail(taskId),
           child: TaskDetailPage(taskId: taskId),
+        );
+      },
+    ),
+    GoRoute(
+      path: EventDetailPage.path,
+      builder: (context, state) {
+        final eventId = state.extra as int;
+        return BlocProvider.value(
+          value: sl<EventDetailCubit>()..getEventDetail(eventId),
+          child: EventDetailPage(eventId: eventId),
         );
       },
     ),

@@ -60,6 +60,10 @@ class $AssetsVectorsGen {
   SvgGenImage get calendarActive =>
       const SvgGenImage('assets/vectors/calendar_active.svg');
 
+  /// File path: assets/vectors/calendar_fav.svg
+  SvgGenImage get calendarFav =>
+      const SvgGenImage('assets/vectors/calendar_fav.svg');
+
   /// File path: assets/vectors/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/vectors/clock.svg');
 
@@ -82,6 +86,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/kpi_active.svg
   SvgGenImage get kpiActive =>
       const SvgGenImage('assets/vectors/kpi_active.svg');
+
+  /// File path: assets/vectors/location.svg
+  SvgGenImage get location => const SvgGenImage('assets/vectors/location.svg');
 
   /// File path: assets/vectors/more.svg
   SvgGenImage get more => const SvgGenImage('assets/vectors/more.svg');
@@ -121,6 +128,7 @@ class $AssetsVectorsGen {
     briefcase,
     calendar,
     calendarActive,
+    calendarFav,
     clock,
     file,
     hide,
@@ -128,6 +136,7 @@ class $AssetsVectorsGen {
     homeActive,
     kpi,
     kpiActive,
+    location,
     more,
     notification,
     play,

@@ -5,7 +5,6 @@ import 'package:andersen/features/calendar/domain/usecase/get_events_usecase.dar
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class EventsCubit extends Cubit<EventsState> {
   final GetEventsUsecase getEventsUsecase;
@@ -78,8 +77,8 @@ class EventsCubit extends Cubit<EventsState> {
     return List.generate(daysInMonth, (index) {
       final day = DateTime(focusedDay.year, focusedDay.month, index + 1);
 
-      final dayEvents = events.where((e) {
-        final start = e.startsAt;
+      final dayEvents = events.where((event) {
+        final start = event.startsAt;
         return start!.year == day.year && start.month == day.month && start.day == day.day;
       }).toList();
 

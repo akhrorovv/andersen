@@ -34,9 +34,23 @@ import 'features/activities/domain/usecase/get_activities_usecase.dart';
 import 'features/activities/domain/usecase/get_activity_detail_usecase.dart';
 import 'features/activities/presentation/cubit/activities_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/calendar/data/repositories/create_event_repository_impl.dart';
+import 'features/calendar/data/repositories/event_detail_repository_impl.dart';
+import 'features/calendar/data/repositories/users_repository_impl.dart';
+import 'features/calendar/data/sources/create_event_remote_data_source.dart';
+import 'features/calendar/data/sources/event_detail_remote_data_source.dart';
 import 'features/calendar/data/sources/events_remote_data_source.dart';
+import 'features/calendar/data/sources/users_remote_data_source.dart';
+import 'features/calendar/domain/repositories/create_event_repository.dart';
+import 'features/calendar/domain/repositories/event_detail_repository.dart';
 import 'features/calendar/domain/repositories/events_repository.dart';
+import 'features/calendar/domain/repositories/users_repository.dart';
+import 'features/calendar/domain/usecase/create_event_usecase.dart';
+import 'features/calendar/domain/usecase/get_event_detail_usecase.dart';
 import 'features/calendar/domain/usecase/get_events_usecase.dart';
+import 'features/calendar/domain/usecase/get_users_usecase.dart';
+import 'features/calendar/presentation/cubit/create_event_cubit.dart';
+import 'features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'features/calendar/presentation/cubit/events_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
 import 'features/tasks/data/sources/clients_remote_data_source.dart';
@@ -146,6 +160,15 @@ Future<void> _initAuth() async {
     )
     ..registerLazySingleton(() => GetEventsUsecase(sl<EventsRepository>()))
     ..registerFactory(() => EventsCubit(sl<GetEventsUsecase>()))
+    /// Event Detail
+    ..registerLazySingleton<EventDetailRemoteDataSource>(
+      () => EventDetailRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<EventDetailRepository>(
+      () => EventDetailRepositoryImpl(sl<EventDetailRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => GetEventDetailUsecase(sl<EventDetailRepository>()))
+    ..registerFactory(() => EventDetailCubit(sl<GetEventDetailUsecase>()))
     /// Create Task
     ..registerLazySingleton<CreateTaskRemoteDataSource>(
       () => CreateTaskRemoteDataSourceImpl(sl<DioClient>()),
@@ -154,5 +177,23 @@ Future<void> _initAuth() async {
       () => CreateTaskRepositoryImpl(sl<CreateTaskRemoteDataSource>()),
     )
     ..registerLazySingleton(() => CreateTaskUsecase(sl<CreateTaskRepository>()))
-    ..registerFactory(() => CreateTaskCubit(sl<CreateTaskUsecase>()));
+    ..registerFactory(() => CreateTaskCubit(sl<CreateTaskUsecase>()))
+    /// Create Event
+    ..registerLazySingleton<CreateEventRemoteDataSource>(
+      () => CreateEventRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<CreateEventRepository>(
+      () => CreateEventRepositoryImpl(sl<CreateEventRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => CreateEventUsecase(sl<CreateEventRepository>()))
+    ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()))
+    /// Users
+    ..registerLazySingleton<UsersRemoteDataSource>(
+      () => UsersRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<UsersRepository>(
+      () => UsersRepositoryImpl(sl<UsersRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => GetUsersUsecase(sl<UsersRepository>()));
+    // ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()));
 }

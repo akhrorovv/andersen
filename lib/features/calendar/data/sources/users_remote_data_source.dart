@@ -1,62 +1,46 @@
 import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
 import 'package:andersen/core/error/exceptions.dart';
-import 'package:andersen/features/calendar/data/models/events_model.dart';
-import 'package:andersen/features/tasks/data/models/tasks_model.dart';
+import 'package:andersen/features/home/data/models/users_model.dart';
 import 'package:dio/dio.dart';
 
-abstract class EventsRemoteDataSource {
-  Future<EventsModel> getEvents({
+abstract class UsersRemoteDataSource {
+  Future<UsersModel> getUsers({
     required int limit,
     required int offset,
-    required int attendeeId,
-    required String dateMin,
-    required String dateMax,
     String? search,
-    String? target,
-    int? matterId,
+    String? status,
   });
 }
 
-class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
+class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
   final DioClient _client;
 
-  EventsRemoteDataSourceImpl(this._client);
+  UsersRemoteDataSourceImpl(this._client);
 
   @override
-  Future<EventsModel> getEvents({
+  Future<UsersModel> getUsers({
     required int limit,
     required int offset,
-    required int attendeeId,
-    required String dateMin,
-    required String dateMax,
     String? search,
-    String? target,
-    int? matterId,
+    String? status,
   }) async {
     try {
       final response = await _client.get(
-        ApiUrls.events,
+        ApiUrls.users,
         queryParameters: {
           "offset": offset,
           "limit": limit,
-          "attendeeId": attendeeId,
           if (search != null) "s": search,
-          "date.min": dateMin,
-          "date.max": dateMax,
-          if (target != null) "target": target,
-          if (matterId != null) "matterId": matterId,
+          if (status != null) "status": status,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {
-          // print("✅ RAW RESPONSE DATA: ${response.data}");
-          final model = EventsModel.fromJson(response.data);
-          // print("✅ PARSED SUCCESSFULLY: ${model.events.length} events");
+          final model = UsersModel.fromJson(response.data);
           return model;
         } catch (e, stack) {
-          // print("❌ PARSING ERROR: $e");
           print(stack);
           throw ServerException(message: "Parsing error: $e", statusCode: 500);
         }

@@ -57,7 +57,15 @@ class DayEventsSection extends StatelessWidget {
               ),
             )
           else
-            ...events.map((event) => EventTile(event: event)),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: events.length,
+              separatorBuilder: (_, __) => SizedBox(height: 12.h.h),
+              itemBuilder: (context, index) {
+                return EventTile(event: events[index]);
+              },
+            ),
         ],
       ),
     );

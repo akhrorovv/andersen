@@ -3,65 +3,69 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomDropdownField<T> extends StatelessWidget {
+class CustomMultiDropdownField<T> extends StatelessWidget {
   final String? hint;
   final Future<List<T>> Function(String? filter) items;
   final String Function(T item) itemAsString;
-  final void Function(T? value) onChanged;
-  final T? selectedItem;
+  final void Function(List<T> values) onChanged;
+  final List<T> selectedItems;
   final bool Function(T, T)? compareFn;
 
-  const CustomDropdownField({
+  const CustomMultiDropdownField({
     super.key,
     this.hint,
     required this.items,
     required this.itemAsString,
     required this.onChanged,
-    this.selectedItem,
+    required this.selectedItems,
     this.compareFn,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<T>(
-      items: (String? filter, props) => items(filter),
-      selectedItem: selectedItem,
+    return DropdownSearch<T>.multiSelection(
+      items: (String? filter, _) => items(filter),
+      selectedItems: selectedItems,
       compareFn: compareFn,
       itemAsString: itemAsString,
-      dropdownBuilder: (context, T? selectedItem) {
-        if (selectedItem == null) {
+      dropdownBuilder: (context, selectedList) {
+        if (selectedList.isEmpty) {
           return Text(
             hint ?? '',
             style: TextStyle(color: AppColors.black45, fontSize: 14.sp),
           );
         }
 
-        return Text(
-          itemAsString(selectedItem),
-          style: TextStyle(
-            color: AppColors.colorText,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
-          ),
+        return Wrap(
+          spacing: 4.w,
+          children: selectedList
+              .map((e) => Chip(
+            label: Text(
+              itemAsString(e),
+              style: TextStyle(
+                color: AppColors.colorText,
+                fontSize: 12.sp,
+              ),
+            ),
+            backgroundColor: AppColors.colorPrimaryBg,
+          ))
+              .toList(),
         );
       },
       decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
           isDense: true,
           contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-          // hintText: (hint != null) ? hint : null,
           hintStyle: TextStyle(color: AppColors.black45),
           enabledBorder: UnderlineInputBorder(
-            // borderRadius: BorderRadius.circular(8.r),
             borderSide: BorderSide(color: AppColors.dividerColor),
           ),
           focusedBorder: UnderlineInputBorder(
-            // borderRadius: BorderRadius.circular(8.r),
             borderSide: BorderSide(color: AppColors.primary),
           ),
         ),
       ),
-      popupProps: PopupProps.menu(
+      popupProps: PopupPropsMultiSelection.menu(
         fit: FlexFit.loose,
         showSearchBox: true,
         showSelectedItems: true,
@@ -69,9 +73,6 @@ class CustomDropdownField<T> extends StatelessWidget {
           backgroundColor: AppColors.background,
           borderRadius: BorderRadius.circular(8.r),
         ),
-        // emptyBuilder: (context, searchEntry) {
-        //   return Center(child: Text(T == MatterEntity ? "Select Client first" : "No data found"));
-        // },
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
             hintText: "Search...",
@@ -79,7 +80,9 @@ class CustomDropdownField<T> extends StatelessWidget {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.dividerColor),
             ),
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.primary),
+            ),
           ),
         ),
       ),
