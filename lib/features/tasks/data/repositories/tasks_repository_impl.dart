@@ -16,6 +16,8 @@ class TasksRepositoryImpl implements TasksRepository {
     required int assignedStaffId,
     String? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
   }) async {
     try {
       final result = await remoteDataSource.getTasks(
@@ -24,6 +26,8 @@ class TasksRepositoryImpl implements TasksRepository {
         assignedStaffId: assignedStaffId,
         status: status,
         search: search,
+        dueMin: dueMin,
+        dueMax: dueMax,
       );
       return Right(result);
     } catch (e) {

@@ -35,21 +35,26 @@ import 'features/activities/domain/usecase/get_activity_detail_usecase.dart';
 import 'features/activities/presentation/cubit/activities_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/calendar/data/repositories/create_event_repository_impl.dart';
+import 'features/calendar/data/repositories/delete_event_repository_impl.dart';
 import 'features/calendar/data/repositories/event_detail_repository_impl.dart';
 import 'features/calendar/data/repositories/users_repository_impl.dart';
 import 'features/calendar/data/sources/create_event_remote_data_source.dart';
+import 'features/calendar/data/sources/delete_event_remote_data_source.dart';
 import 'features/calendar/data/sources/event_detail_remote_data_source.dart';
 import 'features/calendar/data/sources/events_remote_data_source.dart';
 import 'features/calendar/data/sources/users_remote_data_source.dart';
 import 'features/calendar/domain/repositories/create_event_repository.dart';
+import 'features/calendar/domain/repositories/delete_event_repository.dart';
 import 'features/calendar/domain/repositories/event_detail_repository.dart';
 import 'features/calendar/domain/repositories/events_repository.dart';
 import 'features/calendar/domain/repositories/users_repository.dart';
 import 'features/calendar/domain/usecase/create_event_usecase.dart';
+import 'features/calendar/domain/usecase/delete_event_usecase.dart';
 import 'features/calendar/domain/usecase/get_event_detail_usecase.dart';
 import 'features/calendar/domain/usecase/get_events_usecase.dart';
 import 'features/calendar/domain/usecase/get_users_usecase.dart';
 import 'features/calendar/presentation/cubit/create_event_cubit.dart';
+import 'features/calendar/presentation/cubit/delete_event_cubit.dart';
 import 'features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'features/calendar/presentation/cubit/events_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
@@ -130,7 +135,7 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(() => GetTaskDetailUseCase(sl<TaskDetailRepository>()))
     ..registerLazySingleton(() => GetTaskActivitiesUsecase(sl<TaskDetailRepository>()))
     ..registerLazySingleton(() => UpdateTaskUsecase(sl<TaskDetailRepository>()))
-    ..registerLazySingleton(() => TasksCubit(sl<GetTasksUseCase>()))
+    ..registerFactory(() => TasksCubit(sl<GetTasksUseCase>()))
     ..registerLazySingleton(() => TaskDetailCubit(sl<GetTaskDetailUseCase>()))
     ..registerFactory(() => TaskActivitiesCubit(sl<GetTaskActivitiesUsecase>()))
     ..registerFactory(() => TaskUpdateCubit(sl<UpdateTaskUsecase>()))
@@ -188,12 +193,17 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(() => CreateEventUsecase(sl<CreateEventRepository>()))
     ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()))
     /// Users
-    ..registerLazySingleton<UsersRemoteDataSource>(
-      () => UsersRemoteDataSourceImpl(sl<DioClient>()),
-    )
-    ..registerLazySingleton<UsersRepository>(
-      () => UsersRepositoryImpl(sl<UsersRemoteDataSource>()),
-    )
-    ..registerLazySingleton(() => GetUsersUsecase(sl<UsersRepository>()));
+    ..registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(sl<UsersRemoteDataSource>()))
+    ..registerLazySingleton(() => GetUsersUsecase(sl<UsersRepository>()))
     // ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()));
+    /// Delete event
+    ..registerLazySingleton<DeleteEventRemoteDataSource>(
+      () => DeleteEventRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<DeleteEventRepository>(
+      () => DeleteEventRepositoryImpl(sl<DeleteEventRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => DeleteEventUsecase(sl<DeleteEventRepository>()))
+    ..registerFactory(() => DeleteEventCubit(sl<DeleteEventUsecase>()));
 }

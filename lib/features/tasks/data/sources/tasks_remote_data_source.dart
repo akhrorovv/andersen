@@ -11,6 +11,8 @@ abstract class TasksRemoteDataSource {
     required int assignedStaffId,
     String? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
   });
 }
 
@@ -26,6 +28,8 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
     required int assignedStaffId,
     String? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
   }) async {
     try {
       final response = await _client.get(
@@ -36,6 +40,8 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
           "assignedStaffId": assignedStaffId,
           if (status != null) "status": status,
           if (search != null) "s": search,
+          if (dueMin != null) "dueAt.min": dueMin,
+          if (dueMax != null) "dueAt.max": dueMax,
         },
       );
 

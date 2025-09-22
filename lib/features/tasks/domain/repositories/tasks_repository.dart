@@ -9,5 +9,7 @@ abstract interface class TasksRepository {
     required int assignedStaffId,
     String? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
   });
 }

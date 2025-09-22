@@ -28,6 +28,13 @@ class AppTheme {
       selectionColor: AppColors.primary.withValues(alpha: 0.3),
       selectionHandleColor: AppColors.primary,
     ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: GoogleFonts.montserrat(
+        // fontSize: 14,
+        // fontWeight: FontWeight.w500,
+        // color: Colors.white,
+      ),
+    ),
     cupertinoOverrideTheme: NoDefaultCupertinoThemeData(primaryColor: AppColors.primary),
   );
 

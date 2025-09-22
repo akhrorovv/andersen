@@ -12,10 +12,10 @@ class EventModel extends EventEntity {
     super.startsAt,
     super.target,
     super.matter,
+    super.createdById,
     // super.matterId,
     // super.createdAt,
     // super.updatedAt,
-    // super.createdById,
     // super.attendees,
     // super.createdBy,
   });
@@ -31,10 +31,10 @@ class EventModel extends EventEntity {
       matter: json['matter'] != null
           ? MatterModel.fromJson(json['matter'] as Map<String, dynamic>)
           : null,
+      createdById: json["createdById"] as int?,
       // matterId: json["matterId"] as int?,
       // createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
       // updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
-      // createdById: json["createdById"] as int?,
       // attendees: (json['attendees'] as List<dynamic>? ?? [])
       //     .map((t) => AttendeeModel.fromJson(t))
       //     .toList(),
@@ -50,10 +50,10 @@ class EventModel extends EventEntity {
     "startsAt": startsAt,
     "target": target,
     'matter': matter is MatterModel ? (matter as MatterModel).toJson() : null,
+    "createdById": createdById,
     // "matterId": matterId,
     // "createdAt": createdAt?.toIso8601String(),
     // "updatedAt": updatedAt?.toIso8601String(),
-    // "createdById": createdById,
     // "attendees": attendees?.map((x) => (x as AttendeeModel).toJson()).toList(),
     // "createdBy": (createdBy as UserModel?)?.toJson(),
   };

@@ -3,8 +3,10 @@ import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
+import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -24,9 +26,13 @@ class EventTile extends StatelessWidget {
         "${DateFormat('MMM d, HH:mm').format(start!)} - ${DateFormat('MMM d, HH:mm').format(end!)}";
 
     return GestureDetector(
-      onTap: () {
-        context.push(EventDetailPage.path, extra: event.id);
+      onTap: () async {
+        final deleted = await context.push(EventDetailPage.path, extra: event.id);
+        if (deleted == true && context.mounted) {
+          context.read<EventsCubit>().getEvents();
+        }
       },
+
       child: ShadowContainer(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,51 +51,55 @@ class EventTile extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 8.h,
-              children: [
-                Text(
-                  event.matter?.name ?? '-',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                    height: 1.2,
-                    letterSpacing: 0,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.h,
+                children: [
+                  Text(
+                    event.matter?.name ?? '-',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                      height: 1.2,
+                      letterSpacing: 0,
+                    ),
                   ),
-                ),
-                Text(
-                  EventTargetX.fromString(event.target).label,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                    height: 1.2,
-                    letterSpacing: 0,
+                  Text(
+                    EventTargetX.fromString(event.target).label,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                      height: 1.2,
+                      letterSpacing: 0,
+                    ),
                   ),
-                ),
-                Text(
-                  event.description ?? '-',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
-                    height: 1.2,
-                    letterSpacing: 0,
+                  Text(
+                    event.description ?? '-',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.black,
+                      height: 1.2,
+                      letterSpacing: 0,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
                   ),
-                ),
-                Text(
-                  formatted,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                    height: 1.2,
-                    letterSpacing: 0,
+                  Text(
+                    formatted,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                      height: 1.2,
+                      letterSpacing: 0,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

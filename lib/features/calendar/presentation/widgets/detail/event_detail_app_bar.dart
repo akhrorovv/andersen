@@ -1,9 +1,13 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
-import 'package:andersen/service_locator.dart';
+import 'package:andersen/features/calendar/presentation/cubit/delete_event_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final EventEntity event;
@@ -15,25 +19,54 @@ class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: BackButton(color: AppColors.white),
       actions: [
-        TextButton(
-          onPressed: () async {
-            // final updated = await context.pushCupertinoSheet<bool>(
-            //   BlocProvider(
-            //     create: (_) => sl<TaskUpdateCubit>(),
-            //     child: UpdateTaskPage(task: event),
-            //   ),
-            // );
-            // if (context.mounted && updated == true) {
-            //   context.read<TaskDetailCubit>().getTaskDetail(event.id);
-            // }
-          },
-          child: Text(
-            "Edit",
-            style: TextStyle(color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.w500),
-          ),
-        ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            showCupertinoModalPopup(
+              context: context,
+              builder: (_) {
+                return CupertinoActionSheet(
+                  title: Text(
+                    "Calendar event option",
+                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                  ),
+                  actions: [
+                    CupertinoActionSheetAction(
+                      isDestructiveAction: true,
+                      onPressed: () {
+                        if (event.createdById == DBService.user!.id) {
+                          context.read<DeleteEventCubit>().deleteEvent(event.id);
+                          context.pop();
+                        } else {
+                          context.pop();
+                          BasicSnackBar.show(context, message: "This is not your event!");
+                        }
+                      },
+
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                    onPressed: () => context.pop(),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
           icon: Icon(Icons.more_vert, color: AppColors.white, size: 22),
         ),
       ],

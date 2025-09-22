@@ -11,10 +11,10 @@ class EventEntity extends Equatable {
   final DateTime? endsAt;
   final DateTime? startsAt;
   final MatterEntity? matter;
+  final int? createdById;
   // final int? matterId;
   // final DateTime? createdAt;
   // final DateTime? updatedAt;
-  // final int? createdById;
   // final List<AttendeeEntity>? attendees;
   // final UserEntity? createdBy;
 
@@ -26,10 +26,10 @@ class EventEntity extends Equatable {
     this.startsAt,
     this.target,
     this.matter,
+    this.createdById,
     // this.matterId,
     // this.createdAt,
     // this.updatedAt,
-    // this.createdById,
     // this.attendees,
     // this.createdBy,
   });
@@ -43,10 +43,10 @@ class EventEntity extends Equatable {
     startsAt,
     target,
     matter,
+    createdById
     // matterId,
     // createdAt,
     // updatedAt,
-    // createdById,
     // attendees,
     // createdBy,
   ];

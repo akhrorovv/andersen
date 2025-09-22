@@ -14,6 +14,8 @@ class GetTasksUseCase {
     required int assignedStaffId,
     String? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
   }) async {
     return await repository.getTasks(
       limit: limit,
@@ -21,6 +23,8 @@ class GetTasksUseCase {
       assignedStaffId: assignedStaffId,
       status: status,
       search: search,
+      dueMin: dueMin,
+      dueMax: dueMax,
     );
   }
 }

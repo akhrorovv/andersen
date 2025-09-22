@@ -3,6 +3,7 @@ import 'package:andersen/features/activities/presentation/pages/activity_detail_
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
 import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
+import 'package:andersen/features/calendar/presentation/cubit/delete_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
@@ -73,12 +74,16 @@ final GoRouter router = GoRouter(
       path: EventDetailPage.path,
       builder: (context, state) {
         final eventId = state.extra as int;
-        return BlocProvider.value(
-          value: sl<EventDetailCubit>()..getEventDetail(eventId),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => sl<EventDetailCubit>()..getEventDetail(eventId)),
+            BlocProvider(create: (_) => sl<DeleteEventCubit>()),
+          ],
           child: EventDetailPage(eventId: eventId),
         );
       },
     ),
+
     GoRoute(
       path: ActivityDetailPage.path,
       builder: (context, state) {

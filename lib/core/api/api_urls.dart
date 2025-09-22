@@ -30,6 +30,8 @@ class ApiUrls {
   static const events = '${apiV}events';
   static const createEvent = '${apiV}events';
   static String eventDetail(int eventId) => '${apiV}events/$eventId';
+  static String deleteEvent(int eventId) => '${apiV}events/$eventId';
+
 
   /// Users
   static const users = '${apiV}users';

@@ -3,10 +3,14 @@ import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
+import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
+import 'package:andersen/features/home/presentation/widgets/today_events_section.dart';
+import 'package:andersen/features/home/presentation/widgets/today_tasks_section.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
@@ -25,6 +29,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
     final locale = Localizations.localeOf(context).toString();
     final formattedDate = DateFormat("EEEE, dd MMMM", locale).format(now);
     return Scaffold(
@@ -167,11 +174,27 @@ class HomePage extends StatelessWidget {
 
               _upcomingEventText(),
 
-              ShadowContainer(child: Column()),
+              BlocProvider(
+                create: (context) => sl<EventsCubit>()
+                  ..getEvents(
+                    todayMin: '${startOfDay.toIso8601String()}Z',
+                    todayMax: '${endOfDay.toIso8601String()}Z',
+                  ),
+                child: BlocBuilder<EventsCubit, EventsState>(
+                  builder: (context, state) {
+                    if (state is EventsLoading) return const LoadingIndicator();
+                    if (state is EventsError) return ErrorWidget(state.message);
+                    if (state is EventsLoaded) {
+                      return TodayEventsList(events: state.events.events);
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
 
               _tasksText(),
 
-              ShadowContainer(child: Column()),
+              TodayTasksSection(),
 
               _kpiForWeekText(context),
 
@@ -222,7 +245,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               context.go(KpiPage.path);
             },
             child: Text(

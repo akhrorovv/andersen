@@ -26,7 +26,10 @@ class EventsCubit extends Cubit<EventsState> {
     String? target,
     int? matterId,
     DateTime? focusedDay,
+    String? todayMin,
+    String? todayMax,
   }) async {
+
     if (refresh) {
       _offset = 0;
       _events.clear();
@@ -39,15 +42,28 @@ class EventsCubit extends Cubit<EventsState> {
 
     emit(EventsLoading());
 
-    final dateMin = DateTime(_focusedDay.year, _focusedDay.month, 1);
-    final dateMax = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+    // final dateMin = DateTime(_focusedDay.year, _focusedDay.month, 1);
+    // final dateMax = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+    final String dateMin;
+    final String dateMax;
+
+    if (todayMin != null && todayMax != null) {
+      dateMin = todayMin;
+      dateMax = todayMax;
+    } else {
+      final startOfMonth = DateTime(_focusedDay.year, _focusedDay.month, 1);
+      final endOfMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+
+      dateMin = '${startOfMonth.toIso8601String()}Z';
+      dateMax = '${endOfMonth.toIso8601String()}Z';
+    }
 
     final result = await getEventsUsecase.call(
       limit: _limit,
       offset: _offset,
       attendeeId: DBService.user!.id,
-      dateMin: '${dateMin.toIso8601String()}Z',
-      dateMax: '${dateMax.toIso8601String()}Z',
+      dateMin: dateMin,
+      dateMax: dateMax,
       search: _searchQuery,
       target: _target,
       matterId: _target == "CASE_MEETING" ? _matterId : null,

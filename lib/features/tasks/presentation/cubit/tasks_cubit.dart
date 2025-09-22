@@ -58,6 +58,9 @@ class TasksCubit extends Cubit<TasksState> {
     bool refresh = false,
     TaskStatus? status,
     String? search,
+    String? dueMin,
+    String? dueMax,
+    int? limit,
   }) async {
     if (refresh) {
       _offset = 0;
@@ -71,11 +74,13 @@ class TasksCubit extends Cubit<TasksState> {
     if (!_hasMore) return;
 
     final result = await getTasksUseCase(
-      limit: _limit,
+      limit: limit ?? _limit,
       offset: _offset,
       assignedStaffId: DBService.user!.id,
       status: (status ?? _selectedStatus)?.apiValue,
       search: search ?? _searchQuery,
+      dueMin: dueMin,
+      dueMax: dueMax,
     );
 
     result.fold(

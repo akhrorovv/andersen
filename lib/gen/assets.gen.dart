@@ -64,11 +64,19 @@ class $AssetsVectorsGen {
   SvgGenImage get calendarFav =>
       const SvgGenImage('assets/vectors/calendar_fav.svg');
 
+  /// File path: assets/vectors/checkmark.svg
+  SvgGenImage get checkmark =>
+      const SvgGenImage('assets/vectors/checkmark.svg');
+
   /// File path: assets/vectors/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/vectors/clock.svg');
 
   /// File path: assets/vectors/file.svg
   SvgGenImage get file => const SvgGenImage('assets/vectors/file.svg');
+
+  /// File path: assets/vectors/file_colour.svg
+  SvgGenImage get fileColour =>
+      const SvgGenImage('assets/vectors/file_colour.svg');
 
   /// File path: assets/vectors/hide.svg
   SvgGenImage get hide => const SvgGenImage('assets/vectors/hide.svg');
@@ -120,6 +128,10 @@ class $AssetsVectorsGen {
   SvgGenImage get textAlignLeft =>
       const SvgGenImage('assets/vectors/text_align_left.svg');
 
+  /// File path: assets/vectors/time_quarter.svg
+  SvgGenImage get timeQuarter =>
+      const SvgGenImage('assets/vectors/time_quarter.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     activities,
@@ -129,8 +141,10 @@ class $AssetsVectorsGen {
     calendar,
     calendarActive,
     calendarFav,
+    checkmark,
     clock,
     file,
+    fileColour,
     hide,
     home,
     homeActive,
@@ -146,6 +160,7 @@ class $AssetsVectorsGen {
     tasks,
     tasksActive,
     textAlignLeft,
+    timeQuarter,
   ];
 }
 
