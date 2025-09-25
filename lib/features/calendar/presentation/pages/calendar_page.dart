@@ -1,5 +1,6 @@
 import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
@@ -84,8 +85,24 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              context.pushCupertinoSheet<bool>(OptionsPage());
+            onTap: () async {
+              final state = context.read<EventsCubit>().state;
+              EventTarget? currentTarget;
+              if (state is EventsLoaded) {
+                currentTarget = state.target;
+              }
+
+              final result = await context.pushCupertinoSheet<EventTarget?>(
+                OptionsPage(initialTarget: currentTarget),
+              );
+
+              if (!mounted) return;
+
+              context.read<EventsCubit>().getEvents(
+                focusedDay: _focusedDay,
+                target: result,
+                refresh: true,
+              );
             },
             child: Padding(
               padding: EdgeInsets.only(right: 16.w, left: 8.w),

@@ -1,3 +1,4 @@
+import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
@@ -14,16 +15,18 @@ class EventsCubit extends Cubit<EventsState> {
   static const int _limit = 100;
   int _offset = 0;
   String? _searchQuery;
-  String? _target;
+  EventTarget? _target;
   int? _matterId;
   DateTime _focusedDay = DateTime.now();
 
   List<EventEntity> _events = [];
 
+  // String? get currentTarget => _target;
+
   Future<void> getEvents({
     bool refresh = false,
     String? search,
-    String? target,
+    EventTarget? target,
     int? matterId,
     DateTime? focusedDay,
     String? todayMin,
@@ -36,14 +39,13 @@ class EventsCubit extends Cubit<EventsState> {
     }
 
     if (search != null) _searchQuery = search;
-    if (target != null) _target = target;
+    // if (target != null) _target = target;
+    _target = target;
     if (matterId != null) _matterId = matterId;
     if (focusedDay != null) _focusedDay = focusedDay;
 
     emit(EventsLoading());
 
-    // final dateMin = DateTime(_focusedDay.year, _focusedDay.month, 1);
-    // final dateMax = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
     final String dateMin;
     final String dateMax;
 
@@ -65,8 +67,8 @@ class EventsCubit extends Cubit<EventsState> {
       dateMin: dateMin,
       dateMax: dateMax,
       search: _searchQuery,
-      target: _target,
-      matterId: _target == "CASE_MEETING" ? _matterId : null,
+      target: _target?.apiValue,
+      matterId: _target?.apiValue == "CASE_MEETING" ? _matterId : null,
     );
 
     result.fold(
@@ -81,6 +83,7 @@ class EventsCubit extends Cubit<EventsState> {
           EventsLoaded(
             EventsEntity(events: _events, meta: result.meta),
             _mapEventsToDays(_focusedDay, _events),
+            target: _target,
           ),
         );
       },

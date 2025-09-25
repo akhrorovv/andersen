@@ -17,16 +17,13 @@ class OptionsPage extends StatefulWidget {
 }
 
 class _OptionsPageState extends State<OptionsPage> {
-  String? selected;
+  EventTarget? selected;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialTarget != null) {
-      selected = widget.initialTarget!.apiValue;
-    } else {
-      selected = "ALL";
-    }
+    selected = widget.initialTarget;
+    print(selected);
   }
 
   @override
@@ -44,25 +41,20 @@ class _OptionsPageState extends State<OptionsPage> {
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
-                  _buildOption("ALL", "All"),
-                  _buildOption("FIRM_EVENT", "Company Event"),
-                  _buildOption("NEW_CLIENT", "New Client"),
-                  _buildOption("CASE_MEETING", "Case Meeting"),
+                  _buildOption(null, "All"),
+                  _buildOption(EventTarget.firmEvent, EventTarget.firmEvent.label),
+                  _buildOption(EventTarget.newClient, EventTarget.newClient.label),
+                  _buildOption(EventTarget.caseMeeting, EventTarget.caseMeeting.label),
                 ],
               ),
             ),
-
             Spacer(),
             BasicButton(
               marginRight: 0,
               marginLeft: 0,
               title: 'Confirm',
               onTap: () {
-                if (selected == "ALL") {
-                  context.pop(null);
-                } else {
-                  context.pop(selected);
-                }
+                context.pop(selected);
               },
             ),
           ],
@@ -84,10 +76,11 @@ class _OptionsPageState extends State<OptionsPage> {
     );
   }
 
-  Widget _buildOption(String value, String label) {
-    return RadioListTile<String>(
+  Widget _buildOption(EventTarget? value, String label) {
+    return RadioListTile<EventTarget?>(
       value: value,
       groupValue: selected,
+      activeColor: AppColors.primary,
       onChanged: (val) {
         setState(() {
           selected = val;

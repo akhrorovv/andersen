@@ -73,19 +73,15 @@ final GoRouter router = GoRouter(
         // agar bizga oldingi cubit berilgan bo'lsa uni qayta ishlatamiz,
         // aks holda yangi cubit ochamiz (yaratilganini dispose qilish uchun create ishlatamiz)
         final page = passedCubit != null
-            ? BlocProvider.value(
-          value: passedCubit,
-          child: const StopActivityPage(),
-        )
+            ? BlocProvider.value(value: passedCubit, child: const StopActivityPage())
             : BlocProvider(
-          create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
-          child: const StopActivityPage(),
-        );
+                create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
+                child: const StopActivityPage(),
+              );
 
         return MaterialPage(child: page);
       },
     ),
-
 
     GoRoute(
       path: TaskDetailPage.path,

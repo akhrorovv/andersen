@@ -1,3 +1,4 @@
+import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:equatable/equatable.dart';
@@ -16,11 +17,12 @@ class EventsLoading extends EventsState {}
 class EventsLoaded extends EventsState {
   final EventsEntity events;
   final List<DayEvents> days;
+  final EventTarget? target;
 
-  const EventsLoaded(this.events, this.days);
+  const EventsLoaded(this.events, this.days, {this.target});
 
   @override
-  List<Object?> get props => [events, days];
+  List<Object?> get props => [events, days, target];
 }
 
 
