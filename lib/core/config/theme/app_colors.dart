@@ -21,6 +21,7 @@ class AppColors {
   static const white = Color.fromRGBO(255, 255, 255, 1);
   static const grey = Color.fromRGBO(166, 173, 185, 1);
   static const red = Color(0xffFF3B30);
+  static const red5 = Color(0xffFF4D4F);
   static const colorPrimaryBgHover = Color.fromRGBO(186, 224, 255, 1);
 
   /// Status colors

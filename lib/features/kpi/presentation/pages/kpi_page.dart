@@ -1,5 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:andersen/features/kpi/presentation/widgets/kpi_card.dart';
+import 'package:andersen/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,10 +17,11 @@ class KpiPage extends StatelessWidget {
       appBar: AppBar(title: Text(context.tr('kpi'))),
 
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
           spacing: 12.h,
           children: [
+            SizedBox(height: 24.h),
             ShadowContainer(
               child: Row(
                 children: [
@@ -43,7 +46,64 @@ class KpiPage extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Column(children: [ShadowContainer(child: Container())]),
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 12.h,
+                  children: [
+                    // kpis
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12.w,
+                      mainAxisSpacing: 12.h,
+                      childAspectRatio: 7 / 4,
+                      children: [
+                        KpiCard(
+                          iconPath: Assets.vectors.time.path,
+                          title: "Total time counted",
+                          value: "00:00:00",
+                          onTap: () {},
+                        ),
+                        KpiCard(
+                          iconPath: Assets.vectors.moneyBag.path,
+                          title: "Confirmed hours",
+                          value: "00:00:00",
+                          onTap: () {},
+                        ),
+                        KpiCard(
+                          iconPath: Assets.vectors.checkmark.path,
+                          title: "Completed tasks",
+                          value: "21",
+                          onTap: () {},
+                        ),
+                        KpiCard(
+                          iconPath: Assets.vectors.startUp.path,
+                          title: "Efficiency",
+                          value: "92%",
+                          onTap: () {},
+                        ),
+                        KpiCard(
+                          iconPath: Assets.vectors.complaint.path,
+                          title: "Complaints",
+                          value: "1",
+                          onTap: () {},
+                        ),
+                        KpiCard(
+                          iconPath: Assets.vectors.star.path,
+                          title: "Rating",
+                          value: "9/10",
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+
+                    // chart
+
+                    // diagrams
+                  ],
+                ),
+              ),
             ),
           ],
         ),

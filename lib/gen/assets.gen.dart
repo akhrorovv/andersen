@@ -84,12 +84,19 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/clock.svg
   SvgGenImage get clock => const SvgGenImage('assets/vectors/clock.svg');
 
+  /// File path: assets/vectors/complaint.svg
+  SvgGenImage get complaint =>
+      const SvgGenImage('assets/vectors/complaint.svg');
+
   /// File path: assets/vectors/file.svg
   SvgGenImage get file => const SvgGenImage('assets/vectors/file.svg');
 
   /// File path: assets/vectors/file_colour.svg
   SvgGenImage get fileColour =>
       const SvgGenImage('assets/vectors/file_colour.svg');
+
+  /// File path: assets/vectors/global.svg
+  SvgGenImage get global => const SvgGenImage('assets/vectors/global.svg');
 
   /// File path: assets/vectors/hide.svg
   SvgGenImage get hide => const SvgGenImage('assets/vectors/hide.svg');
@@ -110,6 +117,15 @@ class $AssetsVectorsGen {
 
   /// File path: assets/vectors/location.svg
   SvgGenImage get location => const SvgGenImage('assets/vectors/location.svg');
+
+  /// File path: assets/vectors/lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/vectors/lock.svg');
+
+  /// File path: assets/vectors/logout.svg
+  SvgGenImage get logout => const SvgGenImage('assets/vectors/logout.svg');
+
+  /// File path: assets/vectors/money_bag.svg
+  SvgGenImage get moneyBag => const SvgGenImage('assets/vectors/money_bag.svg');
 
   /// File path: assets/vectors/more.svg
   SvgGenImage get more => const SvgGenImage('assets/vectors/more.svg');
@@ -133,6 +149,12 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/show.svg
   SvgGenImage get show => const SvgGenImage('assets/vectors/show.svg');
 
+  /// File path: assets/vectors/star.svg
+  SvgGenImage get star => const SvgGenImage('assets/vectors/star.svg');
+
+  /// File path: assets/vectors/start_up.svg
+  SvgGenImage get startUp => const SvgGenImage('assets/vectors/start_up.svg');
+
   /// File path: assets/vectors/tasks.svg
   SvgGenImage get tasks => const SvgGenImage('assets/vectors/tasks.svg');
 
@@ -143,6 +165,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/text_align_left.svg
   SvgGenImage get textAlignLeft =>
       const SvgGenImage('assets/vectors/text_align_left.svg');
+
+  /// File path: assets/vectors/time.svg
+  SvgGenImage get time => const SvgGenImage('assets/vectors/time.svg');
 
   /// File path: assets/vectors/time_quarter.svg
   SvgGenImage get timeQuarter =>
@@ -159,14 +184,19 @@ class $AssetsVectorsGen {
     calendarFav,
     checkmark,
     clock,
+    complaint,
     file,
     fileColour,
+    global,
     hide,
     home,
     homeActive,
     kpi,
     kpiActive,
     location,
+    lock,
+    logout,
+    moneyBag,
     more,
     notification,
     options,
@@ -174,9 +204,12 @@ class $AssetsVectorsGen {
     search,
     setting,
     show,
+    star,
+    startUp,
     tasks,
     tasksActive,
     textAlignLeft,
+    time,
     timeQuarter,
   ];
 }

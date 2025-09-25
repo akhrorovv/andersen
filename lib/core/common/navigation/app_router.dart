@@ -9,6 +9,7 @@ import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart'
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
+import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
@@ -63,6 +64,7 @@ final GoRouter router = GoRouter(
     GoRoute(path: SplashPage.path, builder: (context, state) => SplashPage()),
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
+    GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
 
     GoRoute(
       path: StopActivityPage.path,
