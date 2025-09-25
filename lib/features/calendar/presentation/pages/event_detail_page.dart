@@ -1,7 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
-import 'package:andersen/core/widgets/default_widget.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
@@ -32,12 +31,15 @@ class EventDetailPage extends StatelessWidget {
           listener: (context, state) {
             if (state is DeleteEventSuccess) {
               context.go(CalendarPage.path);
+            } else if (state is DeleteEventLoading) {
+              LoadingIndicator();
             } else if (state is DeleteEventError) {
               BasicSnackBar.show(context, message: state.message, error: true);
             }
           },
         ),
       ],
+
       child: BlocBuilder<EventDetailCubit, EventDetailState>(
         builder: (context, state) {
           if (state is EventDetailInitial || state is EventDetailLoading) {
@@ -97,7 +99,7 @@ class EventDetailPage extends StatelessWidget {
               ),
             );
           }
-          return DefaultWidget();
+          return SizedBox.shrink();
         },
       ),
     );

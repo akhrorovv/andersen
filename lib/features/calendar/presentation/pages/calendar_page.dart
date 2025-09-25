@@ -45,7 +45,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
     if (index == -1) return;
 
-    // safety: ItemScrollController has `isAttached`
     if (scrollController.isAttached) {
       scrollController.scrollTo(
         index: index,
@@ -55,7 +54,6 @@ class _CalendarPageState extends State<CalendarPage> {
       return;
     }
 
-    // agar hali attach bo'lmagan bo'lsa, keyingi frame da qayta urin
     if (retry < 5) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -152,7 +150,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
           /// Events
           Expanded(
-            child: BlocListener<EventsCubit, EventsState>(
+            child: BlocConsumer<EventsCubit, EventsState>(
               listener: (context, state) {
                 if (state is EventsLoaded) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -161,26 +159,24 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 }
               },
-              child: BlocBuilder<EventsCubit, EventsState>(
-                builder: (context, state) {
-                  if (state is EventsInitial || state is EventsLoading) {
-                    return const LoadingIndicator();
-                  } else if (state is EventsError) {
-                    return ErrorMessage(errorMessage: state.message);
-                  } else if (state is EventsLoaded) {
-                    final days = state.days;
-                    return ScrollablePositionedList.builder(
-                      itemScrollController: scrollController,
-                      itemCount: days.length,
-                      itemBuilder: (context, index) {
-                        final day = days[index];
-                        return DayEventsSection(day: day.day, events: day.events);
-                      },
-                    );
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
+              builder: (context, state) {
+                if (state is EventsInitial || state is EventsLoading) {
+                  return const LoadingIndicator();
+                } else if (state is EventsError) {
+                  return ErrorMessage(errorMessage: state.message);
+                } else if (state is EventsLoaded) {
+                  final days = state.days;
+                  return ScrollablePositionedList.builder(
+                    itemScrollController: scrollController,
+                    itemCount: days.length,
+                    itemBuilder: (context, index) {
+                      final day = days[index];
+                      return DayEventsSection(day: day.day, events: day.events);
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ),
         ],

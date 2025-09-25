@@ -15,7 +15,7 @@ class DeleteEventRepositoryImpl implements DeleteEventRepository {
       final result = await remoteDataSource.deleteEvent(eventId);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+      return Left(ServerFailure.fromException(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));
     }

@@ -22,7 +22,7 @@ class TodayTasksSection extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<TasksCubit>()
         ..getTasks(
-          limit: 100,
+          limit: 50,
           dueMin: '${startOfDay.toIso8601String()}Z',
           dueMax: '${endOfDay.toIso8601String()}Z',
         ),

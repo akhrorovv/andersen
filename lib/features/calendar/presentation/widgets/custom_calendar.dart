@@ -1,7 +1,5 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
-import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -127,45 +125,6 @@ class CustomCalendar<T> extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildEventsList(DateTime month, Map<DateTime, List<EventEntity>> events) {
-    final firstDay = DateTime(month.year, month.month, 1);
-    final lastDay = DateTime(month.year, month.month + 1, 0);
-
-    final days = List.generate(
-      lastDay.day,
-      (index) => DateTime(month.year, month.month, index + 1),
-    );
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: days.length,
-      itemBuilder: (context, index) {
-        final day = days[index];
-        final dayEvents = events[day] ?? [];
-        final isToday =
-            DateTime.now().day == day.day &&
-            DateTime.now().month == day.month &&
-            DateTime.now().year == day.year;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${isToday ? "Today, " : ""}${DateFormat.E().add_yMMMd().format(day)}",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            if (dayEvents.isEmpty)
-              Text(" - No events")
-            else
-              ...dayEvents.map((e) => Text(" - ${e.id} (${e.description})")),
-            SizedBox(height: 8),
-          ],
-        );
-      },
     );
   }
 }

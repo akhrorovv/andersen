@@ -27,10 +27,12 @@ class DeleteEventRemoteDataSourceImpl implements DeleteEventRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.response?.data['message'] ?? e.message ?? "Delete failed",
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
+      final code = e.response?.statusCode ?? 500;
+
+      throw ServerException(message: msg, statusCode: code);
+    } catch (e) {
+      throw ServerException(message: e.toString(), statusCode: 500);
     }
   }
 }

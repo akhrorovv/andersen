@@ -12,7 +12,7 @@ class EventsCubit extends Cubit<EventsState> {
 
   EventsCubit(this.getEventsUsecase) : super(EventsInitial());
 
-  static const int _limit = 100;
+  static const int _limit = 300;
   int _offset = 0;
   String? _searchQuery;
   EventTarget? _target;
@@ -20,8 +20,6 @@ class EventsCubit extends Cubit<EventsState> {
   DateTime _focusedDay = DateTime.now();
 
   List<EventEntity> _events = [];
-
-  // String? get currentTarget => _target;
 
   Future<void> getEvents({
     bool refresh = false,
@@ -32,7 +30,6 @@ class EventsCubit extends Cubit<EventsState> {
     String? todayMin,
     String? todayMax,
   }) async {
-
     if (refresh) {
       _offset = 0;
       _events.clear();

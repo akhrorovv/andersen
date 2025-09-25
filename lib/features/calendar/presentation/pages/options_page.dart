@@ -23,7 +23,6 @@ class _OptionsPageState extends State<OptionsPage> {
   void initState() {
     super.initState();
     selected = widget.initialTarget;
-    print(selected);
   }
 
   @override

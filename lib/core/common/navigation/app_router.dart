@@ -64,7 +64,6 @@ final GoRouter router = GoRouter(
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
 
-    // GoRoute(path: StopActivityPage.path, builder: (context, state) => StopActivityPage()),
     GoRoute(
       path: StopActivityPage.path,
       pageBuilder: (context, state) {
@@ -93,6 +92,7 @@ final GoRouter router = GoRouter(
         );
       },
     ),
+
     GoRoute(
       path: EventDetailPage.path,
       builder: (context, state) {

@@ -56,12 +56,12 @@ class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
                     CupertinoActionSheetAction(
                       isDestructiveAction: true,
                       onPressed: () {
-                        if (event.createdById == DBService.user!.id) {
+                        if (event.createdById == DBService.user?.id) {
                           context.read<DeleteEventCubit>().deleteEvent(event.id);
                           context.pop();
                         } else {
-                          context.pop();
                           BasicSnackBar.show(context, message: "This is not your event!");
+                          context.pop();
                         }
                       },
 
