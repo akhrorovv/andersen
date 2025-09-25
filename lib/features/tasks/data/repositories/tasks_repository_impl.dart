@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/tasks/data/sources/tasks_remote_data_source.dart';
 import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
@@ -30,6 +31,8 @@ class TasksRepositoryImpl implements TasksRepository {
         dueMax: dueMax,
       );
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure.fromException(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));
     }

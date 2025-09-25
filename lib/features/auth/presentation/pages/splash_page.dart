@@ -23,7 +23,8 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     LoggerInterceptor.logger.i(
       "Device ID: ${DBService.deviceId}\n"
-      "Access Token: ${DBService.accessToken}",
+      "Access Token: ${DBService.accessToken}\n"
+      "Refresh Token: ${DBService.refreshToken}",
     );
     _navigate();
   }

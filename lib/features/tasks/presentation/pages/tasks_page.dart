@@ -74,7 +74,7 @@ class _TasksPageState extends State<TasksPage> {
                     if (state is TasksInitial || state is TasksLoading) {
                       return Expanded(child: LoadingIndicator());
                     } else if (state is TasksError) {
-                      return ErrorMessage(errorMessage: state.message);
+                      return Expanded(child: ErrorMessage(errorMessage: state.message));
                     } else if (state is TasksLoaded) {
                       final tasks = state.tasks.results;
                       if (tasks.isEmpty) {

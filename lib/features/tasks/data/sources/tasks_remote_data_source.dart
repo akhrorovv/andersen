@@ -54,10 +54,10 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? e.toString(),
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
+      final code = e.response?.statusCode ?? 500;
+
+      throw ServerException(message: msg, statusCode: code);
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }

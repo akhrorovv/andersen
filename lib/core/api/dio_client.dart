@@ -1,21 +1,28 @@
+import 'dart:developer';
 import 'package:dio/dio.dart';
-
 import 'api_urls.dart';
 import 'interceptors.dart';
 
 class DioClient {
   late final Dio _dio;
 
-  DioClient()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: ApiUrls.baseURL,
-          headers: {'Content-Type': 'application/json; charset=UTF-8'},
-          responseType: ResponseType.json,
-          sendTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
-        ),
-      )..interceptors.addAll([AuthorizationInterceptor(), LoggerInterceptor()]);
+  DioClient() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiUrls.baseURL,
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        responseType: ResponseType.json,
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        connectTimeout: const Duration(seconds: 10),
+      ),
+    );
+    _dio.interceptors.addAll([
+      AuthorizationInterceptor(),
+      TokenInterceptor(_dio),
+      LoggerInterceptor(),
+    ]);
+  }
 
   // GET METHOD
   Future<Response> get(
@@ -34,7 +41,10 @@ class DioClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response;
-    } on DioException {
+    } on DioException catch (e) {
+      rethrow;
+    } catch (e, s) {
+      log("Unexpected error: $e\n$s");
       rethrow;
     }
   }
@@ -62,7 +72,7 @@ class DioClient {
     }
   }
 
-  // PUT METHOD
+  // PATCH METHOD
   Future<Response> patch(
     String url, {
     dynamic data,
@@ -88,8 +98,34 @@ class DioClient {
     }
   }
 
+  // PUT METHOD
+  Future<Response> put(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final Response response = await _dio.put(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // DELETE METHOD
-  Future<dynamic> delete(
+  Future<Response> delete(
     String url, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -104,7 +140,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+      return response;
     } catch (e) {
       rethrow;
     }

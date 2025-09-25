@@ -4,6 +4,7 @@ class ApiUrls {
 
   /// Auth
   static const login = '${apiV}auth/login';
+  static const renewAccess = '${apiV}auth/renew-access';
   static const profile = '${apiV}users/profile';
   static const attendeeStatus = '${apiV}attendees/active';
 
@@ -37,8 +38,6 @@ class ApiUrls {
   static String eventDetail(int eventId) => '${apiV}events/$eventId';
   static String deleteEvent(int eventId) => '${apiV}events/$eventId';
   static String eventUpdate(int eventId) => '${apiV}events/$eventId';
-
-
 
   /// Users
   static const users = '${apiV}users';

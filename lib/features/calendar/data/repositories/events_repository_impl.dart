@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/calendar/data/sources/events_remote_data_source.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
@@ -32,6 +33,8 @@ class EventsRepositoryImpl implements EventsRepository {
         matterId: matterId,
       );
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure.fromException(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));
     }
