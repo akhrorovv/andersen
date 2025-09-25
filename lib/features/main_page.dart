@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,27 +32,27 @@ class MainPage extends StatelessWidget {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(Assets.vectors.home.path),
             activeIcon: SvgPicture.asset(Assets.vectors.homeActive.path),
-            label: 'Home',
+            label: context.tr('home'),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(Assets.vectors.tasks.path),
             activeIcon: SvgPicture.asset(Assets.vectors.tasksActive.path),
-            label: 'Tasks',
+            label: context.tr('tasks'),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(Assets.vectors.calendar.path),
             activeIcon: SvgPicture.asset(Assets.vectors.calendarActive.path),
-            label: 'Calendar',
+            label: context.tr('calendar'),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(Assets.vectors.activities.path),
             activeIcon: SvgPicture.asset(Assets.vectors.activitiesActive.path),
-            label: 'Activities',
+            label: context.tr('activities'),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(Assets.vectors.kpi.path),
             activeIcon: SvgPicture.asset(Assets.vectors.kpiActive.path),
-            label: 'KPI',
+            label: context.tr('kpi'),
           ),
         ],
       ),

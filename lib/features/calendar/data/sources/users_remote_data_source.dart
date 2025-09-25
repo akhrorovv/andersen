@@ -41,7 +41,6 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
           final model = UsersModel.fromJson(response.data);
           return model;
         } catch (e, stack) {
-          print(stack);
           throw ServerException(message: "Parsing error: $e", statusCode: 500);
         }
       } else {

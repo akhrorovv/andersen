@@ -8,7 +8,9 @@ import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
+import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
+import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dart';
@@ -17,6 +19,7 @@ import 'package:andersen/features/tasks/presentation/pages/tasks_page.dart';
 import 'package:andersen/features/main_page.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -60,6 +63,30 @@ final GoRouter router = GoRouter(
     GoRoute(path: SplashPage.path, builder: (context, state) => SplashPage()),
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
+
+    // GoRoute(path: StopActivityPage.path, builder: (context, state) => StopActivityPage()),
+    GoRoute(
+      path: StopActivityPage.path,
+      pageBuilder: (context, state) {
+        final passedCubit = state.extra as ActivityStatusCubit?;
+
+        // agar bizga oldingi cubit berilgan bo'lsa uni qayta ishlatamiz,
+        // aks holda yangi cubit ochamiz (yaratilganini dispose qilish uchun create ishlatamiz)
+        final page = passedCubit != null
+            ? BlocProvider.value(
+          value: passedCubit,
+          child: const StopActivityPage(),
+        )
+            : BlocProvider(
+          create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
+          child: const StopActivityPage(),
+        );
+
+        return MaterialPage(child: page);
+      },
+    ),
+
+
     GoRoute(
       path: TaskDetailPage.path,
       builder: (context, state) {

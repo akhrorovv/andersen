@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
 import 'package:andersen/features/tasks/data/sources/task_detail_remote_data_source.dart';
@@ -11,9 +12,7 @@ class TaskDetailRepositoryImpl implements TaskDetailRepository {
   TaskDetailRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, TaskEntity>> getTaskDetail({
-    required int taskId,
-  }) async {
+  Future<Either<Failure, TaskEntity>> getTaskDetail({required int taskId}) async {
     try {
       final result = await remoteDataSource.getTaskDetail(taskId: taskId);
       return Right(result);
@@ -43,13 +42,12 @@ class TaskDetailRepositoryImpl implements TaskDetailRepository {
   }
 
   @override
-  Future<Either<Failure, TaskEntity>> updateTask(
-    int taskId,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Either<Failure, TaskEntity>> updateTask(int taskId, Map<String, dynamic> body) async {
     try {
       final result = await remoteDataSource.updateTask(taskId, body);
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure.fromException(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));
     }

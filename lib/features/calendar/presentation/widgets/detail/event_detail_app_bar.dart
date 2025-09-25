@@ -1,8 +1,13 @@
+import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:andersen/features/calendar/presentation/cubit/delete_event_cubit.dart';
+import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit.dart';
+import 'package:andersen/features/calendar/presentation/cubit/update_event_cubit.dart';
+import 'package:andersen/features/calendar/presentation/pages/update_event_page.dart';
+import 'package:andersen/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +24,24 @@ class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: BackButton(color: AppColors.white),
       actions: [
+        TextButton(
+          onPressed: () async {
+            final updated = await context.pushCupertinoSheet<bool>(
+              BlocProvider(
+                create: (_) => sl<UpdateEventCubit>(),
+                child: UpdateEventPage(event: event),
+              ),
+            );
+            if (context.mounted && updated == true) {
+              context.read<EventDetailCubit>().getEventDetail(event.id);
+            }
+          },
+          child: Text(
+            "Edit",
+            style: TextStyle(color: AppColors.white, fontSize: 12.sp),
+          ),
+        ),
+
         IconButton(
           onPressed: () {
             showCupertinoModalPopup(

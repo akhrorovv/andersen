@@ -31,11 +31,10 @@ class CustomDropdownField<T> extends StatelessWidget {
       dropdownBuilder: (context, T? selectedItem) {
         if (selectedItem == null) {
           return Text(
-            hint ?? '',
+            hint ?? '-',
             style: TextStyle(color: AppColors.black45, fontSize: 14.sp),
           );
         }
-
         return Text(
           itemAsString(selectedItem),
           style: TextStyle(
@@ -48,17 +47,11 @@ class CustomDropdownField<T> extends StatelessWidget {
       decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-          // hintText: (hint != null) ? hint : null,
-          hintStyle: TextStyle(color: AppColors.black45),
+          // contentPadding: EdgeInsets.symmetric(vertical: 4.h),
           enabledBorder: UnderlineInputBorder(
-            // borderRadius: BorderRadius.circular(8.r),
             borderSide: BorderSide(color: AppColors.dividerColor),
           ),
-          focusedBorder: UnderlineInputBorder(
-            // borderRadius: BorderRadius.circular(8.r),
-            borderSide: BorderSide(color: AppColors.primary),
-          ),
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
         ),
       ),
       popupProps: PopupProps.menu(
@@ -69,9 +62,6 @@ class CustomDropdownField<T> extends StatelessWidget {
           backgroundColor: AppColors.background,
           borderRadius: BorderRadius.circular(8.r),
         ),
-        // emptyBuilder: (context, searchEntry) {
-        //   return Center(child: Text(T == MatterEntity ? "Select Client first" : "No data found"));
-        // },
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
             hintText: "Search...",

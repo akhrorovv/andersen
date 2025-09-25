@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/activities/data/sources/activities_remote_data_source.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
@@ -22,6 +23,8 @@ class ActivityRepositoryImpl implements ActivityRepository {
         createdById: createdById,
       );
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure.fromException(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString(), statusCode: 500));
     }

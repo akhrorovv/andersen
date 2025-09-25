@@ -27,11 +27,7 @@ class ActivitiesRemoteDataSourceImpl implements ActivitiesRemoteDataSource {
     try {
       final response = await _client.get(
         ApiUrls.activities,
-        queryParameters: {
-          "offset": offset,
-          "limit": limit,
-          "createdById": DBService.user?.id,
-        },
+        queryParameters: {"offset": offset, "limit": limit, "createdById": DBService.user?.id},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -43,10 +39,10 @@ class ActivitiesRemoteDataSourceImpl implements ActivitiesRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? e.toString(),
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
+      final code = e.response?.statusCode ?? 500;
+
+      throw ServerException(message: msg, statusCode: code);
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }

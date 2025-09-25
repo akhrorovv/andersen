@@ -40,7 +40,7 @@ class TodayTasksSection extends StatelessWidget {
               final activities = task.activities ?? [];
               final seconds = activities.fold<int>(
                 0,
-                (s, a) => s + (a.userEnteredTimeInSeconds ?? 0),
+                (s, a) => s + (a.userEnteredTimeInSeconds),
               );
               return sum + seconds;
             });
@@ -82,15 +82,6 @@ class TodayTasksSection extends StatelessWidget {
         },
       ),
     );
-  }
-
-  /// Duration ni `1h 34min` formatga o‘giradi
-  String _formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    if (hours > 0 && minutes > 0) return '${hours}h ${minutes}min';
-    if (hours > 0) return '${hours}h';
-    return '${minutes}min';
   }
 }
 

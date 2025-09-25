@@ -44,6 +44,9 @@ dependencies:
   scrollable_positioned_list: ^0.3.8
   geolocator: ^14.0.2
 
+  # localization
+  easy_localization: ^3.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -61,6 +64,7 @@ flutter:
   assets:
     - assets/images/
     - assets/vectors/
+    - assets/translations/
 
 flutter_gen:
   output: lib/gen/

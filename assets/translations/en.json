@@ -1,0 +1,17 @@
+{
+  "hello": "Hello",
+  "welcome": "Welcome",
+  "phone": "Phone",
+  "password": "Password",
+  "logIn": "Log In",
+  "successLogin": "Login Successful",
+  "home": "Home",
+  "tasks": "Tasks",
+  "calendar": "Calendar",
+  "activities": "Activities",
+  "kpi": "KPI",
+  "myKpi": "My KPI",
+  "searchTasks": "Search tasks",
+  "settings": "Settings",
+  "all": "All"
+}

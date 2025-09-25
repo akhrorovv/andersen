@@ -1,8 +1,6 @@
 import 'package:andersen/core/common/models/meta_model.dart';
-import 'package:andersen/features/tasks/data/models/task_model.dart';
 import 'package:andersen/features/tasks/data/models/task_type_model.dart';
 import 'package:andersen/features/tasks/domain/entities/task_types_entity.dart';
-import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
 
 class TaskTypesModel extends TaskTypesEntity {
   const TaskTypesModel({required super.meta, required super.types});

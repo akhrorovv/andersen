@@ -35,6 +35,7 @@ class LoggerInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     logger.d(
+      'Api: ${response.realUri.path}\n'
       'Status Code: ${response.statusCode}\n'
       // 'HEADERS: ${response.headers}\n'
       'Data: ${response.data}',

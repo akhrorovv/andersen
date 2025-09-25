@@ -7,10 +7,10 @@ import 'package:andersen/features/calendar/presentation/cubit/create_event_cubit
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
 import 'package:andersen/features/calendar/presentation/pages/create_event_page.dart';
+import 'package:andersen/features/calendar/presentation/pages/options_page.dart';
 import 'package:andersen/features/calendar/presentation/widgets/custom_calendar.dart';
 import 'package:andersen/features/calendar/presentation/widgets/day_events_section.dart';
-import 'package:andersen/features/tasks/presentation/cubit/create_task_cubit.dart';
-import 'package:andersen/features/tasks/presentation/pages/create_task_page.dart';
+import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,6 +81,15 @@ class _CalendarPageState extends State<CalendarPage> {
             child: Text(
               "New event",
               style: TextStyle(color: AppColors.white, fontSize: 12.sp),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              context.pushCupertinoSheet<bool>(OptionsPage());
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 16.w, left: 8.w),
+              child: Assets.vectors.options.svg(),
             ),
           ),
         ],

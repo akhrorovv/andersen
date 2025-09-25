@@ -41,10 +41,7 @@ class TaskDetailPage extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 24.h,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 16.h,
@@ -59,8 +56,7 @@ class TaskDetailPage extends StatelessWidget {
               ],
             ),
 
-            floatingActionButton:
-                context.read<TaskDetailCubit>().isActivityCreatable(task)
+            floatingActionButton: context.read<TaskDetailCubit>().isActivityCreatable(task)
                 ? FloatingActionButton(
                     backgroundColor: AppColors.primary,
                     shape: CircleBorder(),
@@ -68,7 +64,10 @@ class TaskDetailPage extends StatelessWidget {
                       showCupertinoModalBottomSheet(
                         context: context,
                         topRadius: Radius.circular(16.r),
-                        builder: (context) => activityStartModalBottomSheet(),
+                        builder: (context) => SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: ActivityStartModalBottomSheet(task: task),
+                        ),
                       );
                     },
                     child: Icon(Icons.add, color: AppColors.white),

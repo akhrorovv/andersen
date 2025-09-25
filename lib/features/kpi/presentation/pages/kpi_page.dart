@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,7 +12,7 @@ class KpiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("KPI")),
+      appBar: AppBar(title: Text(context.tr('kpi'))),
 
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
@@ -25,7 +26,7 @@ class KpiPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 6.h,
                     children: [
-                      _myKpiText(),
+                      _myKpiText(context),
                       Text(
                         "10 jun - 17 jun",
                         style: TextStyle(
@@ -50,9 +51,9 @@ class KpiPage extends StatelessWidget {
     );
   }
 
-  Widget _myKpiText() {
+  Widget _myKpiText(BuildContext context) {
     return Text(
-      'My KPI',
+      context.tr('myKpi'),
       style: TextStyle(
         fontWeight: FontWeight.w600,
         fontSize: 24.sp,

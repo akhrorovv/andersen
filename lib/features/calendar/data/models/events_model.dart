@@ -1,8 +1,6 @@
 import 'package:andersen/core/common/models/meta_model.dart';
 import 'package:andersen/features/calendar/data/models/event_model.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
-import 'package:andersen/features/tasks/data/models/task_model.dart';
-import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
 
 class EventsModel extends EventsEntity {
   const EventsModel({required super.meta, required super.events});

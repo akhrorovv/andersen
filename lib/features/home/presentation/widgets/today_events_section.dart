@@ -1,10 +1,12 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
+import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
+import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class TodayEventsList extends StatelessWidget {
@@ -15,7 +17,7 @@ class TodayEventsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (events.isEmpty) {
-      return const Center(child: Text("No events today"));
+      return ShadowContainer(child: EmptyWidget());
     }
 
     return ShadowContainer(
@@ -27,46 +29,49 @@ class TodayEventsList extends StatelessWidget {
         itemBuilder: (context, index) {
           final event = events[index];
           final time = DateFormat('HH:mm').format(event.startsAt!);
-
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 8.w,
-                children: [
-                  CircleAvatar(
-                    radius: 4.r,
-                    backgroundColor: AppColors.primary,
-                  ),
-                  Text(
-                    time,
+          return InkWell(
+            onTap: () async {
+              final deleted = await context.push(EventDetailPage.path, extra: event.id);
+              // if (deleted == true && context.mounted) {
+              //   context.read<EventsCubit>().getEvents();
+              // }
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 8.w,
+                  children: [
+                    CircleAvatar(radius: 4.r, backgroundColor: AppColors.primary),
+                    Text(
+                      time,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.colorText,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    event.description ?? '-',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                       color: AppColors.colorText,
                       height: 1.2,
                     ),
                   ),
-                ],
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  event.description ?? '-',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.colorText,
-                    height: 1.2,
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
     );
   }
 }
-

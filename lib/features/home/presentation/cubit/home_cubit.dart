@@ -1,9 +1,6 @@
 import 'package:andersen/features/home/domain/usecases/activity_usecase.dart';
 import 'package:andersen/features/home/domain/usecases/profile_usecase.dart';
-import 'package:andersen/features/home/presentation/pages/reason_page.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {

@@ -10,7 +10,6 @@ class BasicSnackBar {
     bool error = false,
     Duration duration = const Duration(seconds: 3),
   }) {
-    print("MESSAGE: $message");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

@@ -24,13 +24,20 @@ class ApiUrls {
 
   /// Activities
   static const activities = '${apiV}activities';
+  static const activeActivity = '${apiV}activities/active';
+  static const startActivity = '${apiV}activities/start';
   static String activityDetail(int activityId) => '${apiV}activities/$activityId';
+
+  /// Activity Types
+  static const activityTypes = '${apiV}activity-types';
 
   /// Events
   static const events = '${apiV}events';
   static const createEvent = '${apiV}events';
   static String eventDetail(int eventId) => '${apiV}events/$eventId';
   static String deleteEvent(int eventId) => '${apiV}events/$eventId';
+  static String eventUpdate(int eventId) => '${apiV}events/$eventId';
+
 
 
   /// Users

@@ -1,7 +1,10 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/utils/phone_number_formatter.dart';
+import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -13,26 +16,9 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = DBService.user;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.colorPrimaryText,
-        title: Text(
-          "Settings",
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: AppColors.white,
-            fontSize: 14.sp,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.clear, color: AppColors.white),
-            onPressed: context.pop,
-          ),
-        ],
-      ),
+      appBar: BasicAppBar(title: context.tr('settings')),
       body: Column(
         children: [
           Container(
@@ -44,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                   backgroundColor: AppColors.colorPrimaryBgHover,
                   radius: 26.r,
                   child: Text(
-                    "H",
+                    getInitials(user?.name),
                     style: TextStyle(
                       color: AppColors.colorText,
                       fontSize: 14.sp,
@@ -58,7 +44,7 @@ class SettingsPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        DBService.user?.name ?? "-",
+                        user?.name ?? "-",
                         style: TextStyle(
                           color: AppColors.white,
                           fontSize: 14.sp,
@@ -67,7 +53,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        formatPhoneNumber(DBService.user?.phone ?? "-"),
+                        formatPhoneNumber(user?.phone ?? "-"),
                         style: TextStyle(
                           color: AppColors.white,
                           fontSize: 12.sp,

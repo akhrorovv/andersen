@@ -1,7 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
-import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';

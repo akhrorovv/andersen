@@ -37,41 +37,59 @@ import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/calendar/data/repositories/create_event_repository_impl.dart';
 import 'features/calendar/data/repositories/delete_event_repository_impl.dart';
 import 'features/calendar/data/repositories/event_detail_repository_impl.dart';
+import 'features/calendar/data/repositories/update_event_repository_impl.dart';
 import 'features/calendar/data/repositories/users_repository_impl.dart';
 import 'features/calendar/data/sources/create_event_remote_data_source.dart';
 import 'features/calendar/data/sources/delete_event_remote_data_source.dart';
 import 'features/calendar/data/sources/event_detail_remote_data_source.dart';
 import 'features/calendar/data/sources/events_remote_data_source.dart';
+import 'features/calendar/data/sources/update_event_remote_data_source.dart';
 import 'features/calendar/data/sources/users_remote_data_source.dart';
 import 'features/calendar/domain/repositories/create_event_repository.dart';
 import 'features/calendar/domain/repositories/delete_event_repository.dart';
 import 'features/calendar/domain/repositories/event_detail_repository.dart';
 import 'features/calendar/domain/repositories/events_repository.dart';
+import 'features/calendar/domain/repositories/update_event_repository.dart';
 import 'features/calendar/domain/repositories/users_repository.dart';
 import 'features/calendar/domain/usecase/create_event_usecase.dart';
 import 'features/calendar/domain/usecase/delete_event_usecase.dart';
 import 'features/calendar/domain/usecase/get_event_detail_usecase.dart';
 import 'features/calendar/domain/usecase/get_events_usecase.dart';
 import 'features/calendar/domain/usecase/get_users_usecase.dart';
+import 'features/calendar/domain/usecase/update_event_usecase.dart';
 import 'features/calendar/presentation/cubit/create_event_cubit.dart';
 import 'features/calendar/presentation/cubit/delete_event_cubit.dart';
 import 'features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'features/calendar/presentation/cubit/events_cubit.dart';
+import 'features/calendar/presentation/cubit/update_event_cubit.dart';
+import 'features/home/data/repositories/active_activity_repository_impl.dart';
+import 'features/home/data/repositories/activity_types_repository_impl.dart';
+import 'features/home/data/sources/active_activity_remote_data_source.dart';
+import 'features/home/data/sources/activity_types_remote_data_source.dart';
+import 'features/home/domain/repositories/active_activity_repository.dart';
+import 'features/home/domain/repositories/activity_types_repository.dart';
+import 'features/home/domain/usecases/get_active_activity.dart';
+import 'features/home/presentation/cubit/activity_status_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
+import 'features/tasks/data/repositories/start_activity_repository_impl.dart';
 import 'features/tasks/data/sources/clients_remote_data_source.dart';
 import 'features/tasks/data/sources/create_task_remote_data_source.dart';
 import 'features/tasks/data/sources/matters_remote_data_source.dart';
+import 'features/tasks/data/sources/start_activity_remote_data_source.dart';
 import 'features/tasks/data/sources/task_types_remote_data_source.dart';
 import 'features/tasks/domain/repositories/create_task_repository.dart';
 import 'features/tasks/domain/repositories/matters_repository.dart';
+import 'features/tasks/domain/repositories/start_activity_repository.dart';
 import 'features/tasks/domain/repositories/task_detail_repository.dart';
 import 'features/tasks/domain/repositories/task_types_repository.dart';
 import 'features/tasks/domain/usecase/get_matters_usecase.dart';
 import 'features/tasks/domain/usecase/get_task_detail_usecase.dart';
 import 'features/tasks/domain/usecase/get_tasks_usecase.dart';
+import 'features/tasks/domain/usecase/start_activity_usecase.dart';
 import 'features/tasks/domain/usecase/update_task_usecase.dart';
 import 'features/tasks/presentation/cubit/create_task_cubit.dart';
 import 'features/tasks/presentation/cubit/matter_cubit.dart';
+import 'features/tasks/presentation/cubit/start_activity_cubit.dart';
 import 'features/tasks/presentation/cubit/task_activities_cubit.dart';
 import 'features/tasks/presentation/cubit/task_detail_cubit.dart';
 import 'features/tasks/presentation/cubit/task_update_cubit.dart';
@@ -205,5 +223,39 @@ Future<void> _initAuth() async {
       () => DeleteEventRepositoryImpl(sl<DeleteEventRemoteDataSource>()),
     )
     ..registerLazySingleton(() => DeleteEventUsecase(sl<DeleteEventRepository>()))
-    ..registerFactory(() => DeleteEventCubit(sl<DeleteEventUsecase>()));
+    ..registerFactory(() => DeleteEventCubit(sl<DeleteEventUsecase>()))
+    /// Start activity
+    ..registerLazySingleton<StartActivityRemoteDataSource>(
+      () => StartActivityRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<StartActivityRepository>(
+      () => StartActivityRepositoryImpl(sl<StartActivityRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => StartActivityUsecase(sl<StartActivityRepository>()))
+    ..registerFactory(() => ActivityStartCubit(sl<StartActivityUsecase>()))
+    /// active activity
+    ..registerFactory<ActiveActivityRemoteDataSource>(
+      () => ActiveActivityRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<ActiveActivityRepository>(
+      () => ActiveActivityRepositoryImpl(sl<ActiveActivityRemoteDataSource>()),
+    )
+    ..registerFactory(() => GetActiveActivity(sl<ActiveActivityRepository>()))
+    ..registerFactory(() => ActivityStatusCubit(sl<GetActiveActivity>()))
+    /// Activity types
+    ..registerLazySingleton<ActivityTypesRemoteDataSource>(
+      () => ActivityTypesRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<ActivityTypesRepository>(
+      () => ActivityTypesRepositoryImpl(sl<ActivityTypesRemoteDataSource>()),
+    )
+    /// update event
+    ..registerFactory<UpdateEventRemoteDataSource>(
+      () => UpdateEventRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<UpdateEventRepository>(
+      () => UpdateEventRepositoryImpl(sl<UpdateEventRemoteDataSource>()),
+    )
+    ..registerFactory(() => UpdateEventUsecase(sl<UpdateEventRepository>()))
+    ..registerFactory(() => UpdateEventCubit(sl<UpdateEventUsecase>()));
 }

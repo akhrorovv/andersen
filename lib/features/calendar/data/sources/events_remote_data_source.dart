@@ -2,7 +2,6 @@ import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
 import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/features/calendar/data/models/events_model.dart';
-import 'package:andersen/features/tasks/data/models/tasks_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class EventsRemoteDataSource {
@@ -51,13 +50,9 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {
-          // print("✅ RAW RESPONSE DATA: ${response.data}");
           final model = EventsModel.fromJson(response.data);
-          // print("✅ PARSED SUCCESSFULLY: ${model.events.length} events");
           return model;
-        } catch (e, stack) {
-          // print("❌ PARSING ERROR: $e");
-          print(stack);
+        } catch (e) {
           throw ServerException(message: "Parsing error: $e", statusCode: 500);
         }
       } else {

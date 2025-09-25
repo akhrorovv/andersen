@@ -5,6 +5,7 @@ import 'package:andersen/core/common/entities/client_entity.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
+import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
@@ -47,7 +48,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     descriptionController = TextEditingController(text: widget.task.description);
     dueAt = widget.task.dueAt;
     typeId = widget.task.type?.id;
-    matterId = widget.task.matter?.contract?.clientId;
+    clientId = widget.task.matter?.contract?.clientId;
     matterId = widget.task.matter?.id;
 
     LoggerInterceptor.logger.w("matterId: $matterId\ntypeId: $typeId\nDueDate: $dueAt");
@@ -90,8 +91,10 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         listener: (context, state) {
           if (state is TaskUpdateSuccess) {
             context.pop(true);
+            BasicSnackBar.show(context, message: 'Task updated successfully');
           } else if (state is TaskUpdateError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            context.pop(false);
+            BasicSnackBar.show(context, message: state.message, error: true);
           }
         },
         builder: (context, state) {

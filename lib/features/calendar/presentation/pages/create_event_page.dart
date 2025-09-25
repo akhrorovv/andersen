@@ -16,7 +16,6 @@ import 'package:andersen/features/tasks/domain/repositories/clients_repository.d
 import 'package:andersen/features/tasks/domain/repositories/matters_repository.dart';
 import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_field.dart';
 import 'package:andersen/service_locator.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

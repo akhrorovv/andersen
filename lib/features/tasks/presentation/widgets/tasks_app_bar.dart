@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,7 +29,7 @@ class TasksAppBar extends StatelessWidget implements PreferredSizeWidget {
               controller: controller,
               autofocus: true,
               decoration: InputDecoration(
-                hintText: "Search tasks...",
+                hintText: "${context.tr('searchTasks')}...",
                 hintStyle: TextStyle(color: AppColors.grey),
                 border: InputBorder.none,
               ),
@@ -36,7 +37,7 @@ class TasksAppBar extends StatelessWidget implements PreferredSizeWidget {
               textInputAction: TextInputAction.search,
               onSubmitted: onSubmitted,
             )
-          : Text("Tasks"),
+          : Text(context.tr('tasks')),
       actions: [
         isSearching
             ? GestureDetector(

@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShadowContainer extends StatelessWidget {
   final Widget child;
@@ -22,7 +23,7 @@ class ShadowContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // margin: margin ?? const EdgeInsets.all(8),
-      padding: padding ?? EdgeInsets.all(16),
+      padding: padding ?? EdgeInsets.all(16.w),
       width: double.infinity,
       decoration: BoxDecoration(
         color: color ?? AppColors.white,

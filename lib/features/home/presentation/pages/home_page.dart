@@ -1,25 +1,28 @@
 import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
+import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
+import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
 import 'package:andersen/features/home/presentation/widgets/today_events_section.dart';
 import 'package:andersen/features/home/presentation/widgets/today_tasks_section.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
   static String path = '/home';
@@ -29,11 +32,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+
     final startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
-    final locale = Localizations.localeOf(context).toString();
+    final locale = context.locale.languageCode;
     final formattedDate = DateFormat("EEEE, dd MMMM", locale).format(now);
+
+    final List<DateTime> days = List.generate(5, (i) => now.add(Duration(days: i)));
+    DateTime? selectedDate;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -56,8 +64,9 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,7 +85,7 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Hello, ${DBService.user?.name}",
+                              "${context.tr('hello')}, ${DBService.user?.name}",
                               style: TextStyle(
                                 color: AppColors.colorPrimaryText,
                                 fontSize: 24.sp,
@@ -97,6 +106,7 @@ class HomePage extends StatelessWidget {
                             ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
                                   onTap: () {
@@ -133,22 +143,82 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (state.status.isActive)
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 12.w, top: 12.h),
-                                    child: Text(
-                                      "Getting started - ${DateFormat.Hm().format(state.status.arrivedAt!.toLocal())}",
-                                      style: TextStyle(
-                                        color: AppColors.colorText,
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.2.h,
-                                        letterSpacing: 0,
-                                      ),
-                                    ),
+                                BlocProvider(
+                                  create: (context) =>
+                                      sl<ActivityStatusCubit>()..checkActiveActivity(),
+                                  child: BlocBuilder<ActivityStatusCubit, ActivityStatusState>(
+                                    builder: (context, state) {
+                                      String timeText = "00:00:00";
+                                      VoidCallback? onTap;
+
+                                      if (state is ActivityStatusActive) {
+                                        timeText = formatDuration(state.elapsedSeconds);
+                                        // onTap = () => context.push(StopActivityPage.path);
+                                        onTap = () {
+                                          context.push(
+                                            StopActivityPage.path,
+                                            extra: context.read<ActivityStatusCubit>(),
+                                          );
+                                        };
+                                      } else if (state is ActivityStatusInactive) {
+                                        timeText = "00:00:00";
+                                        onTap = () {};
+                                      } else if (state is ActivityStatusLoading) {
+                                        timeText = "Loading...";
+                                      } else if (state is ActivityStatusError) {
+                                        timeText = "Error";
+                                      }
+
+                                      return GestureDetector(
+                                        onTap: onTap,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 12.w,
+                                            vertical: 10.h,
+                                          ),
+                                          margin: EdgeInsets.only(top: 12.h),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12.r),
+                                            border: Border.all(width: 1.w, color: AppColors.grey),
+                                            color: AppColors.white,
+                                          ),
+                                          child: Row(
+                                            spacing: 4.w,
+                                            children: [
+                                              const Icon(Icons.play_arrow),
+                                              Text(
+                                                timeText,
+                                                style: TextStyle(
+                                                  color: AppColors.colorText,
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  height: 1.25.h,
+                                                  letterSpacing: 0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
+                                ),
                               ],
                             ),
+                            if (state.status.isActive)
+                              Padding(
+                                padding: EdgeInsets.only(top: 12.h),
+                                child: Text(
+                                  "Getting started - ${DateFormat.Hm().format(state.status.arrivedAt!.toLocal())}",
+                                  style: TextStyle(
+                                    color: AppColors.colorText,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.2.h,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                              ),
                             if (!state.status.isActive)
                               Padding(
                                 padding: EdgeInsets.only(top: 12.h),
@@ -202,7 +272,54 @@ class HomePage extends StatelessWidget {
 
               _scheduleText(),
 
-              ShadowContainer(child: Column()),
+              ShadowContainer(
+                child: Column(
+                  children: [
+                    /// Sanalar
+                    SizedBox(
+                      height: 50,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: days.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 8),
+                        itemBuilder: (context, index) {
+                          final date = days[index];
+                          final isSelected = date == selectedDate;
+
+                          final label = index == 0
+                              ? "today"
+                              : DateFormat('EEE d', locale).format(date);
+
+                          return GestureDetector(
+                            onTap: () {
+                              // setState(() => selectedDate = date);
+                              // _fetchEventsFor(date);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? Colors.blue : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  label,
+                                  style: TextStyle(
+                                    color: isSelected ? Colors.white : Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    /// eventlar
+                  ],
+                ),
+              ),
             ],
           ),
         ),

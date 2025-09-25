@@ -1,6 +1,4 @@
-import 'package:andersen/features/calendar/data/models/attendee_model.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
-import 'package:andersen/features/home/data/models/user_model.dart';
 import 'package:andersen/features/tasks/data/models/matter_model.dart';
 
 class EventModel extends EventEntity {

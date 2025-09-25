@@ -34,6 +34,19 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [borderNone, login, splash, title];
 }
 
+class $AssetsTranslationsGen {
+  const $AssetsTranslationsGen();
+
+  /// File path: assets/translations/en.json
+  String get en => 'assets/translations/en.json';
+
+  /// File path: assets/translations/ru.json
+  String get ru => 'assets/translations/ru.json';
+
+  /// List of all assets
+  List<String> get values => [en, ru];
+}
+
 class $AssetsVectorsGen {
   const $AssetsVectorsGen();
 
@@ -105,6 +118,9 @@ class $AssetsVectorsGen {
   SvgGenImage get notification =>
       const SvgGenImage('assets/vectors/notification.svg');
 
+  /// File path: assets/vectors/options.svg
+  SvgGenImage get options => const SvgGenImage('assets/vectors/options.svg');
+
   /// File path: assets/vectors/play.svg
   SvgGenImage get play => const SvgGenImage('assets/vectors/play.svg');
 
@@ -153,6 +169,7 @@ class $AssetsVectorsGen {
     location,
     more,
     notification,
+    options,
     play,
     search,
     setting,
@@ -168,6 +185,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
   static const $AssetsVectorsGen vectors = $AssetsVectorsGen();
 }
 

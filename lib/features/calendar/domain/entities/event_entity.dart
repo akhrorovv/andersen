@@ -1,5 +1,3 @@
-import 'package:andersen/features/calendar/domain/entities/attendee_entity.dart';
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';
 import 'package:equatable/equatable.dart';
 

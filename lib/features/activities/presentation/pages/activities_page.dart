@@ -6,6 +6,7 @@ import 'package:andersen/features/activities/presentation/cubit/activities_state
 import 'package:andersen/features/activities/presentation/pages/activity_detail_page.dart';
 import 'package:andersen/features/activities/presentation/widgets/activity_card.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,7 @@ class ActivitiesPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          "Activities",
+          context.tr('activities'),
           style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
         ),
       ),
