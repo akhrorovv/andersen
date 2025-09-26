@@ -27,8 +27,8 @@ class EventsCubit extends Cubit<EventsState> {
     EventTarget? target,
     int? matterId,
     DateTime? focusedDay,
-    String? todayMin,
-    String? todayMax,
+    String? dayMin,
+    String? dayMax,
   }) async {
     if (refresh) {
       _offset = 0;
@@ -46,9 +46,9 @@ class EventsCubit extends Cubit<EventsState> {
     final String dateMin;
     final String dateMax;
 
-    if (todayMin != null && todayMax != null) {
-      dateMin = todayMin;
-      dateMax = todayMax;
+    if (dayMin != null && dayMax != null) {
+      dateMin = dayMin;
+      dateMax = dayMax;
     } else {
       final startOfMonth = DateTime(_focusedDay.year, _focusedDay.month, 1);
       final endOfMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);

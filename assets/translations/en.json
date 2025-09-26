@@ -13,5 +13,21 @@
   "myKpi": "My KPI",
   "searchTasks": "Search tasks",
   "settings": "Settings",
-  "all": "All"
+  "all": "All",
+  "upcomingEvent": "Upcoming event",
+  "kpiForWeek": "KPI for week",
+  "more": "More",
+  "schedule": "Schedule",
+  "noItemsFound": "No items found",
+  "hasCome": "Has Come",
+  "hasLeft": "Has Left",
+  "gettingStarted": "Getting started",
+  "tasksForToday": "Tasks for today",
+  "completedTasks": "Completed tasks",
+  "countedTimeToday": "The time is counted today",
+  "language": "Language",
+  "changeLanguage": "Change language",
+  "logout": "Log out",
+  "appVersion": "App version",
+  "today": "Today"
 }

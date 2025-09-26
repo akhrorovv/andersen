@@ -2,18 +2,22 @@ import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/format_duration.dart';
+import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
+import 'package:andersen/features/calendar/presentation/widgets/event_tile.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
-import 'package:andersen/features/home/presentation/widgets/today_events_section.dart';
-import 'package:andersen/features/home/presentation/widgets/today_tasks_section.dart';
+import 'package:andersen/features/home/presentation/widgets/kpi_for_week.dart';
+import 'package:andersen/features/home/presentation/widgets/schedule.dart';
+import 'package:andersen/features/home/presentation/widgets/upcoming_events.dart';
+import 'package:andersen/features/home/presentation/widgets/tasks_for_today.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
@@ -24,23 +28,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static String path = '/home';
 
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-
-    final startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
-    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
-
     final locale = context.locale.languageCode;
-    final formattedDate = DateFormat("EEEE, dd MMMM", locale).format(now);
-
-    final List<DateTime> days = List.generate(5, (i) => now.add(Duration(days: i)));
-    DateTime? selectedDate;
+    final formattedDate = DateFormat("EEEE, dd MMMM", locale).format(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +80,9 @@ class HomePage extends StatelessWidget {
                     } else if (state is HomeError) {
                       return ErrorWidget(state.message);
                     } else if (state is HomeLoaded) {
-                      final label = state.status.isActive ? "Has Left" : "Has Come";
+                      final label = state.status.isActive
+                          ? context.tr('hasLeft')
+                          : context.tr('hasCome');
                       return ShadowContainer(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +212,7 @@ class HomePage extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 12.h),
                                 child: Text(
-                                  "Getting started - ${DateFormat.Hm().format(state.status.arrivedAt!.toLocal())}",
+                                  "${context.tr('gettingStarted')} - ${DateFormat.Hm().format(state.status.arrivedAt!.toLocal())}",
                                   style: TextStyle(
                                     color: AppColors.colorText,
                                     fontSize: 14.sp,
@@ -242,150 +245,20 @@ class HomePage extends StatelessWidget {
                 ),
               ),
 
-              _upcomingEventText(),
+              /// Upcoming events
+              UpcomingEvents(),
 
-              BlocProvider(
-                create: (context) => sl<EventsCubit>()
-                  ..getEvents(
-                    todayMin: '${startOfDay.toIso8601String()}Z',
-                    todayMax: '${endOfDay.toIso8601String()}Z',
-                  ),
-                child: BlocBuilder<EventsCubit, EventsState>(
-                  builder: (context, state) {
-                    if (state is EventsLoading) return const LoadingIndicator();
-                    if (state is EventsError) return ErrorWidget(state.message);
-                    if (state is EventsLoaded) {
-                      return TodayEventsList(events: state.events.events);
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
+              /// Tasks for today
+              TasksForToday(),
 
-              _tasksText(),
+              /// Kpi for week
+              KpiForWeek(),
 
-              TodayTasksSection(),
-
-              _kpiForWeekText(context),
-
-              ShadowContainer(child: Column()),
-
-              _scheduleText(),
-
-              ShadowContainer(
-                child: Column(
-                  children: [
-                    /// Sanalar
-                    SizedBox(
-                      height: 50,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: days.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 8),
-                        itemBuilder: (context, index) {
-                          final date = days[index];
-                          final isSelected = date == selectedDate;
-
-                          final label = index == 0
-                              ? "today"
-                              : DateFormat('EEE d', locale).format(date);
-
-                          return GestureDetector(
-                            onTap: () {
-                              // setState(() => selectedDate = date);
-                              // _fetchEventsFor(date);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? Colors.blue : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  label,
-                                  style: TextStyle(
-                                    color: isSelected ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-                    /// eventlar
-                  ],
-                ),
-              ),
+              /// Schedule
+              Schedule(),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _upcomingEventText() {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
-      child: Text(
-        'Upcoming event',
-        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
-      ),
-    );
-  }
-
-  Widget _tasksText() {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
-      child: Text(
-        'Tasks',
-        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
-      ),
-    );
-  }
-
-  Widget _kpiForWeekText(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'KPI for week',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
-              color: AppColors.colorText,
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              context.go(KpiPage.path);
-            },
-            child: Text(
-              'More',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 13.sp,
-                decoration: TextDecoration.underline,
-                color: AppColors.colorText,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _scheduleText() {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
-      child: Text(
-        'Schedule',
-        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp, color: AppColors.colorText),
       ),
     );
   }

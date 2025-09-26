@@ -13,5 +13,21 @@
   "myKpi": "Мои КПЭ",
   "searchTasks": "Задачи поиска",
   "settings": "Настройки",
-  "all": "Все"
+  "all": "Все",
+  "upcomingEvent": "Ближайшие события",
+  "kpiForWeek": "КПЭ за неделю",
+  "more": "Больше",
+  "schedule": "Расписание",
+  "noItemsFound": "Ничего не найдено",
+  "hasCome": "Пришел",
+  "hasLeft": "Ушел",
+  "gettingStarted": "Приступая к работе",
+  "tasksForToday": "Задачи на сегодня",
+  "completedTasks": "Завершенные задачи",
+  "countedTimeToday": "Сегодня учтено времени",
+  "language": "Язык",
+  "changeLanguage": "Изменить язык",
+  "logout": "Выйти из системы",
+  "appVersion": "Версия приложения",
+  "today": "Сегодня"
 }

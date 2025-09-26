@@ -6,7 +6,6 @@ import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/utils/phone_number_formatter.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
-import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
@@ -55,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
             color: AppColors.colorPrimaryText,
             child: Row(
+              spacing: 12.w,
               children: [
                 CircleAvatar(
                   backgroundColor: AppColors.colorPrimaryBgHover,
@@ -68,9 +68,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
+                    spacing: 8.h,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -81,7 +81,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 8.h),
                       Text(
                         formatPhoneNumber(user?.phone ?? "-"),
                         style: TextStyle(
@@ -120,8 +119,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         // BasicDivider(),
                         SettingsTile(
                           iconPath: Assets.vectors.global.path,
-                          title: "Language",
-                          subtitle: "Change language",
+                          title: context.tr('language'),
+                          subtitle: context.tr('changeLanguage'),
                           onTap: () {
                             context.pushCupertinoSheet(LanguagesPage());
                           },
@@ -142,7 +141,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                       showLogoutDialog(context);
                     },
-
                     child: ShadowContainer(
                       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       child: Row(
@@ -154,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: Assets.vectors.logout.svg(),
                           ),
                           Text(
-                            "Log out",
+                            context.tr('logout'),
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
@@ -169,11 +167,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
 
                   Spacer(),
+
                   Column(
                     spacing: 4.h,
                     children: [
                       Text(
-                        "App version",
+                        context.tr('appVersion'),
                         style: TextStyle(
                           color: AppColors.colorBgMask,
                           fontSize: 12.sp,
