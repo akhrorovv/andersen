@@ -76,6 +76,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   @override
+  void dispose() {
+    descriptionController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(title: "New event"),
@@ -218,7 +225,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                           ? DateFormat("dd/MM/yyyy HH:mm").format(startAt!)
                                           : "DD/MM/YYYY HH:MM",
                                       style: TextStyle(
-                                        color: startAt != null ? AppColors.black : AppColors.black45,
+                                        color: startAt != null
+                                            ? AppColors.black
+                                            : AppColors.black45,
                                         fontSize: 14.sp,
                                       ),
                                     ),
@@ -402,11 +411,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                       setState(() {
                                         selectedUsers = values;
                                       });
-                                      log("Selected attendees: ${values.map((u) => u.id)
-                                          .toList()}");
+                                      log(
+                                        "Selected attendees: ${values.map((u) => u.id).toList()}",
+                                      );
                                     },
                                   ),
-
                                 ),
                               ],
                             ),
@@ -430,9 +439,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     }
 
                     if (target == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Target must be selected")),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text("Target must be selected")));
                       return;
                     }
 

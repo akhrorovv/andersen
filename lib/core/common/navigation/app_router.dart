@@ -9,6 +9,7 @@ import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart'
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
+import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
@@ -50,7 +51,6 @@ final GoRouter router = GoRouter(
             ),
           ],
         ),
-
         StatefulShellBranch(
           routes: [
             GoRoute(path: ActivitiesPage.path, builder: (context, state) => ActivitiesPage()),
@@ -66,23 +66,40 @@ final GoRouter router = GoRouter(
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
 
+    // GoRoute(
+    //   path: StopActivityPage.path,
+    //   pageBuilder: (context, state) {
+    //     final passedCubit = state.extra as ActivityStatusCubit?;
+    //
+    //     final page = passedCubit != null
+    //         ? BlocProvider.value(value: passedCubit, child: const StopActivityPage())
+    //         : BlocProvider(
+    //             create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
+    //             child: const StopActivityPage(),
+    //           );
+    //
+    //     return MaterialPage(child: page);
+    //   },
+    // ),
+
     GoRoute(
       path: StopActivityPage.path,
-      pageBuilder: (context, state) {
-        final passedCubit = state.extra as ActivityStatusCubit?;
-
-        // agar bizga oldingi cubit berilgan bo'lsa uni qayta ishlatamiz,
-        // aks holda yangi cubit ochamiz (yaratilganini dispose qilish uchun create ishlatamiz)
-        final page = passedCubit != null
-            ? BlocProvider.value(value: passedCubit, child: const StopActivityPage())
-            : BlocProvider(
-                create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
-                child: const StopActivityPage(),
-              );
-
-        return MaterialPage(child: page);
+      builder: (context, state) {
+        final activityId = state.extra as int;
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
+            ),
+            BlocProvider(
+              create: (_) => sl<StopActivityCubit>(),
+            ),
+          ],
+          child: StopActivityPage(activityId: activityId),
+        );
       },
     ),
+
 
     GoRoute(
       path: TaskDetailPage.path,

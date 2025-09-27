@@ -5,20 +5,17 @@ import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
-import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
-import 'package:andersen/features/calendar/presentation/cubit/events_state.dart';
-import 'package:andersen/features/calendar/presentation/widgets/event_tile.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
+import 'package:andersen/features/home/presentation/widgets/home_header.dart';
 import 'package:andersen/features/home/presentation/widgets/kpi_for_week.dart';
 import 'package:andersen/features/home/presentation/widgets/schedule.dart';
 import 'package:andersen/features/home/presentation/widgets/upcoming_events.dart';
 import 'package:andersen/features/home/presentation/widgets/tasks_for_today.dart';
-import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -71,6 +68,11 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Home header
+              HomeHeader(),
+
+              BasicDivider(),
+
               BlocProvider(
                 create: (context) => sl<HomeCubit>()..loadUserAndStatus(),
                 child: BlocBuilder<HomeCubit, HomeState>(
@@ -108,7 +110,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
@@ -147,8 +148,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 BlocProvider(
-                                  create: (context) =>
-                                      sl<ActivityStatusCubit>()..checkActiveActivity(),
+                                  create: (context) => sl<ActivityStatusCubit>()..checkActiveActivity(),
                                   child: BlocBuilder<ActivityStatusCubit, ActivityStatusState>(
                                     builder: (context, state) {
                                       String timeText = "00:00:00";
@@ -156,7 +156,6 @@ class _HomePageState extends State<HomePage> {
 
                                       if (state is ActivityStatusActive) {
                                         timeText = formatDuration(state.elapsedSeconds);
-                                        // onTap = () => context.push(StopActivityPage.path);
                                         onTap = () {
                                           context.push(
                                             StopActivityPage.path,

@@ -1,6 +1,5 @@
 import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
-import 'package:andersen/features/calendar/domain/repositories/create_event_repository.dart';
 import 'package:andersen/features/calendar/domain/repositories/update_event_repository.dart';
 import 'package:dartz/dartz.dart';
 

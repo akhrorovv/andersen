@@ -6,7 +6,6 @@ import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
-import 'package:andersen/features/calendar/domain/usecase/update_event_usecase.dart';
 import 'package:andersen/features/calendar/presentation/cubit/update_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/widgets/event_update_field.dart';
 import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';

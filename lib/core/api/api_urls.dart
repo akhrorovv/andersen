@@ -27,6 +27,7 @@ class ApiUrls {
   static const activities = '${apiV}activities';
   static const activeActivity = '${apiV}activities/active';
   static const startActivity = '${apiV}activities/start';
+  static String stopActivity(int activityId) => '${apiV}activities/stop/$activityId';
   static String activityDetail(int activityId) => '${apiV}activities/$activityId';
 
   /// Activity Types

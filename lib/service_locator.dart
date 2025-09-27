@@ -64,12 +64,17 @@ import 'features/calendar/presentation/cubit/events_cubit.dart';
 import 'features/calendar/presentation/cubit/update_event_cubit.dart';
 import 'features/home/data/repositories/active_activity_repository_impl.dart';
 import 'features/home/data/repositories/activity_types_repository_impl.dart';
+import 'features/home/data/repositories/stop_activity_repository_impl.dart';
 import 'features/home/data/sources/active_activity_remote_data_source.dart';
 import 'features/home/data/sources/activity_types_remote_data_source.dart';
+import 'features/home/data/sources/stop_activity_remote_data_source.dart';
 import 'features/home/domain/repositories/active_activity_repository.dart';
 import 'features/home/domain/repositories/activity_types_repository.dart';
+import 'features/home/domain/repositories/stop_activity_repository.dart';
 import 'features/home/domain/usecases/get_active_activity.dart';
+import 'features/home/domain/usecases/stop_activity_usecase.dart';
 import 'features/home/presentation/cubit/activity_status_cubit.dart';
+import 'features/home/presentation/cubit/stop_activity_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
 import 'features/tasks/data/repositories/start_activity_repository_impl.dart';
 import 'features/tasks/data/sources/clients_remote_data_source.dart';
@@ -257,5 +262,14 @@ Future<void> _initAuth() async {
       () => UpdateEventRepositoryImpl(sl<UpdateEventRemoteDataSource>()),
     )
     ..registerFactory(() => UpdateEventUsecase(sl<UpdateEventRepository>()))
-    ..registerFactory(() => UpdateEventCubit(sl<UpdateEventUsecase>()));
+    ..registerFactory(() => UpdateEventCubit(sl<UpdateEventUsecase>()))
+    /// Stop activity
+    ..registerFactory<StopActivityRemoteDataSource>(
+      () => StopActivityRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<StopActivityRepository>(
+      () => StopActivityRepositoryImpl(sl<StopActivityRemoteDataSource>()),
+    )
+    ..registerFactory(() => StopActivityUsecase(sl<StopActivityRepository>()))
+    ..registerFactory(() => StopActivityCubit(sl<StopActivityUsecase>()));
 }

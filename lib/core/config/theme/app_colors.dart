@@ -24,6 +24,11 @@ class AppColors {
   static const red5 = Color(0xffFF4D4F);
   static const colorPrimaryBgHover = Color.fromRGBO(186, 224, 255, 1);
 
+  static const green = Color(0xffD9F7BE);
+  static const greenText = Color(0xff389E0D);
+  static const volcano = Color(0xffFFD8BF);
+  static const volcanoText = Color(0xffFF7A45);
+
   /// Status colors
   static const statusColorNew = Color(0xff0069D1);
   static const statusColorReview = Color(0xffFA8C16);

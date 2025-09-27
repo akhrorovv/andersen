@@ -28,14 +28,17 @@ class AppTheme {
       selectionColor: AppColors.primary.withValues(alpha: 0.3),
       selectionHandleColor: AppColors.primary,
     ),
-    snackBarTheme: SnackBarThemeData(
-      contentTextStyle: GoogleFonts.montserrat(
-        // fontSize: 14,
-        // fontWeight: FontWeight.w500,
-        // color: Colors.white,
+    snackBarTheme: SnackBarThemeData(contentTextStyle: GoogleFonts.montserrat()),
+    cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
+      primaryColor: AppColors.primary,
+      textTheme: CupertinoTextThemeData(
+        dateTimePickerTextStyle: GoogleFonts.montserrat(
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w500,
+          color: AppColors.colorText,
+        ),
       ),
     ),
-    cupertinoOverrideTheme: NoDefaultCupertinoThemeData(primaryColor: AppColors.primary),
   );
 
   static final darkTheme = ThemeData();

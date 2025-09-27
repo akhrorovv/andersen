@@ -14,7 +14,7 @@ class ActivityStatusCubit extends Cubit<ActivityStatusState> {
   Future<void> checkActiveActivity() async {
     emit(ActivityStatusLoading());
     try {
-      final result = await useCase();
+      final result = await useCase.call();
 
       result.fold(
         (failure) {
@@ -22,20 +22,20 @@ class ActivityStatusCubit extends Cubit<ActivityStatusState> {
         },
         (activity) {
           if (activity == null) {
+            _timer?.cancel();
             emit(ActivityStatusInactive());
           } else {
             final startTime = activity.lastStartTime;
             if (startTime == null) {
+              _timer?.cancel();
               emit(ActivityStatusError("Activity start time yo‘q"));
               return;
             }
 
-            // Boshlang‘ich diff
             var diff = DateTime.now().toUtc().difference(startTime).inSeconds;
 
             emit(ActivityStatusActive(activity: activity, elapsedSeconds: diff));
 
-            // Har sekund yangilash
             _timer?.cancel();
             _timer = Timer.periodic(const Duration(seconds: 1), (t) {
               diff++;
