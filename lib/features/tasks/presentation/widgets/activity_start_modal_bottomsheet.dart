@@ -1,9 +1,15 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:andersen/features/activities/domain/entities/activity_type_entity.dart';
+import 'package:andersen/features/home/domain/repositories/activity_types_repository.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
+import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:andersen/features/tasks/presentation/cubit/start_activity_cubit.dart';
+import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_field.dart';
+import 'package:andersen/features/tasks/presentation/widgets/task_update_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +17,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ActivityStartModalBottomSheet extends StatefulWidget {
+  static String path = '/start_activity';
   final TaskEntity? task;
 
-  const ActivityStartModalBottomSheet({super.key, required this.task});
+  const ActivityStartModalBottomSheet({super.key, this.task});
 
   @override
   State<ActivityStartModalBottomSheet> createState() => _ActivityStartModalBottomSheetState();
@@ -21,6 +28,7 @@ class ActivityStartModalBottomSheet extends StatefulWidget {
 
 class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottomSheet> {
   final _formKey = GlobalKey<FormState>();
+  int? taskId;
 
   final TextEditingController descriptionController = TextEditingController();
 
@@ -31,9 +39,10 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
       child: BlocConsumer<ActivityStartCubit, ActivityStartState>(
         listener: (context, state) {
           if (state is ActivityStartSuccess) {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
             BasicSnackBar.show(context, message: 'Activity started successfully');
           } else if (state is ActivityStartFailure) {
+            Navigator.of(context).pop(false);
             BasicSnackBar.show(context, message: state.message, error: true);
           }
         },
@@ -83,6 +92,37 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                 ],
                               ),
                             ),
+                          if (widget.task == null)
+                            /// Select task
+                            ShadowContainer(
+                              padding: EdgeInsets.only(top: 16.h, right: 16.w, left: 16.w),
+                              child: TaskUpdateField(
+                                title: "Task",
+                                hasDivider: false,
+                                hasIcon: false,
+                                child: CustomDropdownField<TaskEntity>(
+                                  hint: "Select task",
+                                  selectedItem: null,
+                                  compareFn: (a, b) => a.id == b.id,
+                                  itemAsString: (type) => type.description ?? '-',
+                                  items: (filter) async {
+                                    final result = await sl<TasksRepository>().getTasks(
+                                      limit: 100,
+                                      offset: 0,
+                                      assignedStaffId: DBService.user!.id,
+                                    );
+                                    return result.fold((failure) => [], (res) => res.results);
+                                  },
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        taskId = value.id;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
                           SizedBox(height: 12.h),
                           ShadowContainer(
                             child: Form(
@@ -103,7 +143,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                   TextFormField(
                                     controller: descriptionController,
                                     maxLines: null,
-                                    autofocus: true,
+                                    autofocus: (widget.task != null) ? true : false,
                                     style: TextStyle(
                                       color: AppColors.colorText,
                                       fontWeight: FontWeight.w500,
@@ -145,7 +185,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                         : () {
                             if (_formKey.currentState!.validate()) {
                               final body = {
-                                "taskId": (widget.task != null) ? widget.task!.id : 0,
+                                "taskId": (widget.task != null) ? widget.task!.id : taskId,
                                 "description": descriptionController.text.trim(),
                               };
 

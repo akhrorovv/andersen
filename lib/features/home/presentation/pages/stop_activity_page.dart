@@ -52,7 +52,6 @@ class _StopActivityPageState extends State<StopActivityPage> {
     if (body.isNotEmpty) {
       // sl<StopActivityCubit>().stopActivity(activityId, body);
       context.read<StopActivityCubit>().stopActivity(activityId, body);
-
     } else {
       context.pop(false);
     }
@@ -109,14 +108,10 @@ class _StopActivityPageState extends State<StopActivityPage> {
       body: BlocConsumer<StopActivityCubit, StopActivityState>(
         listener: (context, state) {
           if (state is StopActivitySuccess) {
-            // context.pop(true);
             Navigator.of(context, rootNavigator: true).pop(true);
             BasicSnackBar.show(context, message: 'Activity stopped successfully');
           } else if (state is StopActivityError) {
-            // context.pop(false);
-            Future.microtask(() {
-              Navigator.of(context, rootNavigator: true).pop(false);
-            });
+            Navigator.of(context, rootNavigator: true).pop(false);
             BasicSnackBar.show(context, message: state.message, error: true);
           }
         },
@@ -132,37 +127,51 @@ class _StopActivityPageState extends State<StopActivityPage> {
                       children: [
                         /// total run time
                         ShadowContainer(
-                          child: BlocBuilder<ActivityStatusCubit, ActivityStatusState>(
-                            builder: (context, state) {
-                              if (state is ActivityStatusLoading) {
-                                return LoadingIndicator();
-                              } else if (state is ActivityStatusActive) {
-                                return Column(
-                                  spacing: 4.h,
-                                  children: [
-                                    Text(
-                                      "Total time",
-                                      style: TextStyle(
-                                        color: AppColors.colorText,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.2,
-                                      ),
-                                    ),
-                                    Text(
-                                      formatDuration(state.elapsedSeconds),
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontSize: 24.sp,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.2,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
-                              return const SizedBox.shrink();
+                          child: BlocListener<ActivityStatusCubit, ActivityStatusState>(
+                            listenWhen: (previous, current) {
+                              return current is ActivityStatusActive &&
+                                  (previous is! ActivityStatusActive ||
+                                      previous.activity.description !=
+                                          current.activity.description);
                             },
+
+                            listener: (context, state) {
+                              if (state is ActivityStatusActive) {
+                                descriptionController.text = state.activity.description ?? '';
+                              }
+                            },
+                            child: BlocBuilder<ActivityStatusCubit, ActivityStatusState>(
+                              builder: (context, state) {
+                                if (state is ActivityStatusLoading) {
+                                  return LoadingIndicator();
+                                } else if (state is ActivityStatusActive) {
+                                  return Column(
+                                    spacing: 4.h,
+                                    children: [
+                                      Text(
+                                        "Total time",
+                                        style: TextStyle(
+                                          color: AppColors.colorText,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                      Text(
+                                        formatDuration(state.elapsedSeconds),
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            ),
                           ),
                         ),
 

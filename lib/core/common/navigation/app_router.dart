@@ -19,6 +19,7 @@ import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dar
 import 'package:andersen/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:andersen/features/tasks/presentation/pages/tasks_page.dart';
 import 'package:andersen/features/main_page.dart';
+import 'package:andersen/features/tasks/presentation/widgets/activity_start_modal_bottomsheet.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,22 +66,10 @@ final GoRouter router = GoRouter(
     GoRoute(path: LoginPage.path, builder: (context, state) => LoginPage()),
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
-
-    // GoRoute(
-    //   path: StopActivityPage.path,
-    //   pageBuilder: (context, state) {
-    //     final passedCubit = state.extra as ActivityStatusCubit?;
-    //
-    //     final page = passedCubit != null
-    //         ? BlocProvider.value(value: passedCubit, child: const StopActivityPage())
-    //         : BlocProvider(
-    //             create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
-    //             child: const StopActivityPage(),
-    //           );
-    //
-    //     return MaterialPage(child: page);
-    //   },
-    // ),
+    GoRoute(
+      path: ActivityStartModalBottomSheet.path,
+      builder: (context, state) => ActivityStartModalBottomSheet(),
+    ),
 
     GoRoute(
       path: StopActivityPage.path,
@@ -88,18 +77,13 @@ final GoRouter router = GoRouter(
         final activityId = state.extra as int;
         return MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
-            ),
-            BlocProvider(
-              create: (_) => sl<StopActivityCubit>(),
-            ),
+            BlocProvider(create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity()),
+            BlocProvider(create: (_) => sl<StopActivityCubit>()),
           ],
           child: StopActivityPage(activityId: activityId),
         );
       },
     ),
-
 
     GoRoute(
       path: TaskDetailPage.path,

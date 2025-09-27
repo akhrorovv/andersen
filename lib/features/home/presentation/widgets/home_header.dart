@@ -1,15 +1,18 @@
+import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
+import 'package:andersen/features/tasks/presentation/widgets/activity_start_modal_bottomsheet.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -94,10 +97,19 @@ class HomeHeader extends StatelessWidget {
                             context.read<ActivityStatusCubit>().checkActiveActivity();
                           }
                         };
-
                       } else if (state is ActivityStatusInactive) {
                         timeText = "00:00:00";
-                        onTap = () {};
+                        onTap = () async {
+                          // context.pushCupertinoSheet(ActivityStartModalBottomSheet());
+                          final result = await context.pushCupertinoSheet<bool>(
+                            const ActivityStartModalBottomSheet(),
+                          );
+
+                          if (result == true) {
+                            // agar modal bottom sheet success bo‘lsa
+                            context.read<ActivityStatusCubit>().checkActiveActivity();
+                          }
+                        };
                       } else if (state is ActivityStatusLoading) {
                         timeText = "...";
                       } else if (state is ActivityStatusError) {
