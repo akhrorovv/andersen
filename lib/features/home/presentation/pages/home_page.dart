@@ -1,6 +1,7 @@
 import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
+import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
@@ -10,6 +11,7 @@ import 'package:andersen/features/home/presentation/widgets/schedule.dart';
 import 'package:andersen/features/home/presentation/widgets/upcoming_events.dart';
 import 'package:andersen/features/home/presentation/widgets/tasks_for_today.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:andersen/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,7 +66,10 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// Home header
-                    HomeHeader(),
+                    BlocProvider(
+                      create: (_) => sl<AttendeeCubit>()..checkAttendeeStatus(),
+                      child: HomeHeader(user: user),
+                    ),
 
                     /// Upcoming events
                     UpcomingEvents(),
