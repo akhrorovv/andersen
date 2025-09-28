@@ -283,8 +283,6 @@ class _StopActivityPageState extends State<StopActivityPage> {
                 ),
 
                 BasicButton(
-                  marginLeft: 0,
-                  marginRight: 0,
                   title: 'Save',
                   onTap: () {
                     _onStop(widget.activityId);

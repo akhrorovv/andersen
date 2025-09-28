@@ -313,7 +313,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
               ),
               SafeArea(
                 bottom: true,
-                child: BasicButton(marginBottom: 32, title: "Save", onTap: _onSave),
+                child: BasicButton(title: "Save", onTap: _onSave),
               ),
             ],
           );

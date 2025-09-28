@@ -1,4 +1,4 @@
-import 'package:andersen/features/home/data/models/user_model.dart';
+import 'package:andersen/core/common/models/user_model.dart';
 import 'package:hive/hive.dart';
 
 class DBService {
@@ -20,6 +20,20 @@ class DBService {
   }
 
   static String? get deviceId => _box.get('deviceId');
+
+  // 🔑 Device model saqlash
+  static Future<void> saveDeviceModel(String model) async {
+    await _box.put('deviceModel', model);
+  }
+
+  static String? get deviceModel => _box.get('deviceModel');
+
+  // 🔑 Device version saqlash
+  static Future<void> saveDeviceVersion(String version) async {
+    await _box.put('deviceVersion', version);
+  }
+
+  static String? get deviceVersion => _box.get('deviceVersion');
 
   // 🔑 PIN saqlash
   static Future<void> savePin(String pin) async {

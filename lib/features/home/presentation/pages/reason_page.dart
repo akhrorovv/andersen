@@ -65,8 +65,6 @@ class _ReasonPageState extends State<ReasonPage> {
               ),
             ),
             BasicButton(
-              marginLeft: 0,
-              marginRight: 0,
               title: "Send",
               onTap: () {
                 if (controller.text.isNotEmpty) {

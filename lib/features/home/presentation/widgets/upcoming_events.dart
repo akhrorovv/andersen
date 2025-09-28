@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
+import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
@@ -40,57 +41,62 @@ class UpcomingEvents extends StatelessWidget {
               if (state is EventsLoaded) {
                 final events = state.events.events;
                 return ShadowContainer(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: events.length,
-                    separatorBuilder: (context, index) => BasicDivider(),
-                    itemBuilder: (context, index) {
-                      final event = events[index];
-                      final time = DateFormat('HH:mm').format(event.startsAt!);
-                      return InkWell(
-                        onTap: () async {
-                          final deleted = await context.push(EventDetailPage.path, extra: event.id);
-                          // if (deleted == true && context.mounted) {
-                          //   context.read<EventsCubit>().getEvents();
-                          // }
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              spacing: 8.w,
-                              children: [
-                                CircleAvatar(radius: 4.r, backgroundColor: AppColors.primary),
-                                Text(
-                                  time,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.colorText,
-                                    height: 1.2,
+                  child: (events.isNotEmpty)
+                      ? ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: events.length,
+                          separatorBuilder: (context, index) => BasicDivider(),
+                          itemBuilder: (context, index) {
+                            final event = events[index];
+                            final time = DateFormat('HH:mm').format(event.startsAt!);
+                            return InkWell(
+                              onTap: () async {
+                                final deleted = await context.push(
+                                  EventDetailPage.path,
+                                  extra: event.id,
+                                );
+                                // if (deleted == true && context.mounted) {
+                                //   context.read<EventsCubit>().getEvents();
+                                // }
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    spacing: 8.w,
+                                    children: [
+                                      CircleAvatar(radius: 4.r, backgroundColor: AppColors.primary),
+                                      Text(
+                                        time,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.colorText,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: Text(
-                                event.description ?? '-',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.colorText,
-                                  height: 1.2,
-                                ),
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: Text(
+                                      event.description ?? '-',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.colorText,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                            );
+                          },
+                        )
+                      : EmptyWidget(),
                 );
               }
               return const SizedBox.shrink();

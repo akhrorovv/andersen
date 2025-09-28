@@ -5,12 +5,6 @@ import 'package:andersen/features/auth/domain/repositories/auth_repository.dart'
 import 'package:andersen/features/auth/domain/usecases/login_usecase.dart';
 import 'package:andersen/features/calendar/data/repositories/events_repository_impl.dart';
 import 'package:andersen/features/home/data/repositories/attendee_repository_impl.dart';
-import 'package:andersen/features/home/data/repositories/home_repository_impl.dart';
-import 'package:andersen/features/home/data/sources/home_remote_data_source.dart';
-import 'package:andersen/features/home/domain/repositories/home_repository.dart';
-import 'package:andersen/features/home/domain/usecases/activity_usecase.dart';
-import 'package:andersen/features/home/domain/usecases/get_profile_usecase.dart';
-import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/tasks/data/repositories/clients_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/create_task_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/task_detail_repository_impl.dart';
@@ -25,6 +19,10 @@ import 'package:andersen/features/tasks/domain/usecase/get_task_activities_useca
 import 'package:get_it/get_it.dart';
 
 import 'core/api/dio_client.dart';
+import 'core/common/profile/cubit/profile_cubit.dart';
+import 'core/common/profile/repository/profile_repository.dart';
+import 'core/common/profile/source/profile_remote_data_source.dart';
+import 'core/common/profile/usecase/get_profile_usecase.dart';
 import 'features/activities/data/repositories/activity_detail_repository_impl.dart';
 import 'features/activities/data/repositories/activity_repository_impl.dart';
 import 'features/activities/data/sources/activities_remote_data_source.dart';
@@ -117,17 +115,26 @@ Future<void> setupServiceLocator() async {
 
 Future<void> _initAuth() async {
   sl
-    /// Home
-    ..registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(sl<HomeRemoteDataSource>()))
-    ..registerLazySingleton(() => GetProfileUseCase(sl<HomeRepository>()))
-    ..registerLazySingleton(() => GetActiveStatusUseCase(sl<HomeRepository>()))
-    ..registerLazySingleton(() => HomeCubit(sl<GetProfileUseCase>()))
+    /// Profile
+    ..registerLazySingleton<ProfileRemoteDataSource>(
+      () => ProfileRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<ProfileRepository>(
+      () => ProfileRepositoryImpl(sl<ProfileRemoteDataSource>()),
+    )
+    ..registerLazySingleton(() => GetProfileUseCase(sl<ProfileRepository>()))
+    ..registerFactory(() => ProfileCubit(sl<GetProfileUseCase>()))
     /// Auth
     ..registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl<DioClient>()))
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>()))
     ..registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()))
     ..registerFactory(() => AuthCubit(sl<LoginUseCase>()))
+    /// Home
+    // ..registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(sl<DioClient>()))
+    // ..registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(sl<HomeRemoteDataSource>()))
+    // // ..registerLazySingleton(() => GetProfileUseCase(sl<HomeRepository>()))
+    // ..registerLazySingleton(() => GetActiveStatusUseCase(sl<HomeRepository>()))
+    // ..registerLazySingleton(() => HomeCubit(sl<GetProfileUseCase>()))
     /// Matters & Clients & types
     // matter
     ..registerLazySingleton<MattersRemoteDataSource>(

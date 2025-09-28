@@ -1,4 +1,4 @@
-import 'package:andersen/core/common/navigation/app_router.dart';
+import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';

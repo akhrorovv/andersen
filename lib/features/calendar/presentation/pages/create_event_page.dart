@@ -10,7 +10,7 @@ import 'package:andersen/features/calendar/domain/repositories/users_repository.
 import 'package:andersen/features/calendar/presentation/cubit/create_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/widgets/custom_multi_dropdown_field.dart';
 import 'package:andersen/features/calendar/presentation/widgets/event_field.dart';
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
+import 'package:andersen/core/common/entities/user_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';
 import 'package:andersen/features/tasks/domain/repositories/clients_repository.dart';
 import 'package:andersen/features/tasks/domain/repositories/matters_repository.dart';
@@ -427,7 +427,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 ),
               ),
               BasicButton(
-                marginBottom: 32,
                 title: 'Create',
                 onTap: () {
                   if (_formKey.currentState!.validate()) {

@@ -1,5 +1,5 @@
-import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';

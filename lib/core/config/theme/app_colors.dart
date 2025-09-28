@@ -17,7 +17,7 @@ class AppColors {
   static const dividerColor = Color(0x0F000000);
 
   static const colorBgMask = Color.fromRGBO(0, 0, 0, 0.45);
-  static const shimmer = Color.fromRGBO(240, 240, 240, 1);
+  static const shimmer = Color(0xffF0F0F0);
   static const white = Color.fromRGBO(255, 255, 255, 1);
   static const grey = Color.fromRGBO(166, 173, 185, 1);
   static const red = Color(0xffFF3B30);

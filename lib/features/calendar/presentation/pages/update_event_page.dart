@@ -260,7 +260,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                   ),
                 ),
               ),
-              BasicButton(marginBottom: 32, title: "Save", onTap: _onSave),
+              BasicButton(title: "Save", onTap: _onSave),
             ],
           );
         },

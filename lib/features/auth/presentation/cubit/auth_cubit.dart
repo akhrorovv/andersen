@@ -1,5 +1,5 @@
 import 'package:andersen/core/error/failure.dart';
-import 'package:andersen/features/auth/domain/entities/login_response.dart';
+import 'package:andersen/features/auth/domain/entities/login_response_entity.dart';
 import 'package:andersen/features/auth/domain/usecases/login_params.dart';
 import 'package:andersen/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

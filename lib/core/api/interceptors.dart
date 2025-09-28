@@ -76,24 +76,31 @@ class TokenInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
+      final data = err.response?.data;
+
+      final message = data is Map<String, dynamic> ? data["message"] as String? : null;
+
+      // 🔒 Device blocked holati
+      if (message != null && message.contains("Device is blocked")) {
+        // bu holatda token yangilash emas, balki foydalanuvchini logout qilish yoki errorni o‘tkazib yuborish kerak
+        return handler.next(err);
+      }
+
+      // 🔑 Token expired bo‘lsa
       final refreshToken = DBService.refreshToken;
 
-      // Refresh token bo‘lmasa — logout qilish kerak
       if (refreshToken == null || refreshToken.isEmpty) {
         handler.next(err);
         return;
       }
 
       try {
-        // 🔄 Yangi access token olib kelamiz
         final response = await _dio.put(ApiUrls.renewAccess, data: {"refresh": refreshToken});
-
         final newAccess = response.data["access"];
+
         if (newAccess != null) {
-          // DB ga saqlash
           await DBService.saveTokens(newAccess, refreshToken);
 
-          // ❗ Eski requestni qayta yuboramiz
           final retryRequest = await _dio.fetch(
             err.requestOptions..headers["Authorization"] = "Bearer $newAccess",
           );
@@ -101,13 +108,11 @@ class TokenInterceptor extends Interceptor {
           return handler.resolve(retryRequest);
         }
       } catch (e) {
-        // Refresh ham ishlamasa => logout qilish kerak bo‘ladi
         await DBService.clear();
         return handler.next(err);
       }
     }
 
-    // Agar boshqa xato bo‘lsa oddiy davom etadi
     return handler.next(err);
   }
 }

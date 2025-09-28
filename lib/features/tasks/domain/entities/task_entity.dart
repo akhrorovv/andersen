@@ -1,4 +1,4 @@
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
+import 'package:andersen/core/common/entities/user_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/activity_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/matter_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/task_type_entity.dart';

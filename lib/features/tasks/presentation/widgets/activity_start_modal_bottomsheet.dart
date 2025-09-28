@@ -178,8 +178,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                   BasicButton(
                     title: state is ActivityStartLoading ? "Loading..." : "Start activity",
                     icon: state is ActivityStartLoading ? null : Assets.vectors.play.path,
-                    marginLeft: 0,
-                    marginRight: 0,
+
                     onTap: state is ActivityStartLoading
                         ? () {}
                         : () {

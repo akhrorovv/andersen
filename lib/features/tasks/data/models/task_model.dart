@@ -1,4 +1,4 @@
-import 'package:andersen/features/home/data/models/user_model.dart';
+import 'package:andersen/core/common/models/user_model.dart';
 import 'package:andersen/features/tasks/data/models/activity_model.dart';
 import 'package:andersen/features/tasks/data/models/matter_model.dart';
 import 'package:andersen/features/tasks/data/models/task_type_model.dart';

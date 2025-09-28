@@ -49,8 +49,6 @@ class _OptionsPageState extends State<OptionsPage> {
             ),
             Spacer(),
             BasicButton(
-              marginRight: 0,
-              marginLeft: 0,
               title: 'Confirm',
               onTap: () {
                 context.pop(selected);

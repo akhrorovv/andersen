@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:andersen/core/common/navigation/app_router.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/utils/phone_number_formatter.dart';

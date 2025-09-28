@@ -40,6 +40,7 @@ class _ScheduleState extends State<Schedule> {
     final startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
     final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
     eventsCubit.getEvents(
+      refresh: true,
       dayMin: '${startOfDay.toIso8601String()}Z',
       dayMax: '${endOfDay.toIso8601String()}Z',
     );
@@ -80,7 +81,7 @@ class _ScheduleState extends State<Schedule> {
                           setState(() {
                             selectedDate = date;
                           });
-                          // _fetchEventsForDate(date);
+                          _fetchEventsForDate(date);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 6.w),

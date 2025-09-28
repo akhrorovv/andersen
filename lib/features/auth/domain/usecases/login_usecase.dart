@@ -1,5 +1,5 @@
 import 'package:andersen/core/error/failure.dart';
-import 'package:andersen/features/auth/domain/entities/login_response.dart';
+import 'package:andersen/features/auth/domain/entities/login_response_entity.dart';
 import 'package:andersen/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 

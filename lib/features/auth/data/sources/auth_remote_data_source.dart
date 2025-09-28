@@ -15,10 +15,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._client);
 
   @override
-  Future<LoginResponseModel> login(
-    LoginParams params, {
-    String? deviceId,
-  }) async {
+  Future<LoginResponseModel> login(LoginParams params, {String? deviceId}) async {
     try {
       Map<String, dynamic> body;
 
@@ -34,11 +31,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
         };
       } else {
-        body = {
-          "phone": params.phone,
-          "password": params.password,
-          "deviceId": deviceId,
-        };
+        body = {"phone": params.phone, "password": params.password, "deviceId": deviceId};
       }
 
       final response = await _client.post(ApiUrls.login, data: body);
@@ -52,10 +45,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? e.toString(),
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      throw ServerException.fromDioException(e);
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }

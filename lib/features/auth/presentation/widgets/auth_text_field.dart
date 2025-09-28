@@ -67,12 +67,8 @@ class _AuthFieldState extends State<AuthField> {
           decoration: InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.symmetric(vertical: 10.h),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.shimmer),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primary),
-            ),
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.shimmer)),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
             suffixIcon: widget.obscureText
                 ? IconButton(
                     onPressed: _toggleObscure,
@@ -88,8 +84,8 @@ class _AuthFieldState extends State<AuthField> {
             }
             if (widget.obscureText) {
               // Password validation
-              if (value.length < 6) {
-                return "Password must be at least 6 characters";
+              if (value.length < 8) {
+                return "Password must be at least 8 characters";
               }
             } else {
               String digitsOnly = phoneMaskFormatter.getUnmaskedText();

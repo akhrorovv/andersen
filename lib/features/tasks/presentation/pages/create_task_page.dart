@@ -271,9 +271,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   ),
                   BasicButton(
                     title: 'Create',
-                    marginLeft: 0,
-                    marginBottom: 0,
-                    marginRight: 0,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         if (matterId == null) {

@@ -1,10 +1,11 @@
-import 'package:andersen/core/common/navigation/app_router.dart';
+import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
+import 'package:andersen/core/common/profile/cubit/profile_state.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/error_message.dart';
-import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
+import 'package:andersen/core/common/entities/user_entity.dart';
 import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/widgets/activity_status_button.dart';
@@ -15,7 +16,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 
 class HomeHeader extends StatefulWidget {
   final UserEntity user;

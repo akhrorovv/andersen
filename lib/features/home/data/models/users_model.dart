@@ -1,5 +1,5 @@
 import 'package:andersen/core/common/models/meta_model.dart';
-import 'package:andersen/features/home/data/models/user_model.dart';
+import 'package:andersen/core/common/models/user_model.dart';
 import 'package:andersen/features/home/domain/entities/users_entity.dart';
 
 class UsersModel extends UsersEntity {

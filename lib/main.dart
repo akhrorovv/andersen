@@ -6,8 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'core/common/navigation/app_router.dart';
+import 'core/common/profile/cubit/profile_cubit.dart';
 import 'core/config/theme/app_theme.dart';
+import 'core/navigation/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -41,18 +41,16 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, __) {
         return MultiBlocProvider(
-          providers: [BlocProvider(create: (context) => sl<AuthCubit>())],
+          providers: [
+            BlocProvider(create: (context) => sl<AuthCubit>()),
+            BlocProvider(create: (context) => sl<ProfileCubit>()),
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
-
-            /// Locale
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-
-            /// Theme
             theme: AppTheme.lightTheme,
-
             builder: (context, widget) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),

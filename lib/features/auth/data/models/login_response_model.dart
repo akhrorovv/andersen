@@ -1,5 +1,5 @@
 import 'package:andersen/features/auth/data/models/tokens_model.dart';
-import 'package:andersen/features/auth/domain/entities/login_response.dart';
+import 'package:andersen/features/auth/domain/entities/login_response_entity.dart';
 
 class LoginResponseModel extends LoginResponseEntity {
   const LoginResponseModel({required super.tokens, required super.deviceId});

@@ -13,7 +13,7 @@ class BasicSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
-          spacing: 6.w,
+          spacing: 12.w,
           children: [
             Icon(Icons.error, color: error ? AppColors.red : AppColors.colorTextWhite),
             Expanded(
@@ -27,8 +27,8 @@ class BasicSnackBar {
         backgroundColor: error ? AppColors.white : AppColors.primary,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        margin: EdgeInsets.all(16.w),
       ),
     );
   }

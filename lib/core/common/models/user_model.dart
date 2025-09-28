@@ -1,4 +1,4 @@
-import 'package:andersen/features/home/domain/entities/user_entity.dart';
+import 'package:andersen/core/common/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({

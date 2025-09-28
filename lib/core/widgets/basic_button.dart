@@ -7,59 +7,64 @@ class BasicButton extends StatelessWidget {
   final String title;
   final String? icon;
   final double height;
-  final double marginLeft;
-  final double marginRight;
-  final double marginBottom;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool isLoading;
+  final bool enabled;
 
   const BasicButton({
     super.key,
     required this.title,
     this.icon,
     this.height = 42,
-    this.marginLeft = 16,
-    this.marginRight = 16,
-    this.marginBottom = 16,
     required this.onTap,
+    this.isLoading = false,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(
-          left: marginLeft,
-          right: marginRight,
-          bottom: marginBottom,
-        ),
+    final isDisabled = isLoading || !enabled;
+    return ElevatedButton(
+      onPressed: isDisabled ? null : onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+        minimumSize: Size(MediaQuery.of(context).size.width, 48.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+      ),
+      child: SizedBox(
         height: height.h,
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null)
-                Padding(
-                  padding: EdgeInsets.only(right: 4.w),
-                  child: SvgPicture.asset(icon!, width: 20.w),
+          child: isLoading
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.colorTextWhite),
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (icon != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 4.w),
+                        child: SvgPicture.asset(icon!, width: 20.w),
+                      ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: AppColors.colorTextWhite,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        height: 1.25,
+                      ),
+                    ),
+                  ],
                 ),
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppColors.colorTextWhite,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  height: 1.25,
-                  letterSpacing: 0,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
