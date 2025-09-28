@@ -1,4 +1,5 @@
 import 'package:andersen/core/common/navigation/app_router.dart';
+import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:andersen/features/home/presentation/widgets/upcoming_events.dart
 import 'package:andersen/features/home/presentation/widgets/tasks_for_today.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,34 +60,37 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 24.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// Home header
-                    BlocProvider(
-                      create: (_) => sl<AttendeeCubit>()..checkAttendeeStatus(),
-                      child: HomeHeader(user: user),
+              body: RefreshIndicator(
+                color: AppColors.primary,
+                backgroundColor: Colors.white,
+                displacement: 80, // qancha pastga tushgandan keyin trigger bo‘lsin
+                strokeWidth: 2.5,
+                onRefresh: () async {
+                  await context.read<HomeCubit>().getProfile();
+                },
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          BlocProvider(
+                            create: (_) => sl<AttendeeCubit>()..checkAttendeeStatus(),
+                            child: HomeHeader(user: state.user),
+                          ),
+                          UpcomingEvents(),
+                          TasksForToday(),
+                          KpiForWeek(),
+                          Schedule(),
+                        ]),
+                      ),
                     ),
-
-                    /// Upcoming events
-                    UpcomingEvents(),
-
-                    /// Tasks for today
-                    TasksForToday(),
-
-                    /// Kpi for week
-                    KpiForWeek(),
-
-                    /// Schedule
-                    Schedule(),
                   ],
                 ),
-              ),
-            ),
+              )
+
+
           );
         }
         return SizedBox.shrink();

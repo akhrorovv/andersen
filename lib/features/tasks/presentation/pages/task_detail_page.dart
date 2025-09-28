@@ -64,10 +64,7 @@ class TaskDetailPage extends StatelessWidget {
                       showCupertinoModalBottomSheet(
                         context: context,
                         topRadius: Radius.circular(16.r),
-                        builder: (context) => SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.7,
-                          child: ActivityStartModalBottomSheet(task: task),
-                        ),
+                        builder: (context) => ActivityStartModalBottomSheet(task: task),
                       );
                     },
                     child: Icon(Icons.add, color: AppColors.white),
