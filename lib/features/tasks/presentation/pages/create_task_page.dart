@@ -85,184 +85,195 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ShadowContainer(
-                    child: Column(
-                      spacing: 6.h,
-                      children: [
-                        /// Clients
-                        TaskUpdateField(
-                          title: "Select Client",
-                          hasDivider: false,
-                          hasIcon: false,
-                          child: CustomDropdownField<ClientEntity>(
-                            hint: "Select Client",
-                            selectedItem: null,
-                            compareFn: (a, b) => a.id == b.id,
-                            itemAsString: (client) {
-                              if (client.type == "COMPANY") return client.name ?? "";
-                              if (client.type == "PERSON") {
-                                final last = client.lastname ?? "";
-                                final first = client.name ?? "";
-                                final middle = client.middlename ?? "";
-                                return "$last $first $middle".trim();
-                              }
-                              return "-";
-                            },
-                            items: (filter) async {
-                              final result = await sl<ClientsRepository>().getClients(
-                                limit: 10,
-                                offset: 0,
-                                search: (filter != null && filter.length >= 2) ? filter : null,
-                              );
-                              return result.fold((failure) => [], (res) => res.clients);
-                            },
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  clientId = value.id;
-                                });
-                                log("Selected Client: ${value.name}");
-                              }
-                            },
-                          ),
-                        ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ShadowContainer(
+                            child: Column(
+                              spacing: 6.h,
+                              children: [
+                                /// Clients
+                                TaskUpdateField(
+                                  title: "Select Client",
+                                  hasDivider: false,
+                                  hasIcon: false,
+                                  child: CustomDropdownField<ClientEntity>(
+                                    hint: "Select Client",
+                                    selectedItem: null,
+                                    compareFn: (a, b) => a.id == b.id,
+                                    itemAsString: (client) {
+                                      if (client.type == "COMPANY") return client.name ?? "";
+                                      if (client.type == "PERSON") {
+                                        final last = client.lastname ?? "";
+                                        final first = client.name ?? "";
+                                        final middle = client.middlename ?? "";
+                                        return "$last $first $middle".trim();
+                                      }
+                                      return "-";
+                                    },
+                                    items: (filter) async {
+                                      final result = await sl<ClientsRepository>().getClients(
+                                        limit: 10,
+                                        offset: 0,
+                                        search: (filter != null && filter.length >= 2) ? filter : null,
+                                      );
+                                      return result.fold((failure) => [], (res) => res.clients);
+                                    },
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          clientId = value.id;
+                                        });
+                                        log("Selected Client: ${value.name}");
+                                      }
+                                    },
+                                  ),
+                                ),
 
-                        /// Case
-                        TaskUpdateField(
-                          title: "Case",
-                          hasDivider: false,
-                          hasIcon: false,
-                          child: CustomDropdownField<MatterEntity>(
-                            hint: "Select Case",
-                            selectedItem: null,
-                            compareFn: (a, b) => a.id == b.id,
-                            itemAsString: (m) => m.name,
-                            items: (String? filter) async {
-                              if (clientId == null) return <MatterEntity>[];
-                              final result = await sl<MattersRepository>().getMatters(
-                                limit: 10,
-                                offset: 0,
-                                clientId: clientId!,
-                                taskCreatable: true,
-                                search: (filter != null && filter.length >= 2) ? filter : null,
-                              );
-                              return result.fold((failure) => [], (res) => res.results);
-                            },
-                            onChanged: (m) {
-                              if (m != null) setState(() => matterId = m.id);
-                            },
-                          ),
-                        ),
+                                /// Case
+                                TaskUpdateField(
+                                  title: "Case",
+                                  hasDivider: false,
+                                  hasIcon: false,
+                                  child: CustomDropdownField<MatterEntity>(
+                                    hint: "Select Case",
+                                    selectedItem: null,
+                                    compareFn: (a, b) => a.id == b.id,
+                                    itemAsString: (m) => m.name,
+                                    items: (String? filter) async {
+                                      if (clientId == null) return <MatterEntity>[];
+                                      final result = await sl<MattersRepository>().getMatters(
+                                        limit: 10,
+                                        offset: 0,
+                                        clientId: clientId!,
+                                        taskCreatable: true,
+                                        search: (filter != null && filter.length >= 2) ? filter : null,
+                                      );
+                                      return result.fold((failure) => [], (res) => res.results);
+                                    },
+                                    onChanged: (m) {
+                                      if (m != null) setState(() => matterId = m.id);
+                                    },
+                                  ),
+                                ),
 
-                        /// Due Date
-                        TaskUpdateField(
-                          title: "Due Date",
-                          hasDivider: true,
-                          hasIcon: false,
-                          child: InkWell(
-                            onTap: () async {
-                              final pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: dueAt ?? DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100),
-                                builder: (context, child) {
-                                  return Theme(
-                                    data: Theme.of(context).copyWith(
-                                      colorScheme: ColorScheme.light(
-                                        primary: AppColors.primary,
-                                        onPrimary: Colors.white,
-                                        onSurface: AppColors.black,
+                                /// Due Date
+                                TaskUpdateField(
+                                  title: "Due Date",
+                                  hasDivider: true,
+                                  hasIcon: false,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final pickedDate = await showDatePicker(
+                                        context: context,
+                                        initialDate: dueAt ?? DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(2100),
+                                        builder: (context, child) {
+                                          return Theme(
+                                            data: Theme.of(context).copyWith(
+                                              colorScheme: ColorScheme.light(
+                                                primary: AppColors.primary,
+                                                onPrimary: Colors.white,
+                                                onSurface: AppColors.black,
+                                              ),
+                                            ),
+                                            child: child!,
+                                          );
+                                        },
+                                      );
+
+                                      if (pickedDate != null) {
+                                        setState(() {
+                                          dueAt = pickedDate;
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      dueAt != null
+                                          ? DateFormat("dd/MM/yyyy").format(dueAt!)
+                                          : "DD/MM/YYYY",
+                                      style: TextStyle(
+                                        color: dueAt != null ? AppColors.black : AppColors.black45,
+                                        fontSize: 14.sp,
                                       ),
                                     ),
-                                    child: child!,
-                                  );
-                                },
-                              );
+                                  ),
+                                ),
 
-                              if (pickedDate != null) {
-                                setState(() {
-                                  dueAt = pickedDate;
-                                });
-                              }
-                            },
-                            child: Text(
-                              dueAt != null
-                                  ? DateFormat("dd/MM/yyyy").format(dueAt!)
-                                  : "DD/MM/YYYY",
-                              style: TextStyle(
-                                color: dueAt != null ? AppColors.black : AppColors.black45,
-                                fontSize: 14.sp,
-                              ),
+                                /// Description
+                                TaskUpdateField(
+                                  title: "Description",
+                                  hasDivider: true,
+                                  hasIcon: false,
+                                  child: TextFormField(
+                                    controller: descriptionController,
+                                    maxLines: null,
+                                    validator: (value) {
+                                      if (value == null || value.trim().isEmpty) {
+                                        return "Description should not be empty";
+                                      }
+                                      return null;
+                                    },
+                                    style: TextStyle(
+                                      color: AppColors.colorText,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14.sp,
+                                    ),
+                                    decoration: InputDecoration(
+                                      isCollapsed: true,
+                                      hintText: "Enter description",
+                                      hintStyle: TextStyle(
+                                        color: AppColors.colorBgMask,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14.sp,
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                ),
+
+                                /// Task type
+                                TaskUpdateField(
+                                  title: "Task type",
+                                  hasDivider: false,
+                                  hasIcon: false,
+                                  child: CustomDropdownField<TaskTypeEntity>(
+                                    hint: "Select task type",
+                                    selectedItem: null,
+                                    compareFn: (a, b) => a.id == b.id,
+                                    itemAsString: (type) => type.name ?? '-',
+                                    items: (filter) async {
+                                      final result = await sl<TaskTypesRepository>().getTypes(
+                                        limit: 50,
+                                        offset: 0,
+                                      );
+                                      return result.fold((failure) => [], (res) => res.types);
+                                    },
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          typeId = value.id;
+                                        });
+                                        log("Selected Type: ${value.name}");
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-
-                        /// Description
-                        TaskUpdateField(
-                          title: "Description",
-                          hasDivider: true,
-                          hasIcon: false,
-                          child: TextFormField(
-                            controller: descriptionController,
-                            maxLines: null,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return "Description should not be empty";
-                              }
-                              return null;
-                            },
-                            style: TextStyle(
-                              color: AppColors.colorText,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
-                            ),
-                            decoration: InputDecoration(
-                              isCollapsed: true,
-                              hintText: "Enter description",
-                              hintStyle: TextStyle(
-                                color: AppColors.colorBgMask,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.sp,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-
-                        /// Task type
-                        TaskUpdateField(
-                          title: "Task type",
-                          hasDivider: false,
-                          hasIcon: false,
-                          child: CustomDropdownField<TaskTypeEntity>(
-                            hint: "Select task type",
-                            selectedItem: null,
-                            compareFn: (a, b) => a.id == b.id,
-                            itemAsString: (type) => type.name ?? '-',
-                            items: (filter) async {
-                              final result = await sl<TaskTypesRepository>().getTypes(
-                                limit: 50,
-                                offset: 0,
-                              );
-                              return result.fold((failure) => [], (res) => res.types);
-                            },
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  typeId = value.id;
-                                });
-                                log("Selected Type: ${value.name}");
-                              }
-                            },
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   BasicButton(
                     title: 'Create',
+                    marginLeft: 0,
+                    marginBottom: 0,
+                    marginRight: 0,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         if (matterId == null) {

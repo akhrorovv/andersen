@@ -1,25 +1,17 @@
-import 'package:andersen/features/home/domain/usecases/activity_usecase.dart';
-import 'package:andersen/features/home/domain/usecases/profile_usecase.dart';
+import 'package:andersen/features/home/domain/usecases/get_profile_usecase.dart';
+import 'package:andersen/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final GetProfileUseCase getUserProfile;
-  final GetActiveStatusUseCase getActiveStatus;
 
-  HomeCubit(this.getUserProfile, this.getActiveStatus) : super(HomeInitial());
+  HomeCubit(this.getUserProfile) : super(HomeInitial());
 
-  Future<void> loadUserAndStatus() async {
+  Future<void> getProfile() async {
     emit(HomeLoading());
 
-    final userResult = await getUserProfile();
-    final statusResult = await getActiveStatus();
+    final result = await getUserProfile.call();
 
-    userResult.fold((failure) => emit(HomeError(failure.message)), (user) {
-      statusResult.fold(
-        (failure) => emit(HomeError(failure.message)),
-        (isActive) => emit(HomeLoaded(user, isActive)),
-      );
-    });
+    result.fold((failure) => emit(HomeError(failure.message)), (user) => emit(HomeLoaded(user)));
   }
 }

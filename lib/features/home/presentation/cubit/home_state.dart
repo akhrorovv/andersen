@@ -15,12 +15,11 @@ class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
   final UserEntity user;
-  final ActiveStatusEntity status;
 
-  const HomeLoaded(this.user, this.status);
+  const HomeLoaded(this.user);
 
   @override
-  List<Object?> get props => [user, status];
+  List<Object?> get props => [user];
 }
 
 class HomeError extends HomeState {

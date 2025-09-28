@@ -9,6 +9,7 @@ import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart'
 import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
+import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
@@ -34,7 +35,13 @@ final GoRouter router = GoRouter(
       builder: (context, state, navigationShell) => MainPage(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
-          routes: [GoRoute(path: HomePage.path, builder: (context, state) => HomePage())],
+          routes: [
+            GoRoute(
+              path: HomePage.path,
+              builder: (context, state) =>
+                  BlocProvider(create: (_) => sl<HomeCubit>()..getProfile(), child: HomePage()),
+            ),
+          ],
         ),
         StatefulShellBranch(
           routes: [GoRoute(path: TasksPage.path, builder: (context, state) => TasksPage())],

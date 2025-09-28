@@ -4,11 +4,12 @@ import 'package:andersen/features/auth/data/sources/auth_remote_data_source.dart
 import 'package:andersen/features/auth/domain/repositories/auth_repository.dart';
 import 'package:andersen/features/auth/domain/usecases/login_usecase.dart';
 import 'package:andersen/features/calendar/data/repositories/events_repository_impl.dart';
+import 'package:andersen/features/home/data/repositories/attendee_repository_impl.dart';
 import 'package:andersen/features/home/data/repositories/home_repository_impl.dart';
 import 'package:andersen/features/home/data/sources/home_remote_data_source.dart';
 import 'package:andersen/features/home/domain/repositories/home_repository.dart';
 import 'package:andersen/features/home/domain/usecases/activity_usecase.dart';
-import 'package:andersen/features/home/domain/usecases/profile_usecase.dart';
+import 'package:andersen/features/home/domain/usecases/get_profile_usecase.dart';
 import 'package:andersen/features/home/presentation/cubit/home_cubit.dart';
 import 'package:andersen/features/tasks/data/repositories/clients_repository_impl.dart';
 import 'package:andersen/features/tasks/data/repositories/create_task_repository_impl.dart';
@@ -67,13 +68,19 @@ import 'features/home/data/repositories/activity_types_repository_impl.dart';
 import 'features/home/data/repositories/stop_activity_repository_impl.dart';
 import 'features/home/data/sources/active_activity_remote_data_source.dart';
 import 'features/home/data/sources/activity_types_remote_data_source.dart';
+import 'features/home/data/sources/attendee_remote_data_source.dart';
 import 'features/home/data/sources/stop_activity_remote_data_source.dart';
 import 'features/home/domain/repositories/active_activity_repository.dart';
 import 'features/home/domain/repositories/activity_types_repository.dart';
+import 'features/home/domain/repositories/attendee_repository.dart';
 import 'features/home/domain/repositories/stop_activity_repository.dart';
+import 'features/home/domain/usecases/arrive_attendee_usecase.dart';
+import 'features/home/domain/usecases/check_attendee_status_usecase.dart';
 import 'features/home/domain/usecases/get_active_activity.dart';
+import 'features/home/domain/usecases/leave_attendee_usecase.dart';
 import 'features/home/domain/usecases/stop_activity_usecase.dart';
 import 'features/home/presentation/cubit/activity_status_cubit.dart';
+import 'features/home/presentation/cubit/attendee_cubit.dart';
 import 'features/home/presentation/cubit/stop_activity_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
 import 'features/tasks/data/repositories/start_activity_repository_impl.dart';
@@ -115,7 +122,7 @@ Future<void> _initAuth() async {
     ..registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(sl<HomeRemoteDataSource>()))
     ..registerLazySingleton(() => GetProfileUseCase(sl<HomeRepository>()))
     ..registerLazySingleton(() => GetActiveStatusUseCase(sl<HomeRepository>()))
-    ..registerLazySingleton(() => HomeCubit(sl<GetProfileUseCase>(), sl<GetActiveStatusUseCase>()))
+    ..registerLazySingleton(() => HomeCubit(sl<GetProfileUseCase>()))
     /// Auth
     ..registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl<DioClient>()))
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>()))
@@ -271,5 +278,22 @@ Future<void> _initAuth() async {
       () => StopActivityRepositoryImpl(sl<StopActivityRemoteDataSource>()),
     )
     ..registerFactory(() => StopActivityUsecase(sl<StopActivityRepository>()))
-    ..registerFactory(() => StopActivityCubit(sl<StopActivityUsecase>()));
+    ..registerFactory(() => StopActivityCubit(sl<StopActivityUsecase>()))
+    /// Check attendee status
+    ..registerFactory<AttendeeStatusRemoteDataSource>(
+      () => AttendeeStatusRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<AttendeeStatusRepository>(
+      () => AttendeeStatusRepositoryImpl(sl<AttendeeStatusRemoteDataSource>()),
+    )
+    ..registerFactory(() => ArriveAttendeeUsecase(sl<AttendeeStatusRepository>()))
+    ..registerFactory(() => LeaveAttendeeUsecase(sl<AttendeeStatusRepository>()))
+    ..registerFactory(() => CheckAttendeeStatusUsecase(sl<AttendeeStatusRepository>()))
+    ..registerFactory(
+      () => AttendeeCubit(
+        sl<CheckAttendeeStatusUsecase>(),
+        sl<ArriveAttendeeUsecase>(),
+        sl<LeaveAttendeeUsecase>(),
+      ),
+    );
 }

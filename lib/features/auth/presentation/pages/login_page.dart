@@ -1,8 +1,9 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
-import 'package:andersen/core/entities/device_entity.dart';
+import 'package:andersen/core/common/entities/device_entity.dart';
 import 'package:andersen/core/utils/device_info_helper.dart';
 import 'package:andersen/core/utils/phone_number_formatter.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
+import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/auth/domain/usecases/login_params.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:andersen/features/auth/presentation/widgets/auth_text_field.dart';
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           },
           builder: (context, state) {
             if (state is AuthLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const LoadingIndicator();
             }
             return SafeArea(
               child: Padding(

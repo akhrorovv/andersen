@@ -6,7 +6,11 @@ class ApiUrls {
   static const login = '${apiV}auth/login';
   static const renewAccess = '${apiV}auth/renew-access';
   static const profile = '${apiV}users/profile';
+
+  /// Attendees
   static const attendeeStatus = '${apiV}attendees/active';
+  static const arrive = '${apiV}attendees/arrive';
+  static const leave = '${apiV}attendees/leave';
 
   /// Tasks
   static const tasks = '${apiV}tasks';

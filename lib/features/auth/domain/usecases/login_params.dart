@@ -1,4 +1,4 @@
-import 'package:andersen/core/entities/device_entity.dart';
+import 'package:andersen/core/common/entities/device_entity.dart';
 
 class LoginParams {
   final String phone;

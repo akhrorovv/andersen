@@ -16,9 +16,11 @@ class BasicSnackBar {
           spacing: 6.w,
           children: [
             Icon(Icons.error, color: error ? AppColors.red : AppColors.colorTextWhite),
-            Text(
-              message,
-              style: TextStyle(color: error ? AppColors.red : AppColors.colorTextWhite),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: error ? AppColors.red : AppColors.colorTextWhite),
+              ),
             ),
           ],
         ),
