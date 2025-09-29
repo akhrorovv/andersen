@@ -1,4 +1,5 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,9 +20,13 @@ class AttendeeButton extends StatefulWidget {
   });
 
   /// 🔹 Factory for "Has Come"
-  factory AttendeeButton.hasCome({Future<void> Function()? onTap, bool isLoading = false}) {
+  factory AttendeeButton.hasCome({
+    Future<void> Function()? onTap,
+    bool isLoading = false,
+    required BuildContext context,
+  }) {
     return AttendeeButton(
-      title: "Has Come",
+      title: context.tr("hasCome"),
       background: AppColors.green,
       textColor: AppColors.greenText,
       onTap: onTap,
@@ -30,9 +35,13 @@ class AttendeeButton extends StatefulWidget {
   }
 
   /// 🔹 Factory for "Has Left"
-  factory AttendeeButton.hasLeft({Future<void> Function()? onTap, bool isLoading = false}) {
+  factory AttendeeButton.hasLeft({
+    Future<void> Function()? onTap,
+    bool isLoading = false,
+    required BuildContext context,
+  }) {
     return AttendeeButton(
-      title: "Has Left",
+      title: context.tr("hasLeft"),
       background: AppColors.volcano,
       textColor: AppColors.volcanoText,
       onTap: onTap,

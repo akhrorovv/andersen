@@ -16,6 +16,7 @@ import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.da
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
+import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dart';
@@ -28,9 +29,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter router = GoRouter(
   debugLogDiagnostics: false,
   initialLocation: SplashPage.path,
+  navigatorKey: navigatorKey,
   routes: [
     /// Splash page
     GoRoute(
@@ -74,6 +78,8 @@ final GoRouter router = GoRouter(
         StatefulShellBranch(
           routes: [GoRoute(path: TasksPage.path, builder: (context, state) => TasksPage())],
         ),
+
+        /// Calendar page
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -87,13 +93,25 @@ final GoRouter router = GoRouter(
             ),
           ],
         ),
+
+        /// Activities page
         StatefulShellBranch(
           routes: [
             GoRoute(path: ActivitiesPage.path, builder: (context, state) => ActivitiesPage()),
           ],
         ),
+
+        /// Kpi page
         StatefulShellBranch(
-          routes: [GoRoute(path: KpiPage.path, builder: (context, state) => KpiPage())],
+          routes: [
+            GoRoute(
+              path: KpiPage.path,
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<KpiUserCubit>()..getUserKpi(111),
+                child: KpiPage(),
+              ),
+            ),
+          ],
         ),
       ],
     ),

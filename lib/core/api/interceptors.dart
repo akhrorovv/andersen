@@ -1,6 +1,10 @@
 import 'package:andersen/core/api/api_urls.dart';
+import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
+import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 
 /// This interceptor is used to show request and response logs
@@ -80,10 +84,36 @@ class TokenInterceptor extends Interceptor {
 
       final message = data is Map<String, dynamic> ? data["message"] as String? : null;
 
+      // // 🔒 Device blocked holati
+      // if (message != null && message.contains("Device is blocked")) {
+      //   // Local DB ni tozalash
+      //   await DBService.clear();
+      //
+      //   // Login page ga redirect
+      //   if (navigatorKey.currentContext != null) {
+      //     navigatorKey.currentContext!.go(LoginPage.path);
+      //   }
+      //
+      //   return handler.next(err);
+      // }
+
       // 🔒 Device blocked holati
       if (message != null && message.contains("Device is blocked")) {
-        // bu holatda token yangilash emas, balki foydalanuvchini logout qilish yoki errorni o‘tkazib yuborish kerak
-        return handler.next(err);
+        final context = navigatorKey.currentContext;
+
+        if (context != null) {
+          final router = GoRouter.of(context);
+          final location = router.routerDelegate.currentConfiguration.last.matchedLocation;
+
+          if (location == CheckingPage.path) {
+            return handler.next(err);
+          } else {
+            await DBService.clear();
+            context.go(LoginPage.path);
+            return handler.next(err);
+          }
+        }
+
       }
 
       // 🔑 Token expired bo‘lsa

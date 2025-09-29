@@ -3,6 +3,7 @@ import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +35,7 @@ class _ReasonPageState extends State<ReasonPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "The reason:",
+                        "${context.tr('reason')}:",
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
@@ -65,12 +66,12 @@ class _ReasonPageState extends State<ReasonPage> {
               ),
             ),
             BasicButton(
-              title: "Send",
+              title: context.tr('send'),
               onTap: () {
                 if (controller.text.isNotEmpty) {
                   Navigator.pop(context, controller.text);
                 } else {
-                  BasicSnackBar.show(context, message: "Please enter a reason");
+                  BasicSnackBar.show(context, message: context.tr('pleaseEnterReason'));
                 }
               },
             ),

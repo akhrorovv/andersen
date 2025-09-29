@@ -1,5 +1,3 @@
-import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
-import 'package:andersen/core/common/profile/cubit/profile_state.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
@@ -11,7 +9,6 @@ import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/widgets/activity_status_button.dart';
 import 'package:andersen/features/home/presentation/widgets/attendee_actions.dart';
 import 'package:andersen/features/home/presentation/widgets/attendee_button.dart';
-import 'package:andersen/service_locator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,6 +87,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
                     if (state is AttendeeStatusLoaded) {
                       return AttendeeButton.hasLeft(
+                        context: context,
                         isLoading: isLoading,
                         onTap: () async {
                           final now = DateTime.now();
@@ -108,6 +106,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
                     if (state is AttendeeStatusInactive) {
                       return AttendeeButton.hasCome(
+                        context: context,
                         isLoading: isLoading,
                         onTap: () async => await AttendeeActions.handleArrive(context),
                       );
@@ -134,7 +133,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 final time = DateFormat("HH:mm").format(attendee.arrivedAt!.toLocal());
 
                 return Text(
-                  "Getting started - $time",
+                  "${context.tr('gettingStarted')} - $time",
                   style: TextStyle(
                     color: AppColors.colorText,
                     fontSize: 14.sp,

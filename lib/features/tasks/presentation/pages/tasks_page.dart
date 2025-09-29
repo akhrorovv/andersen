@@ -77,37 +77,36 @@ class _TasksPageState extends State<TasksPage> {
                       return Expanded(child: ErrorMessage(errorMessage: state.message));
                     } else if (state is TasksLoaded) {
                       final tasks = state.tasks.results;
-                      if (tasks.isEmpty) {
-                        return EmptyWidget();
-                      } else {
-                        return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: NotificationListener<ScrollNotification>(
-                              onNotification: (scrollInfo) {
-                                if (scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent - 200) {
-                                  context.read<TasksCubit>().loadMore();
-                                }
-                                return false;
-                              },
-                              child: ListView.separated(
-                                padding: EdgeInsets.symmetric(vertical: 24.h),
-                                itemBuilder: (context, index) {
-                                  return TaskCard(
-                                    task: tasks[index],
-                                    onTap: () async {
-                                      context.push(TaskDetailPage.path, extra: tasks[index].id);
+
+                      return Expanded(
+                        child: tasks.isNotEmpty
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                child: NotificationListener<ScrollNotification>(
+                                  onNotification: (scrollInfo) {
+                                    if (scrollInfo.metrics.pixels >=
+                                        scrollInfo.metrics.maxScrollExtent - 200) {
+                                      context.read<TasksCubit>().loadMore();
+                                    }
+                                    return false;
+                                  },
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.symmetric(vertical: 24.h),
+                                    itemBuilder: (context, index) {
+                                      return TaskCard(
+                                        task: tasks[index],
+                                        onTap: () async {
+                                          context.push(TaskDetailPage.path, extra: tasks[index].id);
+                                        },
+                                      );
                                     },
-                                  );
-                                },
-                                separatorBuilder: (_, __) => BasicDivider(),
-                                itemCount: tasks.length,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
+                                    separatorBuilder: (_, __) => BasicDivider(),
+                                    itemCount: tasks.length,
+                                  ),
+                                ),
+                              )
+                            : EmptyWidget(),
+                      );
                     }
                     return SizedBox.shrink();
                   },

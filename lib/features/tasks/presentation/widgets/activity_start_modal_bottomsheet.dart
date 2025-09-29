@@ -3,8 +3,6 @@ import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
-import 'package:andersen/features/activities/domain/entities/activity_type_entity.dart';
-import 'package:andersen/features/home/domain/repositories/activity_types_repository.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:andersen/features/tasks/presentation/cubit/start_activity_cubit.dart';
@@ -12,6 +10,7 @@ import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_fie
 import 'package:andersen/features/tasks/presentation/widgets/task_update_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,7 +71,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Task",
+                                    context.tr('task'),
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
@@ -97,11 +96,11 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                             ShadowContainer(
                               padding: EdgeInsets.only(top: 16.h, right: 16.w, left: 16.w),
                               child: TaskUpdateField(
-                                title: "Task",
+                                title: context.tr('task'),
                                 hasDivider: false,
                                 hasIcon: false,
                                 child: CustomDropdownField<TaskEntity>(
-                                  hint: "Select task",
+                                  hint: context.tr('selectTask'),
                                   selectedItem: null,
                                   compareFn: (a, b) => a.id == b.id,
                                   itemAsString: (type) => type.description ?? '-',
@@ -175,22 +174,23 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                       ),
                     ),
                   ),
-                  BasicButton(
-                    title: state is ActivityStartLoading ? "Loading..." : "Start activity",
-                    icon: state is ActivityStartLoading ? null : Assets.vectors.play.path,
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: BasicButton(
+                      isLoading: state is ActivityStartLoading,
+                      title: "Start activity",
+                      icon: Assets.vectors.play.path,
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          final body = {
+                            "taskId": (widget.task != null) ? widget.task!.id : taskId,
+                            "description": descriptionController.text.trim(),
+                          };
 
-                    onTap: state is ActivityStartLoading
-                        ? () {}
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              final body = {
-                                "taskId": (widget.task != null) ? widget.task!.id : taskId,
-                                "description": descriptionController.text.trim(),
-                              };
-
-                              context.read<ActivityStartCubit>().startActivity(body);
-                            }
-                          },
+                          context.read<ActivityStartCubit>().startActivity(body);
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),

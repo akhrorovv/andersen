@@ -46,4 +46,8 @@ class ApiUrls {
 
   /// Users
   static const users = '${apiV}users';
+
+  /// Kpi
+  static String kpiUser(int userId) => '${apiV}kpi/user/$userId';
+
 }

@@ -7,6 +7,7 @@
   "successLogin": "Login Successful",
   "home": "Home",
   "tasks": "Tasks",
+  "task": "Task",
   "calendar": "Calendar",
   "activities": "Activities",
   "kpi": "KPI",
@@ -29,5 +30,9 @@
   "changeLanguage": "Change language",
   "logout": "Log out",
   "appVersion": "App version",
-  "today": "Today"
+  "today": "Today",
+  "reason": "The reason",
+  "pleaseEnterReason": "Please enter a reason",
+  "send": "Send",
+  "selectTask": "Select task"
 }
