@@ -14,6 +14,7 @@ import 'package:andersen/features/calendar/presentation/pages/event_detail_page.
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
+import 'package:andersen/features/home/presentation/pages/notifications_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
@@ -106,10 +107,7 @@ final GoRouter router = GoRouter(
           routes: [
             GoRoute(
               path: KpiPage.path,
-              builder: (context, state) => BlocProvider(
-                create: (_) => sl<KpiUserCubit>()..getUserKpi(111),
-                child: KpiPage(),
-              ),
+              builder: (context, state) => KpiPage(),
             ),
           ],
         ),
@@ -118,6 +116,7 @@ final GoRouter router = GoRouter(
 
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
+    GoRoute(path: NotificationsPage.path, builder: (context, state) => NotificationsPage()),
     GoRoute(
       path: ActivityStartModalBottomSheet.path,
       builder: (context, state) => ActivityStartModalBottomSheet(),

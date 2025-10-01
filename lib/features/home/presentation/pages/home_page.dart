@@ -4,6 +4,7 @@ import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
+import 'package:andersen/features/home/presentation/pages/notifications_page.dart';
 import 'package:andersen/features/home/presentation/pages/settings_page.dart';
 import 'package:andersen/features/home/presentation/widgets/home_header.dart';
 import 'package:andersen/features/home/presentation/widgets/kpi_for_week.dart';
@@ -42,11 +43,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          Container(
-            padding: EdgeInsets.all(10.w),
-            width: 44.w,
-            height: 44.w,
-            child: SvgPicture.asset(Assets.vectors.notification.path),
+          GestureDetector(
+            onTap: () => context.pushCupertinoSheet(const NotificationsPage()),
+            child: Container(
+              padding: EdgeInsets.all(10.w),
+              width: 44.w,
+              height: 44.w,
+              child: SvgPicture.asset(Assets.vectors.notification.path),
+            ),
           ),
         ],
       ),

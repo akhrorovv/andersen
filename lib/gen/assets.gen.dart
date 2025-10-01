@@ -17,6 +17,9 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/bell.png
+  AssetGenImage get bell => const AssetGenImage('assets/images/bell.png');
+
   /// File path: assets/images/border_none.png
   AssetGenImage get borderNone =>
       const AssetGenImage('assets/images/border_none.png');
@@ -31,7 +34,7 @@ class $AssetsImagesGen {
   AssetGenImage get title => const AssetGenImage('assets/images/title.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [borderNone, login, splash, title];
+  List<AssetGenImage> get values => [bell, borderNone, login, splash, title];
 }
 
 class $AssetsTranslationsGen {

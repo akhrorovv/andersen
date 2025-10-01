@@ -12,6 +12,7 @@ import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.da
 import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_field.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_update_field.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,7 +76,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
             spacing: 16.h,
             children: [
               Text(
-                "Entered time",
+                context.tr('enteredTime'),
                 style: TextStyle(
                   color: AppColors.colorText,
                   fontSize: 16.sp,
@@ -104,12 +105,12 @@ class _StopActivityPageState extends State<StopActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(title: 'Time entry'),
+      appBar: BasicAppBar(title: context.tr('timeEntry')),
       body: BlocConsumer<StopActivityCubit, StopActivityState>(
         listener: (context, state) {
           if (state is StopActivitySuccess) {
             Navigator.of(context, rootNavigator: true).pop(true);
-            BasicSnackBar.show(context, message: 'Activity stopped successfully');
+            BasicSnackBar.show(context, message: context.tr('activityStopped'));
           } else if (state is StopActivityError) {
             Navigator.of(context, rootNavigator: true).pop(false);
             BasicSnackBar.show(context, message: state.message, error: true);
@@ -149,7 +150,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
                                     spacing: 4.h,
                                     children: [
                                       Text(
-                                        "Total time",
+                                        context.tr('totalTime'),
                                         style: TextStyle(
                                           color: AppColors.colorText,
                                           fontSize: 16.sp,
@@ -182,7 +183,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "User entered time",
+                                context.tr('enteredTime'),
                                 style: TextStyle(
                                   color: AppColors.grey,
                                   fontSize: 12.sp,
@@ -215,7 +216,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Description",
+                                context.tr('description'),
                                 style: TextStyle(
                                   color: AppColors.grey,
                                   fontSize: 12.sp,
@@ -234,7 +235,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
                                 ),
                                 decoration: InputDecoration(
                                   isCollapsed: true,
-                                  hintText: "Enter description",
+                                  hintText: context.tr('enterDescription'),
                                   hintStyle: TextStyle(
                                     color: AppColors.colorBgMask,
                                     fontWeight: FontWeight.w500,
@@ -252,11 +253,11 @@ class _StopActivityPageState extends State<StopActivityPage> {
                         ShadowContainer(
                           padding: EdgeInsets.only(top: 16.h, right: 16.w, left: 16.w),
                           child: TaskUpdateField(
-                            title: "Type",
+                            title: context.tr('type'),
                             hasDivider: false,
                             hasIcon: false,
                             child: CustomDropdownField<ActivityTypeEntity>(
-                              hint: "Select activity type",
+                              hint: context.tr('selectActivityType'),
                               selectedItem: null,
                               compareFn: (a, b) => a.id == b.id,
                               itemAsString: (type) => type.name ?? '-',
@@ -283,7 +284,7 @@ class _StopActivityPageState extends State<StopActivityPage> {
                 ),
 
                 BasicButton(
-                  title: 'Save',
+                  title: context.tr('save'),
                   onTap: () {
                     _onStop(widget.activityId);
                   },

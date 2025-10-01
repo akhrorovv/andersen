@@ -49,5 +49,5 @@ class ApiUrls {
 
   /// Kpi
   static String kpiUser(int userId) => '${apiV}kpi/user/$userId';
-
+  static const kpi = '${apiV}kpi';
 }

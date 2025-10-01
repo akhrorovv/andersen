@@ -80,10 +80,15 @@ import 'features/home/domain/usecases/stop_activity_usecase.dart';
 import 'features/home/presentation/cubit/activity_status_cubit.dart';
 import 'features/home/presentation/cubit/attendee_cubit.dart';
 import 'features/home/presentation/cubit/stop_activity_cubit.dart';
+import 'features/kpi/data/repositories/kpi_repository_impl.dart';
 import 'features/kpi/data/repositories/kpi_user_repository_impl.dart';
+import 'features/kpi/data/sources/kpi_remote_data_source.dart';
 import 'features/kpi/data/sources/kpi_user_remote_data_source.dart';
+import 'features/kpi/domain/repositories/kpi_repository.dart';
 import 'features/kpi/domain/repositories/kpi_user_repository.dart';
+import 'features/kpi/domain/usecase/get_kpi_usecase.dart';
 import 'features/kpi/domain/usecase/get_user_kpi_usecase.dart';
+import 'features/kpi/presentation/cubit/kpi_cubit.dart';
 import 'features/kpi/presentation/cubit/kpi_user_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
 import 'features/tasks/data/repositories/start_activity_repository_impl.dart';
@@ -296,6 +301,11 @@ Future<void> _initAuth() async {
     ..registerFactory<KpiUserRepository>(() => KpiUserRepositoryImpl(sl<KpiUserRemoteDataSource>()))
     ..registerFactory(() => GetUserKpiUsecase(sl<KpiUserRepository>()))
     ..registerFactory(() => KpiUserCubit(sl<GetUserKpiUsecase>()))
+    /// Kpi
+    ..registerFactory<KpiRemoteDataSource>(() => KpiRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerFactory<KpiRepository>(() => KpiRepositoryImpl(sl<KpiRemoteDataSource>()))
+    ..registerFactory(() => GetKpiUsecase(sl<KpiRepository>()))
+    ..registerFactory(() => KpiCubit(sl<GetKpiUsecase>()))
     /// Check attendee status
     ..registerFactory<AttendeeStatusRemoteDataSource>(
       () => AttendeeStatusRemoteDataSourceImpl(sl<DioClient>()),

@@ -1,8 +1,10 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:andersen/features/calendar/presentation/widgets/event_tile.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +18,8 @@ class DayEventsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = DBService.locale;
+
     return Container(
       margin: EdgeInsets.all(16.w),
       child: Column(
@@ -23,7 +27,7 @@ class DayEventsSection extends StatelessWidget {
         children: [
           /// Sana header
           Text(
-            DateFormat('EEE, MMM d').format(day),
+            DateFormat('EEE, MMM d', locale).format(day),
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -44,7 +48,7 @@ class DayEventsSection extends StatelessWidget {
                     child: Assets.vectors.calendar.svg(color: AppColors.colorText),
                   ),
                   Text(
-                    "No events scheduled",
+                    context.tr('noEvents'),
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,

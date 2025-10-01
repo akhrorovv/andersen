@@ -14,6 +14,7 @@ import 'package:andersen/features/tasks/domain/repositories/matters_repository.d
 import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -79,7 +80,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(title: "Edit event"),
+      appBar: BasicAppBar(title: context.tr('editEvent')),
       body: BlocConsumer<UpdateEventCubit, UpdateEventState>(
         listener: (context, state) {
           if (state is UpdateEventSuccess) {
@@ -104,7 +105,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                             children: [
                               /// Description
                               EventUpdateField(
-                                title: "Description",
+                                title: context.tr('description'),
                                 iconPath: Assets.vectors.textAlignLeft.path,
                                 hasDivider: true,
                                 child: TextField(
@@ -117,7 +118,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                                   ),
                                   decoration: InputDecoration(
                                     isCollapsed: true,
-                                    hintText: "No description entered",
+                                    hintText: "-",
                                     hintStyle: TextStyle(
                                       color: AppColors.colorBgMask,
                                       fontWeight: FontWeight.w500,
@@ -131,7 +132,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
 
                               /// Location
                               EventUpdateField(
-                                title: "Location",
+                                title: context.tr('location'),
                                 iconPath: Assets.vectors.location.path,
                                 hasDivider: true,
                                 child: TextField(
@@ -144,7 +145,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                                   ),
                                   decoration: InputDecoration(
                                     isCollapsed: true,
-                                    hintText: "No location entered",
+                                    hintText: "-",
                                     hintStyle: TextStyle(
                                       color: AppColors.colorBgMask,
                                       fontWeight: FontWeight.w500,
@@ -158,11 +159,11 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
 
                               /// Event Target
                               EventUpdateField(
-                                title: "Event type",
+                                title: context.tr('eventType'),
                                 hasDivider: false,
                                 iconPath: Assets.vectors.calendarFav.path,
                                 child: CustomDropdownField<EventTarget>(
-                                  hint: "Select Event Type",
+                                  hint: context.tr('selectEventType'),
                                   selectedItem: target,
                                   compareFn: (a, b) => a == b,
                                   itemAsString: (eventTarget) => eventTarget.label,
@@ -182,11 +183,11 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                               /// Clients
                               if (target == EventTarget.caseMeeting)
                                 EventUpdateField(
-                                  title: "Select Client",
+                                  title: context.tr('selectClient'),
                                   iconPath: Assets.vectors.briefcase.path,
                                   hasDivider: false,
                                   child: CustomDropdownField<ClientEntity>(
-                                    hint: "Select Client",
+                                    hint: context.tr('selectClient'),
                                     // selectedItem: clientId,
                                     compareFn: (a, b) => a.id == b.id,
                                     itemAsString: (client) {
@@ -222,11 +223,11 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                               /// Matters
                               if (target == EventTarget.caseMeeting)
                                 EventUpdateField(
-                                  title: "Related Case",
+                                  title: context.tr('relatedCase'),
                                   hasDivider: false,
                                   iconPath: Assets.vectors.briefcase.path,
                                   child: CustomDropdownField<MatterEntity>(
-                                    hint: "Related Case",
+                                    hint: context.tr('relatedCase'),
                                     selectedItem: widget.event.matter,
                                     compareFn: (a, b) => a.id == b.id,
                                     itemAsString: (matter) => matter.name,
@@ -260,7 +261,10 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                   ),
                 ),
               ),
-              BasicButton(title: "Save", onTap: _onSave),
+              Padding(
+                padding: EdgeInsets.only(right: 16.w, left: 16.w, bottom: 32.h),
+                child: BasicButton(title: context.tr('save'), onTap: _onSave),
+              ),
             ],
           );
         },

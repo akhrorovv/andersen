@@ -73,7 +73,7 @@ class TaskCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  formatDueDate(task.dueAt),
+                  formatDueDate(task.dueAt, context),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,

@@ -14,6 +14,22 @@ class DBService {
 
   static String? get refreshToken => _box.get('refreshToken');
 
+  // 🌐 Language (locale) saqlash
+  static Future<void> saveLocale(String locale) async {
+    await _box.put('locale', locale);
+  }
+
+// 🌐 Language (locale) olish
+  static String get locale => _box.get('locale', defaultValue: 'ru');
+
+
+  // 🔔 Notifications status saqlash
+  static Future<void> saveNotifStatus(bool enabled) async {
+    await _box.put('notifEnabled', enabled);
+  }
+
+  static bool get notifEnabled => _box.get('notifEnabled', defaultValue: true);
+
   // 🔑 DeviceId saqlash
   static Future<void> saveDeviceId(String deviceId) async {
     await _box.put('deviceId', deviceId);

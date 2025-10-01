@@ -1,6 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
+import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
@@ -9,6 +10,7 @@ import 'package:andersen/features/tasks/presentation/cubit/task_activities_state
 import 'package:andersen/features/tasks/presentation/pages/task_activities_page.dart';
 import 'package:andersen/features/tasks/presentation/widgets/detail/activity_item.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,11 +36,7 @@ class TaskActivitiesSection extends StatelessWidget {
 
             return Column(
               children: [
-                _relatedTimesText(
-                  context: context,
-                  activities: state.activities,
-                  taskId: taskId,
-                ),
+                _relatedTimesText(context: context, activities: state.activities, taskId: taskId),
                 ShadowContainer(
                   child: activities.isNotEmpty
                       ? Column(
@@ -48,15 +46,14 @@ class TaskActivitiesSection extends StatelessWidget {
                               children: [
                                 ActivityItem(
                                   description: activity.description ?? '-',
-                                  duration:
-                                      activity.userEnteredTimeInSeconds ?? 0,
+                                  duration: activity.userEnteredTimeInSeconds ?? 0,
                                 ),
                                 if (index != limited.length - 1) BasicDivider(),
                               ],
                             );
                           }),
                         )
-                      : Center(child: Text("No activities")),
+                      : Center(child: EmptyWidget()),
                 ),
               ],
             );
@@ -78,7 +75,7 @@ class TaskActivitiesSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Related time",
+            context.tr('relatedTime'),
             style: TextStyle(
               color: AppColors.colorText,
               fontWeight: FontWeight.w600,
@@ -90,12 +87,10 @@ class TaskActivitiesSection extends StatelessWidget {
           if (activities.results.length > 3)
             GestureDetector(
               onTap: () {
-                context.pushCupertinoSheet(
-                  TaskActivitiesPage(activities: activities),
-                );
+                context.pushCupertinoSheet(TaskActivitiesPage(activities: activities));
               },
               child: Text(
-                "More",
+                context.tr('more'),
                 style: TextStyle(
                   color: AppColors.colorText,
                   fontWeight: FontWeight.w400,

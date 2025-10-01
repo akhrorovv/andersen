@@ -13,6 +13,7 @@ import 'package:andersen/features/calendar/presentation/widgets/custom_calendar.
 import 'package:andersen/features/calendar/presentation/widgets/day_events_section.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,9 +65,11 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toString();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateFormat('MMMM').format(_focusedDay)),
+        title: Text(DateFormat('MMMM', locale).format(_focusedDay)),
         actions: [
           TextButton(
             onPressed: () async {
@@ -78,7 +81,7 @@ class _CalendarPageState extends State<CalendarPage> {
               }
             },
             child: Text(
-              "New event",
+              context.tr('newEvent'),
               style: TextStyle(color: AppColors.white, fontSize: 12.sp),
             ),
           ),

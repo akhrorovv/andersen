@@ -426,34 +426,40 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                 ),
               ),
-              BasicButton(
-                title: 'Create',
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    if (startAt == null || endAt == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Starts At and Ends At must be selected")),
-                      );
-                      return;
-                    }
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 32.h, right: 16.w, left: 16.w),
+                  child: BasicButton(
+                    title: 'Create',
+                    isLoading: state is CreateEventLoading,
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        if (startAt == null || endAt == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Starts At and Ends At must be selected")),
+                          );
+                          return;
+                        }
 
-                    if (target == null) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(const SnackBar(content: Text("Target must be selected")));
-                      return;
-                    }
+                        if (target == null) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(const SnackBar(content: Text("Target must be selected")));
+                          return;
+                        }
 
-                    if (target == EventTarget.caseMeeting && matterId == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Case must be selected for Case Meeting")),
-                      );
-                      return;
-                    }
+                        if (target == EventTarget.caseMeeting && matterId == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Case must be selected for Case Meeting")),
+                          );
+                          return;
+                        }
 
-                    _onCreate();
-                  }
-                },
+                        _onCreate();
+                      }
+                    },
+                  ),
+                ),
               ),
             ],
           );

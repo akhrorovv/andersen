@@ -1,6 +1,9 @@
+import 'package:andersen/core/api/notif_service.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:andersen/service_locator.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +12,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'core/common/profile/cubit/profile_cubit.dart';
 import 'core/config/theme/app_theme.dart';
 import 'core/navigation/app_router.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,12 +23,15 @@ void main() async {
   await Hive.openBox('appBox');
   // service locator
   await setupServiceLocator();
+  // firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotifService.instance.initialize();
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('ru')],
       path: 'assets/translations',
-      fallbackLocale: Locale('en'),
-      startLocale: Locale('en'),
+      fallbackLocale: Locale('ru'),
+      startLocale: Locale(DBService.locale),
       child: MyApp(),
     ),
   );

@@ -39,7 +39,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
         listener: (context, state) {
           if (state is ActivityStartSuccess) {
             Navigator.of(context).pop(true);
-            BasicSnackBar.show(context, message: 'Activity started successfully');
+            BasicSnackBar.show(context, message: context.tr('activityStarted'));
           } else if (state is ActivityStartFailure) {
             Navigator.of(context).pop(false);
             BasicSnackBar.show(context, message: state.message, error: true);
@@ -131,7 +131,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Description",
+                                    context.tr('description'),
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
@@ -150,7 +150,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                     ),
                                     decoration: InputDecoration(
                                       isCollapsed: true,
-                                      hintText: "Enter description",
+                                      hintText: context.tr('enterDescription'),
                                       hintStyle: TextStyle(
                                         color: AppColors.colorBgMask,
                                         fontWeight: FontWeight.w500,
@@ -161,7 +161,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                                     ),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "Description is required";
+                                        return context.tr('descriptionRequired');
                                       }
                                       return null;
                                     },
@@ -178,7 +178,7 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                     padding: EdgeInsets.only(bottom: 16.h),
                     child: BasicButton(
                       isLoading: state is ActivityStartLoading,
-                      title: "Start activity",
+                      title: context.tr('startActivity'),
                       icon: Assets.vectors.play.path,
                       onTap: () {
                         if (_formKey.currentState!.validate()) {

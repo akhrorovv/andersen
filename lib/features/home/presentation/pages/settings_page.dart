@@ -6,9 +6,11 @@ import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/utils/phone_number_formatter.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
+import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
+import 'package:andersen/features/home/presentation/widgets/notif_setting_tile.dart';
 import 'package:andersen/features/home/presentation/widgets/settings_tile.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -106,17 +108,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     child: Column(
                       children: [
-                        // SettingsTile(
-                        //   iconPath: Assets.vectors.notification.path,
-                        //   title: "Notifications",
-                        //   subtitle: "Switch to disable",
-                        //   trailing: CupertinoSwitch(
-                        //     activeTrackColor: AppColors.primary,
-                        //     value: true,
-                        //     onChanged: (v) {},
-                        //   ),
-                        // ),
-                        // BasicDivider(),
+                        NotificationSettingsTile(),
+                        BasicDivider(),
                         SettingsTile(
                           iconPath: Assets.vectors.global.path,
                           title: context.tr('language'),

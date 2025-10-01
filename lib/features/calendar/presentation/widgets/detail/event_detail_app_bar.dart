@@ -8,6 +8,7 @@ import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit
 import 'package:andersen/features/calendar/presentation/cubit/update_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/pages/update_event_page.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,7 @@ class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
             }
           },
           child: Text(
-            "Edit",
+            context.tr('edit'),
             style: TextStyle(color: AppColors.white, fontSize: 12.sp),
           ),
         ),
@@ -47,42 +48,45 @@ class EventDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
             showCupertinoModalPopup(
               context: context,
               builder: (_) {
-                return CupertinoActionSheet(
-                  title: Text(
-                    "Calendar event option",
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
-                  ),
-                  actions: [
-                    CupertinoActionSheetAction(
-                      isDestructiveAction: true,
-                      onPressed: () {
-                        if (event.createdById == DBService.user?.id) {
-                          context.read<DeleteEventCubit>().deleteEvent(event.id);
-                          context.pop();
-                        } else {
-                          BasicSnackBar.show(context, message: "This is not your event!");
-                          context.pop();
-                        }
-                      },
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: CupertinoActionSheet(
+                    title: Text(
+                      context.tr('calendarEventOption'),
+                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                    ),
+                    actions: [
+                      CupertinoActionSheetAction(
+                        isDestructiveAction: true,
+                        onPressed: () {
+                          if (event.createdById == DBService.user?.id) {
+                            context.pop();
+                            context.read<DeleteEventCubit>().deleteEvent(event.id);
+                          } else {
+                            context.pop();
+                            BasicSnackBar.show(context, message: "${context.tr('notYourEvent')}!");
+                          }
+                        },
 
-                      child: Text(
-                        "Delete",
-                        style: TextStyle(
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.red,
+                        child: Text(
+                          context.tr('delete'),
+                          style: TextStyle(
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.red,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                  cancelButton: CupertinoActionSheetAction(
-                    onPressed: () => context.pop(),
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                    ],
+                    cancelButton: CupertinoActionSheetAction(
+                      onPressed: () => context.pop(),
+                      child: Text(
+                        context.tr('cancel'),
+                        style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),

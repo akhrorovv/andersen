@@ -7,11 +7,11 @@ import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/presentation/cubit/delete_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/event_detail_state.dart';
-import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart';
 import 'package:andersen/features/calendar/presentation/widgets/detail/event_detail_app_bar.dart';
 import 'package:andersen/features/calendar/presentation/widgets/detail/event_detail_header.dart';
 import 'package:andersen/features/calendar/presentation/widgets/detail/event_detail_item.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +30,8 @@ class EventDetailPage extends StatelessWidget {
         BlocListener<DeleteEventCubit, DeleteEventState>(
           listener: (context, state) {
             if (state is DeleteEventSuccess) {
-              context.go(CalendarPage.path);
+              context.pop(true);
+              // context.go(CalendarPage.path);
             } else if (state is DeleteEventLoading) {
               LoadingIndicator();
             } else if (state is DeleteEventError) {
@@ -61,28 +62,28 @@ class EventDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 12.h,
                         children: [
-                          _taskDetailText(),
+                          _eventDetailText(context),
                           ShadowContainer(
                             child: Column(
                               spacing: 16.h,
                               children: [
                                 EventDetailItem(
-                                  title: "Event target",
+                                  title: context.tr('eventType'),
                                   iconPath: Assets.vectors.calendarFav.path,
                                   value: EventTargetX.fromString(event.target).label,
                                 ),
                                 EventDetailItem(
-                                  title: "Location",
+                                  title: context.tr('location'),
                                   iconPath: Assets.vectors.location.path,
                                   value: event.location,
                                 ),
                                 EventDetailItem(
-                                  title: "Description",
+                                  title: context.tr('description'),
                                   iconPath: Assets.vectors.textAlignLeft.path,
                                   value: event.description,
                                 ),
                                 EventDetailItem(
-                                  title: "Related case",
+                                  title: context.tr('relatedCase'),
                                   iconPath: Assets.vectors.briefcase.path,
                                   value: event.matter?.name,
                                   isMatter: true,
@@ -105,9 +106,9 @@ class EventDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _taskDetailText() {
+  Widget _eventDetailText(BuildContext context) {
     return Text(
-      "Event details",
+      context.tr('eventDetails'),
       style: TextStyle(
         color: AppColors.colorText,
         fontSize: 16.sp,

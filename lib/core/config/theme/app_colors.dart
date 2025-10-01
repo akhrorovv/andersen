@@ -20,6 +20,7 @@ class AppColors {
   static const shimmer = Color(0xffF0F0F0);
   static const white = Color.fromRGBO(255, 255, 255, 1);
   static const grey = Color.fromRGBO(166, 173, 185, 1);
+  static const grey2 = Color(0xffBDBDBD);
   static const red = Color(0xffFF3B30);
   static const red5 = Color(0xffFF4D4F);
   static const colorPrimaryBgHover = Color.fromRGBO(186, 224, 255, 1);
@@ -28,6 +29,9 @@ class AppColors {
   static const greenText = Color(0xff389E0D);
   static const volcano = Color(0xffFFD8BF);
   static const volcanoText = Color(0xffFF7A45);
+
+  static const chartColor = Color(0xff0069D1);
+
 
   /// Status colors
   static const statusColorNew = Color(0xff0069D1);

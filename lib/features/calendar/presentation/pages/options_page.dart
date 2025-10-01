@@ -3,6 +3,7 @@ import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -28,19 +29,19 @@ class _OptionsPageState extends State<OptionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(title: 'Options'),
+      appBar: BasicAppBar(title: context.tr('options')),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
         child: Column(
           spacing: 12.h,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _eventsTypeText(),
+            _eventsTypeText(context),
             ShadowContainer(
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
-                  _buildOption(null, "All"),
+                  _buildOption(null, context.tr('all')),
                   _buildOption(EventTarget.firmEvent, EventTarget.firmEvent.label),
                   _buildOption(EventTarget.newClient, EventTarget.newClient.label),
                   _buildOption(EventTarget.caseMeeting, EventTarget.caseMeeting.label),
@@ -49,7 +50,7 @@ class _OptionsPageState extends State<OptionsPage> {
             ),
             Spacer(),
             BasicButton(
-              title: 'Confirm',
+              title: context.tr('confirm'),
               onTap: () {
                 context.pop(selected);
               },
@@ -60,9 +61,9 @@ class _OptionsPageState extends State<OptionsPage> {
     );
   }
 
-  Widget _eventsTypeText() {
+  Widget _eventsTypeText(BuildContext context) {
     return Text(
-      "Events type",
+      context.tr('eventsType'),
       style: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,

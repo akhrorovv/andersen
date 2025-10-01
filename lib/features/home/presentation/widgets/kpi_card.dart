@@ -5,9 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class KpiCard extends StatelessWidget {
   final String title;
   final String value;
-  final bool hasProgress;
+  final int? effectiveness;
 
-  const KpiCard({super.key, required this.title, required this.value, this.hasProgress = false});
+  const KpiCard({super.key, required this.title, required this.value, this.effectiveness});
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +42,16 @@ class KpiCard extends StatelessWidget {
               color: AppColors.colorTextWhite,
             ),
           ),
-          if (hasProgress)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
-            child: LinearProgressIndicator(
-              value: 91 / 100,
-              minHeight: 6.h,
-              backgroundColor: Colors.white,
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff73D13D)),
+          if (effectiveness != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: LinearProgressIndicator(
+                value: effectiveness! / 100,
+                minHeight: 6.h,
+                backgroundColor: Colors.white,
+                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff73D13D)),
+              ),
             ),
-          ),
         ],
       ),
     );

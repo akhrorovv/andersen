@@ -1,3 +1,4 @@
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
@@ -29,10 +30,13 @@ class LanguagesPage extends StatelessWidget {
                     subtitle: "Русский",
                     locale: const Locale('ru'),
                     selected: currentLocale.languageCode == 'ru',
-                    onTap: () {
-                      context.setLocale(const Locale('ru'));
+                    onTap: () async {
+                      const locale = Locale('ru');
+                      await DBService.saveLocale(locale.languageCode); // DB ga saqlash
+                      context.setLocale(locale);                       // UI ni almashtirish
                       Navigator.pop(context);
                     },
+
                   ),
                   const BasicDivider(),
                   LanguageTile(
@@ -40,10 +44,13 @@ class LanguagesPage extends StatelessWidget {
                     subtitle: "English",
                     locale: const Locale('en'),
                     selected: currentLocale.languageCode == 'en',
-                    onTap: () {
-                      context.setLocale(const Locale('en'));
+                    onTap: () async {
+                      const locale = Locale('en');
+                      await DBService.saveLocale(locale.languageCode);
+                      context.setLocale(locale);
                       Navigator.pop(context);
                     },
+
                   ),
                 ],
               ),

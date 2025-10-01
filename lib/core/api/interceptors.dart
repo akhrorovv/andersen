@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/utils/db_service.dart';
@@ -84,18 +86,7 @@ class TokenInterceptor extends Interceptor {
 
       final message = data is Map<String, dynamic> ? data["message"] as String? : null;
 
-      // // 🔒 Device blocked holati
-      // if (message != null && message.contains("Device is blocked")) {
-      //   // Local DB ni tozalash
-      //   await DBService.clear();
-      //
-      //   // Login page ga redirect
-      //   if (navigatorKey.currentContext != null) {
-      //     navigatorKey.currentContext!.go(LoginPage.path);
-      //   }
-      //
-      //   return handler.next(err);
-      // }
+      log('401 error message: $message');
 
       // 🔒 Device blocked holati
       if (message != null && message.contains("Device is blocked")) {

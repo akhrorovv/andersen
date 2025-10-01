@@ -1,4 +1,5 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,6 +39,7 @@ class CustomCalendar<T> extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: TableCalendar<T>(
+              locale: DBService.locale,
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: focusedDay,

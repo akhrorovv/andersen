@@ -20,7 +20,6 @@ class AppTheme {
         letterSpacing: 0,
       ),
     ),
-
     brightness: Brightness.light,
     textTheme: GoogleFonts.montserratTextTheme(),
     textSelectionTheme: TextSelectionThemeData(

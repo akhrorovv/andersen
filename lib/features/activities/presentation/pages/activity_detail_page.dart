@@ -9,6 +9,7 @@ import 'package:andersen/features/activities/presentation/cubit/activity_detail_
 import 'package:andersen/features/activities/presentation/widgets/activity_detail_item.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,8 +27,7 @@ class ActivityDetailPage extends StatelessWidget {
       create: (_) => sl<ActivityDetailCubit>()..getActivityDetail(activityId),
       child: BlocBuilder<ActivityDetailCubit, ActivityDetailState>(
         builder: (context, state) {
-          if (state is ActivityDetailInitial ||
-              state is ActivityDetailLoading) {
+          if (state is ActivityDetailInitial || state is ActivityDetailLoading) {
             return SizedBox.expand(child: LoadingPage());
           } else if (state is ActivityDetailError) {
             return Center(
@@ -37,7 +37,7 @@ class ActivityDetailPage extends StatelessWidget {
             final activity = state.activity;
 
             return Scaffold(
-              appBar: BasicAppBar(title: "Activity detail"),
+              appBar: BasicAppBar(title: context.tr('activityDetail')),
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
                 child: Column(
@@ -47,26 +47,26 @@ class ActivityDetailPage extends StatelessWidget {
                         spacing: 16.h,
                         children: [
                           ActivityDetailItem(
-                            title: "Related case",
+                            title: context.tr('relatedCase'),
                             iconPath: Assets.vectors.briefcase.path,
                             value: activity.matter?.name,
                             isMatter: true,
                           ),
                           ActivityDetailItem(
-                            title: "Description",
+                            title: context.tr('description'),
                             iconPath: Assets.vectors.textAlignLeft.path,
                             value: activity.description,
                           ),
                           ActivityDetailItem(
-                            title: "Related Time",
+                            title: context.tr('relatedTime'),
                             iconPath: Assets.vectors.clock.path,
                             value: formatDuration(activity.userEnteredTimeInSeconds ?? 0),
                           ),
                           ActivityDetailItem(
-                            title: "Date",
+                            title: context.tr('date'),
                             iconPath: Assets.vectors.clock.path,
-                            value: formatDueDate(activity.date),
-                              hasDivider: false,
+                            value: formatDueDate(activity.date, context),
+                            hasDivider: false,
                           ),
                           // ActivityDetailItem(
                           //   title: "Invoice status",

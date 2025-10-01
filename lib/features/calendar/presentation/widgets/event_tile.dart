@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
@@ -19,17 +20,18 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = DBService.locale;
     final start = event.startsAt;
     final end = event.endsAt;
 
     final formatted =
-        "${DateFormat('MMM d, HH:mm').format(start!)} - ${DateFormat('MMM d, HH:mm').format(end!)}";
+        "${DateFormat('MMM d, HH:mm', locale).format(start!)} - ${DateFormat('MMM d, HH:mm', locale).format(end!)}";
 
     return GestureDetector(
       onTap: () async {
         final deleted = await context.push(EventDetailPage.path, extra: event.id);
         if (deleted == true && context.mounted) {
-          context.read<EventsCubit>().getEvents();
+          context.read<EventsCubit>().getEvents(refresh: true);
         }
       },
 

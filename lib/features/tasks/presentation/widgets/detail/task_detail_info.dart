@@ -6,6 +6,7 @@ import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/presentation/widgets/detail/task_detail_item.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_filter.dart';
 import 'package:andersen/gen/assets.gen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,44 +22,44 @@ class TaskDetailInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12.h,
       children: [
-        _taskDetailText(),
+        _taskDetailText(context),
         ShadowContainer(
           child: Column(
             spacing: 16.h,
             children: [
               TaskDetailItem(
-                title: "Status",
+                title: context.tr('status'),
                 iconPath: Assets.vectors.borderNone.path,
                 value: status.label,
                 color: status.color,
               ),
               TaskDetailItem(
-                title: "Description",
+                title: context.tr('description'),
                 iconPath: Assets.vectors.textAlignLeft.path,
                 value: task.description,
               ),
               TaskDetailItem(
-                title: "Related case",
+                title: context.tr('relatedCase'),
                 iconPath: Assets.vectors.briefcase.path,
                 value: task.matter?.name,
                 isMatter: true,
               ),
               TaskDetailItem(
-                title: "Assigned to",
+                title: context.tr('assignedTo'),
                 iconPath: Assets.vectors.borderNone.path,
                 value: task.assignedStaff?.name,
                 isMatter: true,
                 initialName: getInitials(task.assignedStaff?.name),
               ),
               TaskDetailItem(
-                title: "Task type",
+                title: context.tr('taskType'),
                 iconPath: Assets.vectors.more.path,
                 value: task.type?.name,
               ),
               TaskDetailItem(
-                title: "Due Date",
+                title: context.tr('dueDate'),
                 iconPath: Assets.vectors.clock.path,
-                value: formatDueDate(task.dueAt),
+                value: formatDueDate(task.dueAt, context),
                 hasDivider: false,
               ),
             ],
@@ -68,9 +69,9 @@ class TaskDetailInfo extends StatelessWidget {
     );
   }
 
-  Widget _taskDetailText() {
+  Widget _taskDetailText(BuildContext context) {
     return Text(
-      "Task details",
+      context.tr('taskDetail'),
       style: TextStyle(
         color: AppColors.colorText,
         fontSize: 16.sp,
