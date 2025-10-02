@@ -26,6 +26,7 @@ dependencies:
   table_calendar: ^3.2.0
   fl_chart: ^1.1.0
   calendar_date_picker2: ^2.0.1
+  pinput: ^5.0.2
 
   # network & utils
   dio: ^5.9.0
@@ -40,6 +41,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.0.15
+  local_auth: ^2.3.0
 
   # device
   device_info_plus: ^11.5.0

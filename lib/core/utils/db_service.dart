@@ -14,6 +14,21 @@ class DBService {
 
   static String? get refreshToken => _box.get('refreshToken');
 
+  // PIN saqlash
+  static Future<void> savePin(String pin) async {
+    await _box.put('pin', pin);
+  }
+
+  // PIN olish
+  static String get pin => _box.get('pin');
+
+  // Biometric toggle saqlash
+  static Future<void> saveBiometricStatus(bool enabled) async {
+    await _box.put('biometric', enabled);
+  }
+
+  static bool get biometricEnabled => _box.get('biometric', defaultValue: true);
+
   // 🌐 Language (locale) saqlash
   static Future<void> saveLocale(String locale) async {
     await _box.put('locale', locale);
@@ -30,7 +45,7 @@ class DBService {
   static bool get notifEnabled => _box.get('notifEnabled', defaultValue: true);
 
   // 🔔 Save FCM token
-  static Future<void> saveFCMToken(String  token) async {
+  static Future<void> saveFCMToken(String token) async {
     await _box.put('fcmToken', token);
   }
 
@@ -57,11 +72,6 @@ class DBService {
 
   static String? get deviceVersion => _box.get('deviceVersion');
 
-  // 🔑 PIN saqlash
-  static Future<void> savePin(String pin) async {
-    await _box.put('pin', pin);
-  }
-
   // 🔑 User ma'lumotlarini saqlash
   static Future<void> saveUser(UserModel user) async {
     await _box.put('user', user.toJson());
@@ -74,8 +84,6 @@ class DBService {
     }
     return null;
   }
-
-  static String? get pin => _box.get('pin');
 
   // 🔑 Logout (hamma narsani tozalash)
   static Future<void> clear() async {

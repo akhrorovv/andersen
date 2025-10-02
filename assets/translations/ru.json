@@ -111,5 +111,27 @@
   "confirmedHours": "Подтверждённые часы",
   "efficiency": "Эффективность",
   "complaint": "Жалобы",
-  "rating": "Рейтинг"
+  "rating": "Рейтинг",
+  "new": "Новые",
+  "review": "На проверке",
+  "done": "Завершённые",
+  "companyEvent": "Корпоративное событие",
+  "newClient": "Новый клиент",
+  "caseMeeting": "Встреча по делу",
+  "continue": "Продолжать",
+  "faceIdOrTouchId": "По лицу или отпечатку",
+  "loginUsingBiometrics": "Вход по биометрии",
+  "security": "Безопасность",
+  "incorrectPin": "Неправильный PIN-код",
+  "forgotPinMessage": "Если вы забыли PIN-код,\nнажмите кнопку выхода.",
+  "cannotLogin": "Не могу войти",
+  "enterPin": "Введите PIN-код",
+  "enterNewPin": "Введите новый PIN-код",
+  "verifyPin": "Подтвердите PIN-код",
+  "pinMismatch": "ПИН-коды не совпадают",
+  "changePin": "Изменить PIN-код",
+  "pinCode": "PIN-код",
+  "enterOldPin": "Введите старый PIN-код",
+  "pinMustBe4Digits": "PIN должен состоять из 4 цифр"
+
 }

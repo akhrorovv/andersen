@@ -10,6 +10,7 @@ import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
+import 'package:andersen/features/home/presentation/pages/security_page.dart';
 import 'package:andersen/features/home/presentation/widgets/notif_setting_tile.dart';
 import 'package:andersen/features/home/presentation/widgets/settings_tile.dart';
 import 'package:andersen/gen/assets.gen.dart';
@@ -118,13 +119,15 @@ class _SettingsPageState extends State<SettingsPage> {
                             context.pushCupertinoSheet(LanguagesPage());
                           },
                         ),
-                        // BasicDivider(),
-                        // SettingsTile(
-                        //   iconPath: Assets.vectors.lock.path,
-                        //   title: "Security",
-                        //   subtitle: "Settings",
-                        //   onTap: () {},
-                        // ),
+                        BasicDivider(),
+                        SettingsTile(
+                          iconPath: Assets.vectors.lock.path,
+                          title: context.tr('security'),
+                          subtitle: context.tr('settings'),
+                          onTap: () {
+                            context.pushCupertinoSheet(SecurityPage());
+                          },
+                        ),
                       ],
                     ),
                   ),

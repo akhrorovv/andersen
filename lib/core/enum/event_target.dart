@@ -1,14 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
+
 enum EventTarget { firmEvent, newClient, caseMeeting }
 
 extension EventTargetX on EventTarget {
-  String get label {
+  String label(BuildContext context) {
     switch (this) {
       case EventTarget.firmEvent:
-        return "Company Event";
+        return context.tr('companyEvent');
       case EventTarget.newClient:
-        return "New Client";
+        return context.tr('newClient');
       case EventTarget.caseMeeting:
-        return "Case Meeting";
+        return context.tr('caseMeeting');
     }
   }
 

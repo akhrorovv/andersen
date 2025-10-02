@@ -29,7 +29,7 @@ class EventDetailHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 4.h,
         children: [
-          _descriptionText(EventTargetX.fromString(event.target).label),
+          _descriptionText(EventTargetX.fromString(event.target).label(context)),
           _dueDateText(formatted),
         ],
       ),

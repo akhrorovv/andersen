@@ -30,7 +30,7 @@ class TaskDetailInfo extends StatelessWidget {
               TaskDetailItem(
                 title: context.tr('status'),
                 iconPath: Assets.vectors.borderNone.path,
-                value: status.label,
+                value: status.label(context),
                 color: status.color,
               ),
               TaskDetailItem(

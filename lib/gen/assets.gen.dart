@@ -24,6 +24,10 @@ class $AssetsImagesGen {
   AssetGenImage get borderNone =>
       const AssetGenImage('assets/images/border_none.png');
 
+  /// File path: assets/images/finger_print.png
+  AssetGenImage get fingerPrint =>
+      const AssetGenImage('assets/images/finger_print.png');
+
   /// File path: assets/images/login.png
   AssetGenImage get login => const AssetGenImage('assets/images/login.png');
 
@@ -34,7 +38,14 @@ class $AssetsImagesGen {
   AssetGenImage get title => const AssetGenImage('assets/images/title.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [bell, borderNone, login, splash, title];
+  List<AssetGenImage> get values => [
+    bell,
+    borderNone,
+    fingerPrint,
+    login,
+    splash,
+    title,
+  ];
 }
 
 class $AssetsTranslationsGen {
@@ -98,6 +109,10 @@ class $AssetsVectorsGen {
   SvgGenImage get fileColour =>
       const SvgGenImage('assets/vectors/file_colour.svg');
 
+  /// File path: assets/vectors/finger_print.svg
+  SvgGenImage get fingerPrint =>
+      const SvgGenImage('assets/vectors/finger_print.svg');
+
   /// File path: assets/vectors/global.svg
   SvgGenImage get global => const SvgGenImage('assets/vectors/global.svg');
 
@@ -146,6 +161,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/search.svg
   SvgGenImage get search => const SvgGenImage('assets/vectors/search.svg');
 
+  /// File path: assets/vectors/security.svg
+  SvgGenImage get security => const SvgGenImage('assets/vectors/security.svg');
+
   /// File path: assets/vectors/setting.svg
   SvgGenImage get setting => const SvgGenImage('assets/vectors/setting.svg');
 
@@ -190,6 +208,7 @@ class $AssetsVectorsGen {
     complaint,
     file,
     fileColour,
+    fingerPrint,
     global,
     hide,
     home,
@@ -205,6 +224,7 @@ class $AssetsVectorsGen {
     options,
     play,
     search,
+    security,
     setting,
     show,
     star,

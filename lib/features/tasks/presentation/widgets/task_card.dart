@@ -102,7 +102,7 @@ class TaskCard extends StatelessWidget {
                 ),
                 SizedBox(width: 18.w),
                 Text(
-                  status.label,
+                  status.label(context),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,

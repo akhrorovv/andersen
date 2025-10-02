@@ -35,7 +35,7 @@ class TaskStatusChip extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            status.label,
+            status.label(context),
             style: TextStyle(
               color: AppColors.colorTextWhite,
               fontWeight: FontWeight.w600,

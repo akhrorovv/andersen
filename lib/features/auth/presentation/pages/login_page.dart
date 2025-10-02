@@ -8,6 +8,7 @@ import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/auth/domain/usecases/login_params.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
+import 'package:andersen/features/auth/presentation/pages/set_pin_page.dart';
 import 'package:andersen/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -52,7 +53,8 @@ class _LoginPageState extends State<LoginPage> {
             BasicSnackBar.show(context, message: state.message, error: true);
           } else if (state is AuthSuccess) {
             BasicSnackBar.show(context, message: context.tr('successLogin'));
-            context.go(CheckingPage.path);
+            // context.go(CheckingPage.path);
+            context.go(SetPinPage.path);
           }
         },
         child: SafeArea(

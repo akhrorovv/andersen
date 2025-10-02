@@ -302,7 +302,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                     hint: context.tr('selectEventType'),
                                     selectedItem: EventTarget.firmEvent,
                                     compareFn: (a, b) => a == b,
-                                    itemAsString: (eventTarget) => eventTarget.label,
+                                    itemAsString: (eventTarget) => eventTarget.label(context),
                                     items: (filter) async {
                                       return EventTarget.values;
                                     },

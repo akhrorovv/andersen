@@ -42,9 +42,9 @@ class _OptionsPageState extends State<OptionsPage> {
               child: Column(
                 children: [
                   _buildOption(null, context.tr('all')),
-                  _buildOption(EventTarget.firmEvent, EventTarget.firmEvent.label),
-                  _buildOption(EventTarget.newClient, EventTarget.newClient.label),
-                  _buildOption(EventTarget.caseMeeting, EventTarget.caseMeeting.label),
+                  _buildOption(EventTarget.firmEvent, EventTarget.firmEvent.label(context)),
+                  _buildOption(EventTarget.newClient, EventTarget.newClient.label(context)),
+                  _buildOption(EventTarget.caseMeeting, EventTarget.caseMeeting.label(context)),
                 ],
               ),
             ),

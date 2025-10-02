@@ -2,10 +2,14 @@ import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
 import 'package:andersen/features/activities/presentation/cubit/activity_detail_cubit.dart';
 import 'package:andersen/features/activities/presentation/pages/activity_detail_page.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:andersen/features/auth/presentation/pages/biometric_page.dart';
 import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
+import 'package:andersen/features/auth/presentation/pages/enter_pin_page.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
+import 'package:andersen/features/auth/presentation/pages/set_pin_page.dart';
 import 'package:andersen/features/auth/presentation/pages/splash_page.dart';
 import 'package:andersen/features/activities/presentation/pages/activities_page.dart';
+import 'package:andersen/features/auth/presentation/pages/verify_pin_page.dart';
 import 'package:andersen/features/calendar/presentation/cubit/delete_event_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/event_detail_cubit.dart';
 import 'package:andersen/features/calendar/presentation/cubit/events_cubit.dart';
@@ -13,10 +17,13 @@ import 'package:andersen/features/calendar/presentation/pages/calendar_page.dart
 import 'package:andersen/features/calendar/presentation/pages/event_detail_page.dart';
 import 'package:andersen/features/home/presentation/cubit/activity_status_cubit.dart';
 import 'package:andersen/features/home/presentation/cubit/stop_activity_cubit.dart';
+import 'package:andersen/features/home/presentation/pages/change_pin_page.dart';
 import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/notifications_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
+import 'package:andersen/features/home/presentation/pages/set_new_pin_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
+import 'package:andersen/features/home/presentation/pages/verify_new_pin_page.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/workload_cubit.dart';
@@ -122,13 +129,37 @@ final GoRouter router = GoRouter(
             ),
           ],
         ),
-
       ],
     ),
 
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
     GoRoute(path: NotificationsPage.path, builder: (context, state) => NotificationsPage()),
+    GoRoute(path: SetPinPage.path, builder: (context, state) => SetPinPage()),
+    GoRoute(path: BiometricPage.path, builder: (context, state) => BiometricPage()),
+    GoRoute(path: ChangePinPage.path, builder: (context, state) => ChangePinPage()),
+    GoRoute(path: SetNewPinPage.path, builder: (context, state) => SetNewPinPage()),
+    GoRoute(
+      path: EnterPinPage.path,
+      builder: (context, state) {
+        final fromLogin = state.extra as bool;
+        return EnterPinPage(fromLogin: fromLogin);
+      },
+    ),
+    GoRoute(
+      path: VerifyNewPinPage.path,
+      builder: (context, state) {
+        final pin = state.extra as String;
+        return VerifyNewPinPage(newPin: pin,);
+      },
+    ),
+    GoRoute(
+      path: VerifyPinPage.path,
+      builder: (context, state) {
+        final pin = state.extra as String;
+        return VerifyPinPage(pin: pin);
+      },
+    ),
     GoRoute(
       path: ActivityStartModalBottomSheet.path,
       builder: (context, state) => ActivityStartModalBottomSheet(),
@@ -191,3 +222,26 @@ extension CupertinoSheetExtension on BuildContext {
     return Navigator.of(this, rootNavigator: true).push(CupertinoSheetRoute(builder: (_) => page));
   }
 }
+
+
+// extension CupertinoSheetExtension on BuildContext {
+//   /// Push a page as a Cupertino modal sheet.
+//   /// [extra] can be any data you want to pass to the pushed page.
+//   Future<T?> pushCupertinoSheet<T>({
+//     required Widget page,
+//     Object? extra,
+//     bool useRootNavigator = true,
+//   }) {
+//     return Navigator.of(this, rootNavigator: useRootNavigator).push<T>(
+//       CupertinoSheetRoute<T>(
+//         builder: (context) {
+//           // If you need extra, you can pass it via constructor of page
+//           return page;
+//         },
+//         settings: RouteSettings(
+//           arguments: extra,
+//         ),
+//       ),
+//     );
+//   }
+// }

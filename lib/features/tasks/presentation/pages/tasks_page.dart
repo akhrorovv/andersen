@@ -104,7 +104,10 @@ class _TasksPageState extends State<TasksPage> {
                                         return TaskCard(
                                           task: tasks[index],
                                           onTap: () async {
-                                            context.push(TaskDetailPage.path, extra: tasks[index].id);
+                                            context.push(
+                                              TaskDetailPage.path,
+                                              extra: tasks[index].id,
+                                            );
                                           },
                                         );
                                       },

@@ -166,7 +166,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                                   hint: context.tr('selectEventType'),
                                   selectedItem: target,
                                   compareFn: (a, b) => a == b,
-                                  itemAsString: (eventTarget) => eventTarget.label,
+                                  itemAsString: (eventTarget) => eventTarget.label(context),
                                   items: (filter) async {
                                     return EventTarget.values;
                                   },

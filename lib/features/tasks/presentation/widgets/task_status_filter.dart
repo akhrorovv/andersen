@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/features/tasks/presentation/widgets/task_status_chip.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -39,16 +40,16 @@ class TaskStatusFilter extends StatelessWidget {
 enum TaskStatus { all, newTask, review, done }
 
 extension TaskStatusX on TaskStatus {
-  String get label {
+  String label(BuildContext context) {
     switch (this) {
       case TaskStatus.all:
-        return "All";
+        return context.tr("all");
       case TaskStatus.newTask:
-        return "New";
+        return context.tr("new");
       case TaskStatus.review:
-        return "Review";
+        return context.tr("review");
       case TaskStatus.done:
-        return "Done";
+        return context.tr("done");
     }
   }
 

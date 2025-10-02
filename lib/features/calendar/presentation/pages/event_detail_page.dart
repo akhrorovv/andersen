@@ -70,7 +70,7 @@ class EventDetailPage extends StatelessWidget {
                                 EventDetailItem(
                                   title: context.tr('eventType'),
                                   iconPath: Assets.vectors.calendarFav.path,
-                                  value: EventTargetX.fromString(event.target).label,
+                                  value: EventTargetX.fromString(event.target).label(context),
                                 ),
                                 EventDetailItem(
                                   title: context.tr('location'),

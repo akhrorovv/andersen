@@ -69,7 +69,7 @@ class EventTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    EventTargetX.fromString(event.target).label,
+                    EventTargetX.fromString(event.target).label(context),
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
