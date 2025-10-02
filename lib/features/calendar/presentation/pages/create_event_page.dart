@@ -5,6 +5,7 @@ import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_button.dart';
+import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/calendar/domain/repositories/users_repository.dart';
 import 'package:andersen/features/calendar/presentation/cubit/create_event_cubit.dart';
@@ -16,6 +17,7 @@ import 'package:andersen/features/tasks/domain/repositories/clients_repository.d
 import 'package:andersen/features/tasks/domain/repositories/matters_repository.dart';
 import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_field.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -85,7 +87,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(title: "New event"),
+      appBar: BasicAppBar(title: context.tr('newEvent')),
       body: BlocConsumer<CreateEventCubit, CreateEventState>(
         listener: (context, state) {
           if (state is CreateEventSuccess) {
@@ -111,7 +113,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                               children: [
                                 /// Description
                                 EventField(
-                                  title: "Description",
+                                  title: context.tr('description'),
                                   hasDivider: true,
                                   hasIcon: false,
                                   child: TextFormField(
@@ -119,7 +121,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                     maxLines: null,
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
-                                        return "Description should not be empty";
+                                        return context.tr('descriptionRequired');
                                       }
                                       return null;
                                     },
@@ -130,7 +132,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                     ),
                                     decoration: InputDecoration(
                                       isCollapsed: true,
-                                      hintText: "Enter description",
+                                      hintText: context.tr('enterDescription'),
                                       hintStyle: TextStyle(
                                         color: AppColors.colorBgMask,
                                         fontWeight: FontWeight.w500,
@@ -144,7 +146,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 /// Location
                                 EventField(
-                                  title: "Location",
+                                  title: context.tr('location'),
                                   hasDivider: true,
                                   hasIcon: false,
                                   child: TextFormField(
@@ -163,7 +165,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                     ),
                                     decoration: InputDecoration(
                                       isCollapsed: true,
-                                      hintText: "Enter location",
+                                      hintText: context.tr('enterLocation'),
                                       hintStyle: TextStyle(
                                         color: AppColors.colorBgMask,
                                         fontWeight: FontWeight.w500,
@@ -177,7 +179,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 /// Starts At
                                 EventField(
-                                  title: "Starts At",
+                                  title: context.tr('startsAt'),
                                   hasDivider: true,
                                   hasIcon: false,
                                   child: InkWell(
@@ -236,7 +238,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 /// Ends At
                                 EventField(
-                                  title: "Ends At",
+                                  title: context.tr('endsAt'),
                                   hasDivider: true,
                                   hasIcon: false,
                                   child: InkWell(
@@ -293,11 +295,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 /// Event Type
                                 EventField(
-                                  title: "Select Event Type",
+                                  title: context.tr('selectEventType'),
                                   hasDivider: false,
                                   hasIcon: false,
                                   child: CustomDropdownField<EventTarget>(
-                                    hint: "Select Event Type",
+                                    hint: context.tr('selectEventType'),
                                     selectedItem: EventTarget.firmEvent,
                                     compareFn: (a, b) => a == b,
                                     itemAsString: (eventTarget) => eventTarget.label,
@@ -309,7 +311,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                         setState(() {
                                           target = value;
                                         });
-                                        log("Selected Event Type: ${value.apiValue}");
                                       }
                                     },
                                   ),
@@ -318,11 +319,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                 /// Clients
                                 if (target == EventTarget.caseMeeting)
                                   EventField(
-                                    title: "Select Client",
+                                    title: context.tr('selectClient'),
                                     hasDivider: false,
                                     hasIcon: false,
                                     child: CustomDropdownField<ClientEntity>(
-                                      hint: "Select Client",
+                                      hint: context.tr('selectClient'),
                                       selectedItem: null,
                                       compareFn: (a, b) => a.id == b.id,
                                       itemAsString: (client) {
@@ -350,7 +351,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                           setState(() {
                                             clientId = value.id;
                                           });
-                                          log("Selected Client: ${value.name}");
                                         }
                                       },
                                     ),
@@ -359,11 +359,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                 /// Case
                                 if (target == EventTarget.caseMeeting)
                                   EventField(
-                                    title: "Case",
+                                    title: context.tr('case'),
                                     hasDivider: false,
                                     hasIcon: false,
                                     child: CustomDropdownField<MatterEntity>(
-                                      hint: "Select Case",
+                                      hint: context.tr('selectCase'),
                                       selectedItem: null,
                                       compareFn: (a, b) => a.id == b.id,
                                       itemAsString: (m) => m.name,
@@ -388,11 +388,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 /// Users
                                 EventField(
-                                  title: "Select Attendees",
+                                  title: context.tr('selectAttendees'),
                                   hasDivider: false,
                                   hasIcon: false,
                                   child: CustomMultiDropdownField<UserEntity>(
-                                    hint: "Select users",
+                                    hint: context.tr('selectUsers'),
                                     items: (filter) async {
                                       final result = await sl<UsersRepository>().getUsers(
                                         limit: 10,
@@ -411,9 +411,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                       setState(() {
                                         selectedUsers = values;
                                       });
-                                      log(
-                                        "Selected attendees: ${values.map((u) => u.id).toList()}",
-                                      );
                                     },
                                   ),
                                 ),
@@ -430,27 +427,33 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 32.h, right: 16.w, left: 16.w),
                   child: BasicButton(
-                    title: 'Create',
+                    title: context.tr('create'),
                     isLoading: state is CreateEventLoading,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         if (startAt == null || endAt == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Starts At and Ends At must be selected")),
+                          BasicSnackBar.show(
+                            context,
+                            message: context.tr('startsAtAndEndsAtMustBeSelected'),
+                            error: true,
                           );
                           return;
                         }
 
                         if (target == null) {
-                          ScaffoldMessenger.of(
+                          BasicSnackBar.show(
                             context,
-                          ).showSnackBar(const SnackBar(content: Text("Target must be selected")));
+                            message: context.tr('targetMustBeSelected'),
+                            error: true,
+                          );
                           return;
                         }
 
                         if (target == EventTarget.caseMeeting && matterId == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Case must be selected for Case Meeting")),
+                          BasicSnackBar.show(
+                            context,
+                            message: context.tr('caseMustBeSelectedForCaseMeeting'),
+                            error: true,
                           );
                           return;
                         }

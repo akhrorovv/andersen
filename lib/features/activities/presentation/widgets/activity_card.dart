@@ -3,6 +3,7 @@ import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/domain/entities/activity_entity.dart';
+import 'package:andersen/features/activities/presentation/widgets/activity_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -53,15 +54,22 @@ class ActivityCard extends StatelessWidget {
                           letterSpacing: 0,
                         ),
                       ),
-                      Text(
-                        formatDuration(activity.userEnteredTimeInSeconds ?? 0),
-                        style: TextStyle(
-                          color: AppColors.colorBgMask,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          height: 1.2,
-                          letterSpacing: 0,
-                        ),
+                      // Text(
+                      //   activity.lastEndTime != null
+                      //       ? formatDuration(activity.userEnteredTimeInSeconds ?? 0)
+                      //       : '-',
+                      //   style: TextStyle(
+                      //     color: AppColors.colorBgMask,
+                      //     fontSize: 14.sp,
+                      //     fontWeight: FontWeight.w400,
+                      //     height: 1.2,
+                      //     letterSpacing: 0,
+                      //   ),
+                      // ),
+                      ActivityTimer(
+                        lastStartTime: activity.lastStartTime,
+                        lastEndTime: activity.lastEndTime,
+                        userEnteredTimeInSeconds: activity.userEnteredTimeInSeconds,
                       ),
                     ],
                   ),

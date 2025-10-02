@@ -1,5 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
@@ -26,7 +27,7 @@ class HomeHeader extends StatefulWidget {
 class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale.languageCode;
+    final locale = DBService.locale;
     final formattedDate = DateFormat("EEEE, dd MMMM", locale).format(DateTime.now());
 
     return ShadowContainer(
@@ -65,10 +66,10 @@ class _HomeHeaderState extends State<HomeHeader> {
                 BlocConsumer<AttendeeCubit, AttendeeState>(
                   listener: (context, state) {
                     if (state is AttendeeArriveSuccess) {
-                      BasicSnackBar.show(context, message: "Welcome! You’ve arrived ✅");
+                      BasicSnackBar.show(context, message: "${context.tr('welcomeYouArrived')} ✅");
                       context.read<AttendeeCubit>().checkAttendeeStatus();
                     } else if (state is AttendeeLeaveSuccess) {
-                      BasicSnackBar.show(context, message: "Goodbye! You’ve left 👋");
+                      BasicSnackBar.show(context, message: "${context.tr('goodbyeYouLeft')} 👋");
                       context.read<AttendeeCubit>().checkAttendeeStatus();
                     } else if (state is AttendeeArriveError || state is AttendeeLeaveError) {
                       final msg = state is AttendeeArriveError
@@ -145,7 +146,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
               if (state is AttendeeStatusInactive) {
                 return Text(
-                  "To get started, please click on the \"Has come\" button!",
+                  context.tr('clickHasComeButton'),
                   style: TextStyle(
                     color: AppColors.colorBgMask,
                     fontSize: 12.sp,

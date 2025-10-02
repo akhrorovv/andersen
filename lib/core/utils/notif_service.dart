@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -36,8 +37,12 @@ class NotifService {
     // FCM token olish
     try {
       final token = await _messaging.getToken();
-      log("FCM TOKEN: $token");
-      // DBService.saveFCMToken(token.toString());
+      if (token != null) {
+        log("FCM TOKEN: $token");
+        DBService.saveFCMToken(token);
+      } else {
+        log("⚠️ FCM token null (simulator bo'lishi mumkin)");
+      }
     } catch (e) {
       log("FCM token olishda xatolik: $e");
     }
@@ -45,7 +50,7 @@ class NotifService {
     // FCM token yangilanishi
     _messaging.onTokenRefresh.listen((newToken) {
       log("FCM TOKEN (onRefresh): $newToken");
-      // serverga yuborish yoki localda saqlash mumkin
+      DBService.saveFCMToken(newToken);
     });
 
     // foreground, background, initial handlers
@@ -53,11 +58,7 @@ class NotifService {
   }
 
   Future<void> _requestPermission() async {
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    final settings = await _messaging.requestPermission(alert: true, badge: true, sound: true);
 
     log("Permission status: ${settings.authorizationStatus}");
   }
@@ -73,12 +74,10 @@ class NotifService {
       importance: Importance.high,
     );
     await _localNotifications
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
-    const initializationSettingsAndroid =
-    AndroidInitializationSettings('mipmap/ic_launcher');
+    const initializationSettingsAndroid = AndroidInitializationSettings('mipmap/ic_launcher');
 
     final initializationSettingsDarwin = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -105,12 +104,13 @@ class NotifService {
   }
 
   Future<void> showNotification(RemoteMessage message) async {
-    // faqat data payload ishlatamiz
+    final notification = message.notification;
     final data = message.data;
-    if (data.isEmpty) return;
 
-    final title = data['title'] ?? 'No Title';
-    final body = data['body'] ?? 'No Body';
+    final title = notification?.title ?? data['title'] ?? 'No Title';
+    final body = notification?.body ?? data['body'] ?? 'No Body';
+
+    if (title.isEmpty && body.isEmpty) return;
 
     await _localNotifications.show(
       message.hashCode,
@@ -120,19 +120,18 @@ class NotifService {
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
-          channelDescription:
-          'This channel is used for important notifications.',
+          channelDescription: 'This channel is used for important notifications.',
           importance: Importance.high,
           priority: Priority.high,
           icon: 'mipmap/ic_launcher',
         ),
-        iOS: DarwinNotificationDetails(
+        iOS: const DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
         ),
       ),
-      payload: jsonEncode(data),
+      payload: jsonEncode(data.isNotEmpty ? data : {}),
     );
   }
 

@@ -90,18 +90,27 @@ class _TasksPageState extends State<TasksPage> {
                                     }
                                     return false;
                                   },
-                                  child: ListView.separated(
-                                    padding: EdgeInsets.symmetric(vertical: 24.h),
-                                    itemBuilder: (context, index) {
-                                      return TaskCard(
-                                        task: tasks[index],
-                                        onTap: () async {
-                                          context.push(TaskDetailPage.path, extra: tasks[index].id);
-                                        },
-                                      );
+                                  child: RefreshIndicator(
+                                    color: AppColors.primary,
+                                    backgroundColor: Colors.white,
+                                    displacement: 50.h,
+                                    strokeWidth: 3,
+                                    onRefresh: () async {
+                                      await context.read<TasksCubit>().getTasks(refresh: true);
                                     },
-                                    separatorBuilder: (_, __) => BasicDivider(),
-                                    itemCount: tasks.length,
+                                    child: ListView.separated(
+                                      padding: EdgeInsets.symmetric(vertical: 24.h),
+                                      itemBuilder: (context, index) {
+                                        return TaskCard(
+                                          task: tasks[index],
+                                          onTap: () async {
+                                            context.push(TaskDetailPage.path, extra: tasks[index].id);
+                                          },
+                                        );
+                                      },
+                                      separatorBuilder: (_, __) => BasicDivider(),
+                                      itemCount: tasks.length,
+                                    ),
                                   ),
                                 ),
                               )

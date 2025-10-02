@@ -28,3 +28,26 @@ String formatDuration(int seconds) {
 
   return "$hours:$minutes:$secs";
 }
+
+String formatKpiDuration(int seconds) {
+  final duration = Duration(seconds: seconds);
+  final hours = duration.inHours;
+  final minutes = duration.inMinutes % 60;
+
+  if (hours > 0 && minutes > 0) {
+    return "${hours}h${minutes}min";
+  } else if (hours > 0) {
+    return "${hours}h";
+  } else if (minutes > 0) {
+    return "${minutes}min";
+  } else {
+    return "0min";
+  }
+}
+
+String calculateCompletion(int fact, int plan) {
+  if (plan == 0) return "0%";
+  final percent = (fact / plan * 100).clamp(0, 100);
+  return "${percent.toStringAsFixed(0)}%";
+}
+

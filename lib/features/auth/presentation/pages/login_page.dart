@@ -113,6 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                               DBService.saveDeviceVersion(version),
                             ]);
 
+                            final token = DBService.fcmToken ?? '';
+
                             final params = LoginParams(
                               phone: phone,
                               password: password,
@@ -120,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                                 model: model,
                                 version: version,
                                 locale: locale,
-                                fcmToken: "fake_token",
+                                fcmToken: token.isEmpty ? 'null' : token,
                               ),
                             );
                             cubit.login(params);

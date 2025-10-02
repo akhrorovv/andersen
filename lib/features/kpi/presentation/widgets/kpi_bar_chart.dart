@@ -14,83 +14,63 @@ class KpiBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0);
-    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    return BlocBuilder<KpiCubit, KpiState>(
+      builder: (context, state) {
+        if (state is KpiLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is KpiLoadedError) {
+          return Text("Error: ${state.message}");
+        } else if (state is KpiLoadedSuccess) {
+          final kpis = state.resultsEntity.results;
+          final visibleKpis = kpis.take(10).toList();
 
-    return BlocProvider(
-      create: (_) => sl<KpiCubit>()
-        ..geKpi(
-          KpiRequest(
-            limit: 20,
-            offset: 0,
-            userId: 111,
-            startDate: startOfDay.toIso8601String(),
-            endDate: endOfDay.toIso8601String(),
-          ),
-        ),
-      child: BlocBuilder<KpiCubit, KpiState>(
-        builder: (context, state) {
-          if (state is KpiLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is KpiLoadedError) {
-            return Text("Error: ${state.message}");
-          } else if (state is KpiLoadedSuccess) {
-            final kpis = state.resultsEntity.results;
-            final visibleKpis = kpis.take(10).toList();
+          final maxY = visibleKpis.isNotEmpty
+              ? (visibleKpis.map((e) => e.value ?? 0).reduce((a, b) => a > b ? a : b)).toDouble() +
+                    1
+              : 10.0;
 
-            final maxY = visibleKpis.isNotEmpty
-                ? (visibleKpis.map((e) => e.value ?? 0).reduce((a, b) => a > b ? a : b))
-                          .toDouble() +
-                      1
-                : 10.0;
-
-            return ShadowContainer(
-              child: SizedBox(
-                height: 250.h,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: maxY,
-                    barTouchData: BarTouchData(enabled: false),
-                    titlesData: FlTitlesData(
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: true, reservedSize: 28.w, interval: 2),
-                      ),
-                      bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          return ShadowContainer(
+            child: SizedBox(
+              height: 250.h,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: maxY,
+                  barTouchData: BarTouchData(enabled: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true, reservedSize: 28.w, interval: 2),
                     ),
-                    gridData: FlGridData(show: true, horizontalInterval: 1),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(color: AppColors.grey2),
-                    ),
-                    barGroups: visibleKpis.isNotEmpty
-                        ? List.generate(visibleKpis.length, (index) {
-                            final kpi = visibleKpis[index];
-                            return BarChartGroupData(
-                              x: index,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: (kpi.value ?? 0).toDouble(),
-                                  color: AppColors.chartColor,
-                                  width: 16.w,
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                              ],
-                            );
-                          })
-                        : [],
+                    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
+                  gridData: FlGridData(show: true, horizontalInterval: 1),
+                  borderData: FlBorderData(show: true, border: Border.all(color: AppColors.grey2)),
+                  barGroups: visibleKpis.isNotEmpty
+                      ? List.generate(visibleKpis.length, (index) {
+                          final kpi = visibleKpis[index];
+                          return BarChartGroupData(
+                            x: index,
+                            barRods: [
+                              BarChartRodData(
+                                toY: (kpi.value ?? 0).toDouble(),
+                                color: AppColors.chartColor,
+                                width: 16.w,
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ],
+                          );
+                        })
+                      : [],
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          return const SizedBox.shrink();
-        },
-      ),
+        return const SizedBox.shrink();
+      },
     );
   }
 }

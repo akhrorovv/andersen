@@ -1,5 +1,6 @@
 class ApiUrls {
   static const baseURL = 'https://anderson-api.w2w.uz/';
+  // static const baseURL = 'https://billing-api.vl-legal.uz/';
   static const apiV = 'api/v1/mobile/';
 
   /// Auth
@@ -50,4 +51,5 @@ class ApiUrls {
   /// Kpi
   static String kpiUser(int userId) => '${apiV}kpi/user/$userId';
   static const kpi = '${apiV}kpi';
+  static const workload = '${apiV}reports/tasks/count-by-type';
 }

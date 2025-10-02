@@ -46,7 +46,9 @@ class TaskActivitiesSection extends StatelessWidget {
                               children: [
                                 ActivityItem(
                                   description: activity.description ?? '-',
-                                  duration: activity.userEnteredTimeInSeconds ?? 0,
+                                  userEnteredTimeInSeconds: activity.userEnteredTimeInSeconds,
+                                  lastStartTime: activity.lastStartTime,
+                                  lastEndTime: activity.lastEndTime,
                                 ),
                                 if (index != limited.length - 1) BasicDivider(),
                               ],

@@ -17,7 +17,9 @@ import 'package:andersen/features/home/presentation/pages/languages_page.dart';
 import 'package:andersen/features/home/presentation/pages/notifications_page.dart';
 import 'package:andersen/features/home/presentation/pages/reason_page.dart';
 import 'package:andersen/features/home/presentation/pages/stop_activity_page.dart';
+import 'package:andersen/features/kpi/presentation/cubit/kpi_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
+import 'package:andersen/features/kpi/presentation/cubit/workload_cubit.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:andersen/features/tasks/presentation/cubit/task_detail_cubit.dart';
@@ -107,10 +109,20 @@ final GoRouter router = GoRouter(
           routes: [
             GoRoute(
               path: KpiPage.path,
-              builder: (context, state) => KpiPage(),
+              builder: (context, state) {
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider(create: (_) => sl<KpiCubit>()),
+                    BlocProvider(create: (_) => sl<KpiUserCubit>()),
+                    BlocProvider(create: (_) => sl<WorkloadCubit>()),
+                  ],
+                  child: const KpiPage(),
+                );
+              },
             ),
           ],
         ),
+
       ],
     ),
 

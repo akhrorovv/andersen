@@ -11,9 +11,12 @@ class KpiUserRepositoryImpl implements KpiUserRepository {
   KpiUserRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, KpiUserEntity>> getUserKpi({required int userId}) async {
+  Future<Either<Failure, KpiUserEntity>> getUserKpi({
+    required int userId,
+    required KpiUserRequest request,
+  }) async {
     try {
-      final result = await remoteDataSource.getUserKpi(userId: userId);
+      final result = await remoteDataSource.getUserKpi(userId: userId, request: request);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));

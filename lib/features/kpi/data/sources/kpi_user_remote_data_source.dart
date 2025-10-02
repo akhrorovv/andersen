@@ -2,10 +2,11 @@ import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
 import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/features/kpi/data/models/kpi_user_model.dart';
+import 'package:andersen/features/kpi/domain/repositories/kpi_user_repository.dart';
 import 'package:dio/dio.dart';
 
 abstract class KpiUserRemoteDataSource {
-  Future<KpiUserModel> getUserKpi({required int userId});
+  Future<KpiUserModel> getUserKpi({required int userId, required KpiUserRequest request});
 }
 
 class KpiUserRemoteDataSourceImpl implements KpiUserRemoteDataSource {
@@ -14,9 +15,12 @@ class KpiUserRemoteDataSourceImpl implements KpiUserRemoteDataSource {
   KpiUserRemoteDataSourceImpl(this._client);
 
   @override
-  Future<KpiUserModel> getUserKpi({required int userId}) async {
+  Future<KpiUserModel> getUserKpi({required int userId, required KpiUserRequest request}) async {
     try {
-      final response = await _client.get(ApiUrls.kpiUser(userId));
+      final response = await _client.get(
+        ApiUrls.kpiUser(userId),
+        queryParameters: request.toJson(),
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return KpiUserModel.fromJson(response.data);

@@ -202,13 +202,13 @@ Future<void> showLogoutDialog(BuildContext context) async {
     return showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text("Logout"),
-        content: const Text("Are you sure you want to logout?"),
+        title: Text(context.tr('logout')),
+        content: Text(context.tr('logoutConfirm')),
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Cancel"),
+            child: Text(context.tr('cancel')),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
@@ -217,7 +217,7 @@ Future<void> showLogoutDialog(BuildContext context) async {
               DBService.clear();
               context.go(LoginPage.path);
             },
-            child: const Text("Yes"),
+            child: Text(context.tr('yes')),
           ),
         ],
       ),
@@ -227,20 +227,17 @@ Future<void> showLogoutDialog(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Logout"),
-        content: const Text("Are you sure you want to logout?"),
+        title: Text(context.tr('logout')),
+        content: Text(context.tr('logoutConfirm')),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Cancel"),
-          ),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text(context.tr('cancel'))),
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
               DBService.clear();
               context.go(LoginPage.path);
             },
-            child: const Text("Yes"),
+            child: Text(context.tr('yes')),
           ),
         ],
       ),

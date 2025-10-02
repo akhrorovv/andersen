@@ -19,6 +19,7 @@ import 'package:andersen/features/tasks/presentation/widgets/custom_dropdown_fie
 import 'package:andersen/features/tasks/presentation/widgets/task_update_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:andersen/service_locator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,7 +52,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     clientId = widget.task.matter?.contract?.clientId;
     matterId = widget.task.matter?.id;
 
-    LoggerInterceptor.logger.w("matterId: $matterId\ntypeId: $typeId\nDueDate: $dueAt");
+    // LoggerInterceptor.logger.w("matterId: $matterId\ntypeId: $typeId\nDueDate: $dueAt");
   }
 
   @override
@@ -86,12 +87,12 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(title: "Edit task"),
+      appBar: BasicAppBar(title: context.tr('editTask')),
       body: BlocConsumer<TaskUpdateCubit, TaskUpdateState>(
         listener: (context, state) {
           if (state is TaskUpdateSuccess) {
             context.pop(true);
-            BasicSnackBar.show(context, message: 'Task updated successfully');
+            BasicSnackBar.show(context, message: context.tr('taskUpdatedSuccessfully'));
           } else if (state is TaskUpdateError) {
             context.pop(false);
             BasicSnackBar.show(context, message: state.message, error: true);
@@ -111,11 +112,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                             children: [
                               /// Clients
                               TaskUpdateField(
-                                title: "Select Client",
+                                title: context.tr('selectClient'),
                                 iconPath: Assets.vectors.briefcase.path,
                                 hasDivider: false,
                                 child: CustomDropdownField<ClientEntity>(
-                                  hint: "Select Client",
+                                  hint: context.tr('selectClient'),
                                   selectedItem: null,
                                   compareFn: (a, b) => a.id == b.id,
                                   itemAsString: (client) {
@@ -132,7 +133,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                     final result = await sl<ClientsRepository>().getClients(
                                       limit: 10,
                                       offset: 0,
-                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                      search: (filter != null && filter.length >= 2)
+                                          ? filter
+                                          : null,
                                     );
                                     return result.fold((failure) => [], (res) => res.clients);
                                   },
@@ -141,7 +144,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       setState(() {
                                         clientId = value.id;
                                       });
-                                      log("Selected Client: ${value.name}");
                                     }
                                   },
                                 ),
@@ -149,7 +151,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
                               /// Description
                               TaskUpdateField(
-                                title: "Description",
+                                title: context.tr('description'),
                                 iconPath: Assets.vectors.textAlignLeft.path,
                                 hasDivider: true,
                                 child: TextField(
@@ -162,7 +164,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                   ),
                                   decoration: InputDecoration(
                                     isCollapsed: true,
-                                    hintText: "No description entered",
+                                    hintText: "-",
                                     hintStyle: TextStyle(
                                       color: AppColors.colorBgMask,
                                       fontWeight: FontWeight.w500,
@@ -176,7 +178,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
                               /// Due Date
                               TaskUpdateField(
-                                title: "Due Date",
+                                title: context.tr('dueDate'),
                                 iconPath: Assets.vectors.clock.path,
                                 hasDivider: true,
                                 child: InkWell(
@@ -220,11 +222,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
                               /// Task Types
                               TaskUpdateField(
-                                title: "Task type",
+                                title: context.tr('taskType'),
                                 iconPath: Assets.vectors.briefcase.path,
                                 hasDivider: false,
                                 child: CustomDropdownField<TaskTypeEntity>(
-                                  hint: "Task type",
+                                  hint: context.tr('taskType'),
                                   selectedItem: widget.task.type,
                                   compareFn: (a, b) => a.id == b.id,
                                   itemAsString: (type) => type.name ?? '-',
@@ -232,7 +234,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                     final result = await sl<TaskTypesRepository>().getTypes(
                                       limit: 15,
                                       offset: 0,
-                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                      search: (filter != null && filter.length >= 2)
+                                          ? filter
+                                          : null,
                                     );
                                     return result.fold((failure) => [], (res) => res.types);
                                   },
@@ -241,7 +245,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       setState(() {
                                         typeId = value.id;
                                       });
-                                      log("Selected Type: ${value.name}");
                                     }
                                   },
                                 ),
@@ -249,11 +252,11 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
                               /// Matters
                               TaskUpdateField(
-                                title: "Related Case",
+                                title: context.tr('relatedCase'),
                                 hasDivider: false,
                                 iconPath: Assets.vectors.briefcase.path,
                                 child: CustomDropdownField<MatterEntity>(
-                                  hint: "Related Case",
+                                  hint: context.tr('relatedCase'),
                                   selectedItem: widget.task.matter,
                                   compareFn: (a, b) => a.id == b.id,
                                   itemAsString: (matter) => matter.name,
@@ -264,7 +267,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       offset: 0,
                                       clientId: clientId!,
                                       taskCreatable: true,
-                                      search: (filter != null && filter.length >= 2) ? filter : null,
+                                      search: (filter != null && filter.length >= 2)
+                                          ? filter
+                                          : null,
                                     );
                                     return result.fold((failure) => [], (res) => res.results);
                                   },
@@ -273,7 +278,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                                       setState(() {
                                         matterId = value.id;
                                       });
-                                      log("Selected Case: ${value.name}");
                                     }
                                   },
                                 ),
@@ -313,7 +317,10 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
               ),
               SafeArea(
                 bottom: true,
-                child: BasicButton(title: "Save", onTap: _onSave),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 32.h, left: 16.w, right: 16.w),
+                  child: BasicButton(title: context.tr('save'), onTap: _onSave),
+                ),
               ),
             ],
           );

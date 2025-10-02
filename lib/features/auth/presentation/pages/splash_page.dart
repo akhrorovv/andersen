@@ -33,16 +33,15 @@ class SplashPage extends StatelessWidget {
             context.go(HomePage.path);
           } else if (state is ProfileLoadedError) {
             BasicSnackBar.show(context, message: state.message, error: true);
-            context.go(CheckingPage.path);
-
-            // if (state.message == "Device is blocked") {
-            //   context.go(CheckingPage.path);
-            // } else {
-            //   await DBService.clear();
-            //   if (context.mounted) {
-            //     context.go(LoginPage.path);
-            //   }
-            // }
+            if (state.message == "Device is blocked") {
+              context.go(CheckingPage.path);
+            } else if (state.message == 'Unauthorized') {
+              await DBService.clear();
+              if (context.mounted) {
+                context.go(LoginPage.path);
+              }
+            }
+            // context.go(CheckingPage.path);
           }
         },
         child: Center(

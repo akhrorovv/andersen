@@ -1,4 +1,4 @@
-import 'package:andersen/core/api/notif_service.dart';
+import 'package:andersen/core/utils/notif_service.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:andersen/service_locator.dart';

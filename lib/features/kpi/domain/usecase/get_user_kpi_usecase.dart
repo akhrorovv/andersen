@@ -8,7 +8,7 @@ class GetUserKpiUsecase {
 
   GetUserKpiUsecase(this.repository);
 
-  Future<Either<Failure, KpiUserEntity>> call(int userId) {
-    return repository.getUserKpi(userId: userId);
+  Future<Either<Failure, KpiUserEntity>> call(int userId, KpiUserRequest request) {
+    return repository.getUserKpi(userId: userId, request: request);
   }
 }

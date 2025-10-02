@@ -19,9 +19,8 @@ class DBService {
     await _box.put('locale', locale);
   }
 
-// 🌐 Language (locale) olish
+  // 🌐 Language (locale) olish
   static String get locale => _box.get('locale', defaultValue: 'ru');
-
 
   // 🔔 Notifications status saqlash
   static Future<void> saveNotifStatus(bool enabled) async {
@@ -29,6 +28,13 @@ class DBService {
   }
 
   static bool get notifEnabled => _box.get('notifEnabled', defaultValue: true);
+
+  // 🔔 Save FCM token
+  static Future<void> saveFCMToken(String  token) async {
+    await _box.put('fcmToken', token);
+  }
+
+  static String? get fcmToken => _box.get('fcmToken');
 
   // 🔑 DeviceId saqlash
   static Future<void> saveDeviceId(String deviceId) async {

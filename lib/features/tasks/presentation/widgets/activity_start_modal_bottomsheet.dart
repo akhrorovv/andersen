@@ -182,6 +182,14 @@ class _ActivityStartModalBottomSheetState extends State<ActivityStartModalBottom
                       icon: Assets.vectors.play.path,
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
+                          if (taskId == null) {
+                            BasicSnackBar.show(
+                              context,
+                              message: context.tr('selectTask'),
+                              error: true,
+                            );
+                            return;
+                          }
                           final body = {
                             "taskId": (widget.task != null) ? widget.task!.id : taskId,
                             "description": descriptionController.text.trim(),

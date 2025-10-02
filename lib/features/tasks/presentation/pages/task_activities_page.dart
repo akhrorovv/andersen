@@ -3,6 +3,7 @@ import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
 import 'package:andersen/features/tasks/presentation/widgets/detail/activity_item.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +16,7 @@ class TaskActivitiesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final allActivities = activities.results;
     return Scaffold(
-      appBar: BasicAppBar(title: "Related time"),
+      appBar: BasicAppBar(title: context.tr('relatedTime')),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
         child: Column(
@@ -28,7 +29,9 @@ class TaskActivitiesPage extends StatelessWidget {
                     children: [
                       ActivityItem(
                         description: activity.description ?? '-',
-                        duration: activity.userEnteredTimeInSeconds ?? 0,
+                        userEnteredTimeInSeconds: activity.userEnteredTimeInSeconds,
+                        lastStartTime: activity.lastStartTime,
+                        lastEndTime: activity.lastEndTime,
                       ),
                       if (index != allActivities.length - 1) BasicDivider(),
                     ],

@@ -1,8 +1,10 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/home/presentation/widgets/kpi_card.dart';
+import 'package:andersen/features/kpi/domain/repositories/kpi_user_repository.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_state.dart';
 import 'package:andersen/features/kpi/presentation/pages/kpi_page.dart';
@@ -18,8 +20,21 @@ class KpiForWeek extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = DBService.user;
+    final now = DateTime.now();
+    final startDate = now.subtract(const Duration(days: 7));
+
     return BlocProvider(
-      create: (_) => sl<KpiUserCubit>()..getUserKpi(111),
+      create: (_) => sl<KpiUserCubit>()
+        ..getUserKpi(
+          user!.id,
+          KpiUserRequest(
+            limit: 100,
+            offset: 0,
+            startDate: startDate.toIso8601String(),
+            endDate: now.toIso8601String(),
+          ),
+        ),
       child: BlocBuilder<KpiUserCubit, KpiUserState>(
         builder: (context, state) {
           if (state is KpiUserInitial || state is KpiUserLoading) {
@@ -39,14 +54,24 @@ class KpiForWeek extends StatelessWidget {
                   spacing: 12.w,
                   children: [
                     Expanded(
-                      child: KpiCard(title: context.tr('completedTasks'), value: completedTasks.toString()),
+                      child: KpiCard(
+                        title: context.tr('completedTasks'),
+                        value: completedTasks.toString(),
+                      ),
                     ),
                     Expanded(
-                      child: KpiCard(title: context.tr('totalTimeCounted'), value: formatDuration(totalTime)),
+                      child: KpiCard(
+                        title: context.tr('totalTimeCounted'),
+                        value: formatDuration(totalTime),
+                      ),
                     ),
                   ],
                 ),
-                KpiCard(title: context.tr('effectiveness'), value: "$efficiency %", effectiveness: efficiency),
+                KpiCard(
+                  title: context.tr('effectiveness'),
+                  value: "$efficiency %",
+                  effectiveness: efficiency,
+                ),
               ],
             );
           }

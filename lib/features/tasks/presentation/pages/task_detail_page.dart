@@ -61,12 +61,18 @@ class TaskDetailPage extends StatelessWidget {
                     backgroundColor: AppColors.primary,
                     shape: CircleBorder(),
                     onPressed: () async {
-                      showCupertinoModalBottomSheet(
+                      final result = await showCupertinoModalBottomSheet<bool>(
                         context: context,
                         topRadius: Radius.circular(16.r),
                         builder: (context) => ActivityStartModalBottomSheet(task: task),
                       );
+
+                      if (result == true) {
+                        // Task qayta yuklash
+                        context.read<TaskDetailCubit>().getTaskDetail(taskId);
+                      }
                     },
+
                     child: Icon(Icons.add, color: AppColors.white),
                   )
                 : null,

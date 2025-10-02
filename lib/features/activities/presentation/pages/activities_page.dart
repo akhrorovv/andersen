@@ -1,6 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
+import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/features/activities/presentation/cubit/activities_cubit.dart';
 import 'package:andersen/features/activities/presentation/cubit/activities_state.dart';
 import 'package:andersen/features/activities/presentation/pages/activity_detail_page.dart';
@@ -31,9 +32,7 @@ class ActivitiesPage extends StatelessWidget {
         child: BlocBuilder<ActivitiesCubit, ActivitiesState>(
           builder: (context, state) {
             if (state is ActivitiesInitial || state is ActivitiesLoading) {
-              return Center(
-                child: CircularProgressIndicator(color: AppColors.primary),
-              );
+              return Center(child: CircularProgressIndicator(color: AppColors.primary));
             } else if (state is ActivitiesError) {
               return Center(
                 child: Text(state.message, style: TextStyle(color: Colors.red)),
@@ -41,7 +40,7 @@ class ActivitiesPage extends StatelessWidget {
             } else if (state is ActivitiesLoaded) {
               final activities = state.activities.results;
               if (activities.isEmpty) {
-                return Center(child: Text("No Activities found"));
+                return Center(child: EmptyWidget());
               }
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -52,23 +51,29 @@ class ActivitiesPage extends StatelessWidget {
                     }
                     return false;
                   },
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: 24.h),
-                    itemBuilder: (context, index) {
-                      return ActivityCard(
-                        onTap: () {
-                          context.pushCupertinoSheet(
-                            ActivityDetailPage(
-                              activityId: activities[index].id,
-                            ),
-                          );
-                        },
-                        activity: activities[index],
-                      );
+                  child: RefreshIndicator(
+                    color: AppColors.primary,
+                    backgroundColor: Colors.white,
+                    displacement: 50.h,
+                    strokeWidth: 3,
+                    onRefresh: () async {
+                      await context.read<ActivitiesCubit>().getActivities(refresh: true);
                     },
-                    separatorBuilder: (_, __) =>
-                        BasicDivider(marginTop: 8, marginBottom: 8),
-                    itemCount: activities.length,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(vertical: 24.h),
+                      itemBuilder: (context, index) {
+                        return ActivityCard(
+                          onTap: () {
+                            context.pushCupertinoSheet(
+                              ActivityDetailPage(activityId: activities[index].id),
+                            );
+                          },
+                          activity: activities[index],
+                        );
+                      },
+                      separatorBuilder: (_, __) => BasicDivider(marginTop: 8, marginBottom: 8),
+                      itemCount: activities.length,
+                    ),
                   ),
                 ),
               );
