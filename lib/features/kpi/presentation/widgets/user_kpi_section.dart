@@ -7,7 +7,6 @@ import 'package:andersen/features/kpi/presentation/cubit/kpi_user_state.dart';
 import 'package:andersen/features/kpi/presentation/pages/complaints.dart';
 import 'package:andersen/features/kpi/presentation/pages/completed_tasks.dart';
 import 'package:andersen/features/kpi/presentation/pages/confirmed_hours.dart';
-import 'package:andersen/features/kpi/presentation/pages/rating.dart';
 import 'package:andersen/features/kpi/presentation/pages/total_time_counted.dart';
 import 'package:andersen/features/kpi/presentation/widgets/kpi_card.dart';
 import 'package:andersen/gen/assets.gen.dart';
@@ -17,7 +16,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserKpiSection extends StatelessWidget {
-  const UserKpiSection({super.key});
+  final String startDate;
+  final String endDate;
+
+  const UserKpiSection({super.key, required this.startDate, required this.endDate});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,9 @@ class UserKpiSection extends StatelessWidget {
                 title: context.tr('totalTimeCounted'),
                 value: formatDuration(totalTime),
                 onTap: () {
-                  context.pushCupertinoSheet(const TotalTimeCounted());
+                  context.pushCupertinoSheet(
+                    TotalTimeCounted(startDate: startDate, endDate: endDate),
+                  );
                 },
               ),
               KpiCard(
@@ -54,7 +58,9 @@ class UserKpiSection extends StatelessWidget {
                 title: context.tr('confirmedHours'),
                 value: "00:00:00",
                 onTap: () {
-                  context.pushCupertinoSheet(const ConfirmedHours());
+                  context.pushCupertinoSheet(
+                    ConfirmedHours(startDate: startDate, endDate: endDate),
+                  );
                 },
               ),
               KpiCard(
@@ -62,7 +68,9 @@ class UserKpiSection extends StatelessWidget {
                 title: context.tr('completedTasks'),
                 value: completedTasks.toString(),
                 onTap: () {
-                  context.pushCupertinoSheet(const CompletedTasks());
+                  context.pushCupertinoSheet(
+                    CompletedTasks(startDate: startDate, endDate: endDate),
+                  );
                 },
               ),
               KpiCard(
@@ -76,7 +84,7 @@ class UserKpiSection extends StatelessWidget {
                 title: context.tr('complaint'),
                 value: complaints.toString(),
                 onTap: () {
-                  context.pushCupertinoSheet(const Complaints());
+                  context.pushCupertinoSheet(Complaints(startDate: startDate, endDate: endDate));
                 },
               ),
               KpiCard(
@@ -84,8 +92,7 @@ class UserKpiSection extends StatelessWidget {
                 title: context.tr('rating'),
                 value: "$rating/10",
                 onTap: () {
-                  context.pushCupertinoSheet(const Rating());
-
+                  // context.pushCupertinoSheet(const Rating());
                 },
               ),
             ],

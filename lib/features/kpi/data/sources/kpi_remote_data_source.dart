@@ -1,7 +1,6 @@
 import 'package:andersen/core/api/api_urls.dart';
 import 'package:andersen/core/api/dio_client.dart';
 import 'package:andersen/core/error/exceptions.dart';
-import 'package:andersen/features/kpi/data/models/kpi_model.dart';
 import 'package:andersen/features/kpi/data/models/kpi_results_model.dart';
 import 'package:andersen/features/kpi/domain/repositories/kpi_repository.dart';
 import 'package:dio/dio.dart';

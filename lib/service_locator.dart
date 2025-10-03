@@ -80,19 +80,34 @@ import 'features/home/domain/usecases/stop_activity_usecase.dart';
 import 'features/home/presentation/cubit/activity_status_cubit.dart';
 import 'features/home/presentation/cubit/attendee_cubit.dart';
 import 'features/home/presentation/cubit/stop_activity_cubit.dart';
+import 'features/kpi/data/repositories/complaints_repository_impl.dart';
+import 'features/kpi/data/repositories/kpi_activities_repository_impl.dart';
 import 'features/kpi/data/repositories/kpi_repository_impl.dart';
+import 'features/kpi/data/repositories/kpi_tasks_repository_impl.dart';
 import 'features/kpi/data/repositories/kpi_user_repository_impl.dart';
 import 'features/kpi/data/repositories/workload_repository_impl.dart';
+import 'features/kpi/data/sources/complaints_remote_data_source.dart';
+import 'features/kpi/data/sources/kpi_activities_remote_data_source.dart';
 import 'features/kpi/data/sources/kpi_remote_data_source.dart';
+import 'features/kpi/data/sources/kpi_tasks_remote_data_source.dart';
 import 'features/kpi/data/sources/kpi_user_remote_data_source.dart';
 import 'features/kpi/data/sources/workload_remote_data_source.dart';
+import 'features/kpi/domain/repositories/complaints_repository.dart';
+import 'features/kpi/domain/repositories/kpi_activities_repository.dart';
 import 'features/kpi/domain/repositories/kpi_repository.dart';
+import 'features/kpi/domain/repositories/kpi_tasks_repository.dart';
 import 'features/kpi/domain/repositories/kpi_user_repository.dart';
 import 'features/kpi/domain/repositories/workload_repository.dart';
+import 'features/kpi/domain/usecase/get_complaints_usecase.dart';
+import 'features/kpi/domain/usecase/get_kpi_activities_usecase.dart';
+import 'features/kpi/domain/usecase/get_kpi_tasks_usecase.dart';
 import 'features/kpi/domain/usecase/get_kpi_usecase.dart';
 import 'features/kpi/domain/usecase/get_user_kpi_usecase.dart';
 import 'features/kpi/domain/usecase/get_workload_usecase.dart';
+import 'features/kpi/presentation/cubit/complaints_cubit.dart';
+import 'features/kpi/presentation/cubit/kpi_activities_cubit.dart';
 import 'features/kpi/presentation/cubit/kpi_cubit.dart';
+import 'features/kpi/presentation/cubit/kpi_tasks_cubit.dart';
 import 'features/kpi/presentation/cubit/kpi_user_cubit.dart';
 import 'features/kpi/presentation/cubit/workload_cubit.dart';
 import 'features/tasks/data/repositories/matters_repository_impl.dart';
@@ -144,12 +159,6 @@ Future<void> _initAuth() async {
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>()))
     ..registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()))
     ..registerFactory(() => AuthCubit(sl<LoginUseCase>()))
-    /// Home
-    // ..registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(sl<DioClient>()))
-    // ..registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(sl<HomeRemoteDataSource>()))
-    // // ..registerLazySingleton(() => GetProfileUseCase(sl<HomeRepository>()))
-    // ..registerLazySingleton(() => GetActiveStatusUseCase(sl<HomeRepository>()))
-    // ..registerLazySingleton(() => HomeCubit(sl<GetProfileUseCase>()))
     /// Matters & Clients & types
     // matter
     ..registerLazySingleton<MattersRemoteDataSource>(
@@ -313,9 +322,36 @@ Future<void> _initAuth() async {
     ..registerFactory(() => KpiCubit(sl<GetKpiUsecase>()))
     /// Workload
     ..registerFactory<WorkloadRemoteDataSource>(() => WorkloadRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerFactory<WorkloadRepository>(() => WorkloadRepositoryImpl(sl<WorkloadRemoteDataSource>()))
+    ..registerFactory<WorkloadRepository>(
+      () => WorkloadRepositoryImpl(sl<WorkloadRemoteDataSource>()),
+    )
     ..registerFactory(() => GetWorkloadUsecase(sl<WorkloadRepository>()))
     ..registerFactory(() => WorkloadCubit(sl<GetWorkloadUsecase>()))
+    /// Complaints
+    ..registerFactory<ComplaintsRemoteDataSource>(
+      () => ComplaintsRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<ComplaintsRepository>(
+      () => ComplaintsRepositoryImpl(sl<ComplaintsRemoteDataSource>()),
+    )
+    ..registerFactory(() => GetComplaintsUsecase(sl<ComplaintsRepository>()))
+    ..registerFactory(() => ComplaintsCubit(sl<GetComplaintsUsecase>()))
+    /// Kpi tasks
+    ..registerFactory<KpiTasksRemoteDataSource>(() => KpiTasksRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerFactory<KpiTasksRepository>(
+      () => KpiTasksRepositoryImpl(sl<KpiTasksRemoteDataSource>()),
+    )
+    ..registerFactory(() => GetKpiTasksUsecase(sl<KpiTasksRepository>()))
+    ..registerFactory(() => KpiTasksCubit(sl<GetKpiTasksUsecase>()))
+    /// Kpi activities
+    ..registerFactory<KpiActivitiesRemoteDataSource>(
+      () => KpiActivitiesRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<KpiActivitiesRepository>(
+      () => KpiActivitiesRepositoryImpl(sl<KpiActivitiesRemoteDataSource>()),
+    )
+    ..registerFactory(() => GetKpiActivitiesUsecase(sl<KpiActivitiesRepository>()))
+    ..registerFactory(() => KpiActivitiesCubit(sl<GetKpiActivitiesUsecase>()))
     /// Check attendee status
     ..registerFactory<AttendeeStatusRemoteDataSource>(
       () => AttendeeStatusRemoteDataSourceImpl(sl<DioClient>()),

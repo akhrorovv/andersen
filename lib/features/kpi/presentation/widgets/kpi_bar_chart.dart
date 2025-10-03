@@ -1,9 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
-import 'package:andersen/features/kpi/domain/repositories/kpi_repository.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_state.dart';
-import 'package:andersen/service_locator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

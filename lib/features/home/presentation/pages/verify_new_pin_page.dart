@@ -1,9 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
-import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
-import 'package:andersen/features/auth/presentation/pages/biometric_page.dart';
 import 'package:andersen/features/home/presentation/pages/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

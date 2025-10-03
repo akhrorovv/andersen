@@ -7,7 +7,6 @@ import 'package:andersen/features/home/domain/usecases/check_attendee_status_use
 import 'package:andersen/features/home/domain/usecases/leave_attendee_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 
 // cubit
 

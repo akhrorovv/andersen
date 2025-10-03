@@ -64,10 +64,7 @@ class _KpiPageState extends State<KpiPage> {
       ),
     );
     context.read<WorkloadCubit>().getWorkload(
-      WorkloadRequest(
-        startDate: _startDate.toIso8601String(),
-        endDate: _endDate.toIso8601String(),
-      ),
+      WorkloadRequest(startDate: _startDate.toIso8601String(), endDate: _endDate.toIso8601String()),
     );
   }
 
@@ -140,11 +137,28 @@ class _KpiPageState extends State<KpiPage> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 24.h),
-                child: Column(
-                  spacing: 12.h,
-                  children: [UserKpiSection(), KpiBarChart(), ActualPlanTable(), WorkloadChart()],
+              child: RefreshIndicator(
+                color: AppColors.primary,
+                backgroundColor: Colors.white,
+                displacement: 50.h,
+                strokeWidth: 3,
+                onRefresh: () async {
+                  _fetchData();
+                },
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 24.h),
+                  child: Column(
+                    spacing: 12.h,
+                    children: [
+                      UserKpiSection(
+                        startDate: _startDate.toIso8601String(),
+                        endDate: _endDate.toIso8601String(),
+                      ),
+                      KpiBarChart(),
+                      ActualPlanTable(),
+                      WorkloadChart(),
+                    ],
+                  ),
                 ),
               ),
             ),

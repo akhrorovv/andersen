@@ -7,7 +7,6 @@ import 'package:andersen/core/widgets/basic_button.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/auth/domain/usecases/login_params.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
 import 'package:andersen/features/auth/presentation/pages/set_pin_page.dart';
 import 'package:andersen/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
@@ -59,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         },
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h),
             child: Form(
               key: _formKey,
               child: Column(

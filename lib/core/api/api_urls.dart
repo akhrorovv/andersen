@@ -52,4 +52,5 @@ class ApiUrls {
   static String kpiUser(int userId) => '${apiV}kpi/user/$userId';
   static const kpi = '${apiV}kpi';
   static const workload = '${apiV}reports/tasks/count-by-type';
+  static const complaints = '${apiV}complaints';
 }

@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:andersen/core/api/interceptors.dart';
 import 'package:andersen/core/common/entities/client_entity.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';

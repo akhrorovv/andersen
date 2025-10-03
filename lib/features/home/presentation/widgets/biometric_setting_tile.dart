@@ -3,7 +3,6 @@ import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/home/presentation/widgets/settings_tile.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 
 class BiometricSettingTile extends StatefulWidget {

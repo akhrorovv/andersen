@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:upgrader/upgrader.dart';
 
 class HomePage extends StatefulWidget {
   static String path = '/home';
@@ -30,80 +31,89 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Assets.images.title.image(width: 125.w),
-        leading: GestureDetector(
-          onTap: () => context.pushCupertinoSheet(const SettingsPage()),
-          child: Padding(
-            padding: EdgeInsets.all(10.w),
-            child: SvgPicture.asset(Assets.vectors.setting.path),
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () => context.pushCupertinoSheet(const NotificationsPage()),
-            child: Container(
+    return UpgradeAlert(
+      dialogStyle: UpgradeDialogStyle.cupertino,
+      barrierDismissible: false,
+      showIgnore: false,
+      showLater: true,
+      showReleaseNotes: false,
+      upgrader: Upgrader(),
+
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          title: Assets.images.title.image(width: 125.w),
+          leading: GestureDetector(
+            onTap: () => context.pushCupertinoSheet(const SettingsPage()),
+            child: Padding(
               padding: EdgeInsets.all(10.w),
-              width: 44.w,
-              height: 44.w,
-              child: SvgPicture.asset(Assets.vectors.notification.path),
+              child: SvgPicture.asset(Assets.vectors.setting.path),
             ),
           ),
-        ],
-      ),
-      body: BlocProvider(
-        create: (_) => sl<ProfileCubit>()..getProfile(),
-        child: BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            if (state is ProfileInitial || state is ProfileLoading) {
-              return Center(child: CircularProgressIndicator(color: AppColors.primary));
-            } else if (state is ProfileLoadedError) {
-              return ErrorMessage(errorMessage: state.message);
-            } else if (state is ProfileLoadedSuccess) {
-              final user = state.user;
-              return RefreshIndicator(
-                color: AppColors.primary,
-                backgroundColor: Colors.white,
-                displacement: 50.h,
-                strokeWidth: 3,
-                onRefresh: () async {
-                  await context.read<ProfileCubit>().getProfile();
-                },
-                child: CustomScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  slivers: [
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          BlocProvider(
-                            create: (_) => sl<AttendeeCubit>()..checkAttendeeStatus(),
-                            child: HomeHeader(user: user),
-                          ),
+          actions: [
+            GestureDetector(
+              onTap: () => context.pushCupertinoSheet(const NotificationsPage()),
+              child: Container(
+                padding: EdgeInsets.all(10.w),
+                width: 44.w,
+                height: 44.w,
+                child: SvgPicture.asset(Assets.vectors.notification.path),
+              ),
+            ),
+          ],
+        ),
+        body: BlocProvider(
+          create: (_) => sl<ProfileCubit>()..getProfile(),
+          child: BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (context, state) {
+              if (state is ProfileInitial || state is ProfileLoading) {
+                return Center(child: CircularProgressIndicator(color: AppColors.primary));
+              } else if (state is ProfileLoadedError) {
+                return ErrorMessage(errorMessage: state.message);
+              } else if (state is ProfileLoadedSuccess) {
+                final user = state.user;
+                return RefreshIndicator(
+                  color: AppColors.primary,
+                  backgroundColor: Colors.white,
+                  displacement: 50.h,
+                  strokeWidth: 3,
+                  onRefresh: () async {
+                    await context.read<ProfileCubit>().getProfile();
+                  },
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            BlocProvider(
+                              create: (_) => sl<AttendeeCubit>()..checkAttendeeStatus(),
+                              child: HomeHeader(user: user),
+                            ),
 
-                          // Upcoming events
-                          UpcomingEvents(),
+                            // Upcoming events
+                            UpcomingEvents(),
 
-                          // tasks for today
-                          TasksForToday(),
+                            // tasks for today
+                            TasksForToday(),
 
-                          // kpi for week
-                          KpiForWeek(),
+                            // kpi for week
+                            KpiForWeek(),
 
-                          // schedule
-                          Schedule(),
-                        ]),
+                            // schedule
+                            Schedule(),
+                          ]),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return SizedBox.shrink();
-          },
+                    ],
+                  ),
+                );
+              }
+              return SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );

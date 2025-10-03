@@ -1,5 +1,4 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
-import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/utils/initial.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/domain/entities/activity_entity.dart';

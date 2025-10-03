@@ -1,5 +1,4 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
-import 'package:andersen/core/navigation/app_router.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
 import 'package:andersen/features/home/presentation/pages/verify_new_pin_page.dart';
 import 'package:easy_localization/easy_localization.dart';

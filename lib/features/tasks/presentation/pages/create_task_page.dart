@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:andersen/core/common/entities/client_entity.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
