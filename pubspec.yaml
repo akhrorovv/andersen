@@ -2,8 +2,9 @@ name: andersen
 description: "A new Flutter project."
 publish_to: 'none'
 
+# Versioning: major.minor.patch+build
 version: 1.1.0+11
-#version: 1.0.9+10
+# version: 1.0.9+10  # old version kept for reference
 
 environment:
   sdk: ^3.8.1
@@ -11,70 +12,70 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  
-  # router
-  go_router: ^16.2.4
 
-  # ui
-  flutter_screenutil: ^5.9.3
-  mask_text_input_formatter: ^2.9.0
-  modal_bottom_sheet: ^3.0.0
-  flutter_svg: ^2.2.1
-  equatable: ^2.0.7
-  google_fonts: ^6.3.0
-  dropdown_search: ^6.0.2
-  table_calendar: ^3.2.0
-  fl_chart: ^1.1.0
-  calendar_date_picker2: ^2.0.1
-  pinput: ^5.0.2
+  # ----- Core UI -----
+  cupertino_icons: ^1.0.8              # Cupertino (iOS style) icons
+  flutter_screenutil: ^5.9.3           # Responsive UI helper
+  modal_bottom_sheet: ^3.0.0           # Custom bottom sheet
+  flutter_svg: ^2.2.1                  # SVG support
+  google_fonts: ^6.3.0                 # Google Fonts
+  dropdown_search: ^6.0.2              # Dropdown with search
+  table_calendar: ^3.2.0               # Calendar widget
+  fl_chart: ^1.1.0                     # Chart library
+  calendar_date_picker2: ^2.0.1        # Date range picker
+  pinput: ^5.0.2                       # PIN input widget
 
-  # network & utils
-  dio: ^5.9.0
-  logger: ^2.6.1
-  dartz: ^0.10.1
-  json_annotation: ^4.9.0
-  get_it: ^8.2.0
-  intl: ^0.20.2
-  flutter_bloc: ^9.1.1
+  # ----- State Management / Routing -----
+  go_router: ^16.2.4                   # Navigation & routing
+  flutter_bloc: ^9.1.1                 # State management (BLoC)
+  equatable: ^2.0.7                    # Value equality for BLoC states
 
-  # local db
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  path_provider: ^2.0.15
-  local_auth: ^2.3.0
+  # ----- Network & Utilities -----
+  dio: ^5.9.0                          # HTTP client
+  logger: ^2.6.1                       # Logging utility
+  dartz: ^0.10.1                       # Functional programming utils (Either, Option, etc.)
+  json_annotation: ^4.9.0              # For code generation (models)
+  get_it: ^8.2.0                       # Dependency injection
+  intl: ^0.20.2                        # Internationalization / Date formatting
 
-  # device
-  device_info_plus: ^11.5.0
-  scrollable_positioned_list: ^0.3.8
-  geolocator: ^14.0.2
-  upgrader: ^12.1.0
+  # ----- Local Storage & Security -----
+  hive: ^2.2.3                         # Lightweight local DB
+  hive_flutter: ^1.1.0                 # Hive + Flutter integration
+  path_provider: ^2.0.15               # File system paths
+  local_auth: ^2.3.0                   # Biometric authentication (Face ID / Touch ID)
 
-  # localization
-  easy_localization: ^3.0.8
+  # ----- Device & System -----
+  device_info_plus: ^11.5.0            # Device info
+  package_info_plus: ^8.3.0            # App version & package info
+  scrollable_positioned_list: ^0.3.8   # Scrollable list with position control
+  geolocator: ^14.0.2                  # Location services
+  upgrader: ^12.1.0                    # In-app update dialog
 
-  # device
-  package_info_plus: ^8.3.0
-
+  # ----- Firebase & Notifications -----
   firebase_core: ^3.14.0
-  firebase_messaging: ^15.2.7
-  flutter_local_notifications: ^19.3.0
+  firebase_messaging: ^15.2.7          # Push notifications
+  flutter_local_notifications: ^19.3.0 # Local notifications
+
+  # ----- Localization -----
+  easy_localization: ^3.0.8            # i18n support
 
 dependency_overrides:
-  vector_math: ^2.1.5
+  vector_math: ^2.1.5                  # Override to avoid version conflicts
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  # Code generation
+  flutter_gen_runner: ^5.11.0          # Assets & fonts code generator
+  json_serializable: ^6.10.0           # JSON model generator
 
-  flutter_gen_runner: ^5.11.0
-  json_serializable: ^6.10.0
-  change_app_package_name: ^1.5.0
+  # Project setup
+  change_app_package_name: ^1.5.0      # Change package name
+  flutter_lints: ^5.0.0                # Recommended lint rules
+  flutter_launcher_icons: ^0.14.4      # Generate launcher icons
 
-  flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.14.4
-
+# ----- Launcher Icons Configuration -----
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -90,13 +91,14 @@ flutter:
     - assets/vectors/
     - assets/translations/
 
+# ----- FlutterGen Configuration -----
 flutter_gen:
   output: lib/gen/
   line_length: 80
   integrations:
     image: true
     flutter_svg: true
-    # lottie: true
+    # lottie: true   # enable if using Lottie animations
   assets:
     enabled: true
   fonts:
