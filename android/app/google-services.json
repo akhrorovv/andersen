@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384363895163",
+    "project_id": "andersen-legal",
+    "storage_bucket": "andersen-legal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384363895163:android:f6670949675f56650bc5de",
+        "android_client_info": {
+          "package_name": "uz.w2w.andersenlegal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcNzkIIqg5-a715SMwtR13X5b4Q40ZgQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

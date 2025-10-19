@@ -58,6 +58,6 @@
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Ilova sizning joylashuvingizni aniqlash orqali xizmatlarni aniqroq taqdim etadi.</string>
     <key>MinimumOSVersion</key>
-    <string>13</string>
+    <string>12.0</string>
 </dict>
 </plist>
