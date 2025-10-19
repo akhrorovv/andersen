@@ -39,7 +39,7 @@ class NotifService {
       final token = await _messaging.getToken();
       if (token != null) {
         log("FCM TOKEN: $token");
-        DBService.saveFCMToken(token);
+        await DBService.saveFCMToken(token);
       } else {
         log("⚠️ FCM token null (simulator bo'lishi mumkin)");
       }

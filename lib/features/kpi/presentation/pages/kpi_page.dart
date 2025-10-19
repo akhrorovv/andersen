@@ -33,6 +33,7 @@ class _KpiPageState extends State<KpiPage> {
   @override
   void initState() {
     super.initState();
+
     final now = DateTime.now();
     _startDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
     _endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);

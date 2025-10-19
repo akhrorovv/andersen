@@ -3,6 +3,7 @@ import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
 import 'package:andersen/core/common/profile/cubit/profile_state.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
+import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
 import 'package:andersen/features/auth/presentation/pages/enter_pin_page.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
@@ -30,22 +31,33 @@ class SplashPage extends StatelessWidget {
       body: BlocListener<ProfileCubit, ProfileState>(
         listener: (context, state) async {
           if (state is ProfileLoadedSuccess) {
-            if(DBService.pin.isEmpty){
+            if (DBService.pin == null) {
               context.go(SetPinPage.path);
             } else {
               context.go(EnterPinPage.path, extra: false);
             }
           } else if (state is ProfileLoadedError) {
-            // BasicSnackBar.show(context, message: state.message, error: true);
             if (state.message == "Device is blocked") {
+              BasicSnackBar.show(context, message: state.message, error: true);
               context.go(CheckingPage.path);
+            } else if (state.message == "Device not found") {
+              BasicSnackBar.show(context, message: state.message, error: true);
+              await DBService.clear();
+              if (context.mounted) {
+                context.go(LoginPage.path);
+              }
             } else if (state.message == 'Unauthorized') {
               await DBService.clear();
               if (context.mounted) {
                 context.go(LoginPage.path);
               }
+            } else {
+              BasicSnackBar.show(context, message: state.message, error: true);
+              await DBService.clear();
+              if (context.mounted) {
+                context.go(LoginPage.path);
+              }
             }
-            // context.go(CheckingPage.path);
           }
         },
         child: Center(

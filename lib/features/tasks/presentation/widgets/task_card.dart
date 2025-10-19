@@ -26,18 +26,22 @@ class TaskCard extends StatelessWidget {
             // type & activities time
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12.w,
               children: [
-                Text(
-                  task.type?.name ?? "-",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: task.type?.name != null
-                        ? FontWeight.w600
-                        : FontWeight.w500,
-                    color: task.type?.name != null
-                        ? AppColors.colorPrimaryText
-                        : null,
-                    letterSpacing: 0,
+                Expanded(
+                  child: Text(
+                    task.type?.name ?? "-",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: task.type?.name != null
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      color: task.type?.name != null
+                          ? AppColors.colorPrimaryText
+                          : null,
+                      letterSpacing: 0,
+                    ),
                   ),
                 ),
                 Text(

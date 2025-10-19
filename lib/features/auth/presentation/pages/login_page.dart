@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/common/entities/device_entity.dart';
 import 'package:andersen/core/utils/db_service.dart';
@@ -11,6 +13,7 @@ import 'package:andersen/features/auth/presentation/pages/set_pin_page.dart';
 import 'package:andersen/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:andersen/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,9 +34,28 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _phoneController = TextEditingController(text: "+998");
   final TextEditingController _passwordController = TextEditingController();
 
+  String? token;
+
   String formatPhone(String phone) {
     final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
     return digits;
+  }
+
+  void getFcmToke() async {
+    token = DBService.fcmToken;
+    if (token == null) {
+      token = await FirebaseMessaging.instance.getToken();
+      if (token != null) {
+        await DBService.saveFCMToken(token!);
+      }
+    }
+    log('FCM: ${DBService.fcmToken}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getFcmToke();
   }
 
   @override
@@ -52,7 +74,6 @@ class _LoginPageState extends State<LoginPage> {
             BasicSnackBar.show(context, message: state.message, error: true);
           } else if (state is AuthSuccess) {
             BasicSnackBar.show(context, message: context.tr('successLogin'));
-            // context.go(CheckingPage.path);
             context.go(SetPinPage.path);
           }
         },
@@ -114,8 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                               DBService.saveDeviceVersion(version),
                             ]);
 
-                            final token = DBService.fcmToken ?? '';
-
                             final params = LoginParams(
                               phone: phone,
                               password: password,
@@ -123,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                 model: model,
                                 version: version,
                                 locale: locale,
-                                fcmToken: token.isEmpty ? 'null' : token,
+                                fcmToken: token ?? DateTime.now().toString(),
                               ),
                             );
                             cubit.login(params);

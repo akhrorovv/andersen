@@ -81,38 +81,40 @@ class TokenInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      final data = err.response?.data;
+    final status = err.response?.statusCode;
+    final data = err.response?.data;
 
-      final message = data is Map<String, dynamic> ? data["message"] as String? : null;
+    final message = data is Map<String, dynamic> ? data["message"] as String? : null;
+    log('${status ?? "?"} error message: $message');
 
-      log('401 error message: $message');
+    // 🧩 Device error (401 & 404)
+    if ((status == 401 || status == 404) && message != null) {
+      final context = navigatorKey.currentContext;
 
-      // 🔒 Device blocked holati
-      if (message != null && message.contains("Device is blocked")) {
-        final context = navigatorKey.currentContext;
-
+      if (message.contains("Device is blocked")) {
+        // 🚫 Device is blocked
         if (context != null) {
-          final router = GoRouter.of(context);
-          final location = router.routerDelegate.currentConfiguration.last.matchedLocation;
-
-          if (location == CheckingPage.path) {
-            return handler.next(err);
-          } else {
-            await DBService.clear();
-            context.go(LoginPage.path);
-            return handler.next(err);
-          }
+          context.go(CheckingPage.path);
         }
-
+        return handler.next(err);
       }
 
-      // 🔑 Token expired bo‘lsa
+      if (message.contains("Device not found")) {
+        // ❌ Device not found
+        if (context != null) {
+          await DBService.clear();
+          context.go(LoginPage.path);
+        }
+        return handler.next(err);
+      }
+    }
+
+    // 🔑 Token expired (401)
+    if (status == 401) {
       final refreshToken = DBService.refreshToken;
 
       if (refreshToken == null || refreshToken.isEmpty) {
-        handler.next(err);
-        return;
+        return handler.next(err);
       }
 
       try {

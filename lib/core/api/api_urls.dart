@@ -1,6 +1,6 @@
 class ApiUrls {
-  static const baseURL = 'https://anderson-api.w2w.uz/';
-  // static const baseURL = 'https://billing-api.vl-legal.uz/';
+  // static const baseURL = 'https://anderson-api.w2w.uz/';
+  static const baseURL = 'https://billing-api.vl-legal.uz/';
   static const apiV = 'api/v1/mobile/';
 
   /// Auth

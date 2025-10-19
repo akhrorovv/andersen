@@ -3,8 +3,7 @@ description: "A new Flutter project."
 publish_to: 'none'
 
 # Versioning: major.minor.patch+build
-version: 1.1.0+11
-# version: 1.0.9+10  # old version kept for reference
+version: 1.1.2+14
 
 environment:
   sdk: ^3.8.1
@@ -58,6 +57,7 @@ dependencies:
 
   # ----- Localization -----
   easy_localization: ^3.0.8            # i18n support
+  mask_text_input_formatter: ^2.9.0
 
 dependency_overrides:
   vector_math: ^2.1.5                  # Override to avoid version conflicts
