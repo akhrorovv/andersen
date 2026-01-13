@@ -28,3 +28,9 @@ class ServerException implements Exception {
     return ServerException(message: msg, statusCode: code);
   }
 }
+
+class NetworkException implements Exception {
+  final String message;
+
+  NetworkException({this.message = 'No internet connection'});
+}

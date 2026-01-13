@@ -23,9 +23,10 @@ class ComplaintsLoaded extends ComplaintsState {
 
 class ComplaintsError extends ComplaintsState {
   final String message;
+  final bool isNetworkError;
 
-  const ComplaintsError(this.message);
+  const ComplaintsError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

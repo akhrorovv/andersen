@@ -5,16 +5,24 @@ class MatterModel extends MatterEntity {
   const MatterModel({
     required super.id,
     required super.name,
-     super.status,
+    super.status,
     super.contract,
   });
 
   factory MatterModel.fromJson(Map<String, dynamic> json) {
     return MatterModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      status: json['status'] as String?,
-      contract: json['contract'] != null
+      // id: int yoki string kelsa ham xavfsiz o'girish
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+
+      // name: null kelsa bo'sh string berish (crash bo'lmasligi uchun)
+      name: json['name']?.toString() ?? '',
+
+      status: json['status']?.toString(),
+
+      // contract: ichma-ich obyektlarni xavfsiz parse qilish
+      contract: (json['contract'] != null && json['contract'] is Map<String, dynamic>)
           ? ContractModel.fromJson(json['contract'] as Map<String, dynamic>)
           : null,
     );
@@ -25,7 +33,10 @@ class MatterModel extends MatterEntity {
       'id': id,
       'name': name,
       'status': status,
-      'contract': contract is ContractModel ? (contract as ContractModel).toJson() : null,
+      // contractni casting bilan toJson qilish
+      'contract': contract is ContractModel
+          ? (contract as ContractModel).toJson()
+          : null,
     };
   }
 }

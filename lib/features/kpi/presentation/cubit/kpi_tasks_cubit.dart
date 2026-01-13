@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/kpi/domain/usecase/get_kpi_tasks_usecase.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_tasks_state.dart';
@@ -42,7 +43,10 @@ class KpiTasksCubit extends Cubit<KpiTasksState> {
 
     result.fold(
       (failure) {
-        emit(KpiTasksError(failure.message));
+        emit(KpiTasksError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (tasksEntity) {
         _tasks = [..._tasks, ...tasksEntity.results];

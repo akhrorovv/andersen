@@ -18,6 +18,8 @@ class KpiUserRepositoryImpl implements KpiUserRepository {
     try {
       final result = await remoteDataSource.getUserKpi(userId: userId, request: request);
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

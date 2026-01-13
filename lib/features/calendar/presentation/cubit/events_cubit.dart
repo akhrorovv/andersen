@@ -1,4 +1,5 @@
 import 'package:andersen/core/enum/event_target.dart';
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
 import 'package:andersen/features/calendar/domain/entities/events_entity.dart';
@@ -70,7 +71,10 @@ class EventsCubit extends Cubit<EventsState> {
 
     result.fold(
       (failure) {
-        emit(EventsError(failure.message));
+        emit(EventsError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (result) {
         _events = [..._events, ...result.events];

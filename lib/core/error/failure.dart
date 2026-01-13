@@ -19,3 +19,13 @@ class ServerFailure extends Failure {
   ServerFailure.fromException(ServerException e)
     : this(message: e.message, statusCode: e.statusCode);
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure({
+    super.message = 'No internet connection',
+    super.statusCode = 0,
+  });
+
+  NetworkFailure.fromException(NetworkException e)
+    : this(message: e.message, statusCode: 0);
+}

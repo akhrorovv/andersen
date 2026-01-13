@@ -22,6 +22,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await DBService.saveTokens(result.tokens.access, result.tokens.refresh);
 
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

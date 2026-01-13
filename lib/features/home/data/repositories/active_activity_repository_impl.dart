@@ -15,6 +15,8 @@ class ActiveActivityRepositoryImpl implements ActiveActivityRepository {
     try {
       final result = await remoteDataSource.getActiveActivity();
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     } catch (e) {

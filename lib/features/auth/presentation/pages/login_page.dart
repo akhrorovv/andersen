@@ -112,42 +112,45 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
-                      return BasicButton(
-                        title: context.tr('logIn'),
-                        isLoading: state is AuthLoading,
-                        onTap: () async {
-                          final cubit = context.read<AuthCubit>();
-                          if (_formKey.currentState!.validate()) {
-                            final phone = formatPhone(_phoneController.text.trim());
-                            final password = _passwordController.text.trim();
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: BasicButton(
+                          title: context.tr('logIn'),
+                          isLoading: state is AuthLoading,
+                          onTap: () async {
+                            final cubit = context.read<AuthCubit>();
+                            if (_formKey.currentState!.validate()) {
+                              final phone = formatPhone(_phoneController.text.trim());
+                              final password = _passwordController.text.trim();
 
-                            final results = await Future.wait([
-                              DeviceInfoHelper.model,
-                              DeviceInfoHelper.version,
-                            ]);
-                            final model = results[0];
-                            final version = results[1];
-                            final locale = DeviceInfoHelper.locale;
+                              final results = await Future.wait([
+                                DeviceInfoHelper.model,
+                                DeviceInfoHelper.version,
+                              ]);
+                              final model = results[0];
+                              final version = results[1];
+                              final locale = DeviceInfoHelper.locale;
 
-                            // save
-                            await Future.wait([
-                              DBService.saveDeviceModel(model),
-                              DBService.saveDeviceVersion(version),
-                            ]);
+                              // save
+                              await Future.wait([
+                                DBService.saveDeviceModel(model),
+                                DBService.saveDeviceVersion(version),
+                              ]);
 
-                            final params = LoginParams(
-                              phone: phone,
-                              password: password,
-                              device: DeviceEntity(
-                                model: model,
-                                version: version,
-                                locale: locale,
-                                fcmToken: token ?? DateTime.now().toString(),
-                              ),
-                            );
-                            cubit.login(params);
-                          }
-                        },
+                              final params = LoginParams(
+                                phone: phone,
+                                password: password,
+                                device: DeviceEntity(
+                                  model: model,
+                                  version: version,
+                                  locale: locale,
+                                  fcmToken: token ?? DateTime.now().toString(),
+                                ),
+                              );
+                              cubit.login(params);
+                            }
+                          },
+                        ),
                       );
                     },
                   ),

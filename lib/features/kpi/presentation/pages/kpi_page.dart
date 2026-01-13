@@ -1,4 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/kpi/domain/repositories/kpi_repository.dart';
@@ -6,6 +8,7 @@ import 'package:andersen/features/kpi/domain/repositories/kpi_user_repository.da
 import 'package:andersen/features/kpi/domain/repositories/workload_repository.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_cubit.dart';
 import 'package:andersen/features/kpi/presentation/cubit/kpi_user_cubit.dart';
+import 'package:andersen/features/kpi/presentation/cubit/kpi_user_state.dart';
 import 'package:andersen/features/kpi/presentation/cubit/workload_cubit.dart';
 import 'package:andersen/features/kpi/presentation/widgets/actual_plan_table.dart';
 import 'package:andersen/features/kpi/presentation/widgets/kpi_bar_chart.dart';
@@ -97,7 +100,21 @@ class _KpiPageState extends State<KpiPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('kpi'))),
-      body: Padding(
+      body: BlocListener<ConnectivityCubit, ConnectivityState>(
+        listener: (context, connectivityState) {
+          // Retry when user presses "Обновить" or connectivity restored
+          if (connectivityState is RetryRequested) {
+            _fetchData();
+          } else if (connectivityState is ConnectivityChanged &&
+              connectivityState.isConnected) {
+            final kpiUserState = context.read<KpiUserCubit>().state;
+            if (kpiUserState is KpiUserLoadedError &&
+                kpiUserState.isNetworkError) {
+              _fetchData();
+            }
+          }
+        },
+        child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
           spacing: 12.h,
@@ -164,6 +181,7 @@ class _KpiPageState extends State<KpiPage> {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

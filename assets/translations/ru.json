@@ -107,7 +107,7 @@
   "completion": "Завершение",
   "hours": "Часы",
   "workload": "Нагрузка",
-  "selectDateRange": "Выбрать диапазон дат",
+  "selectDateRange": "Выбрать диапазон",
   "confirmedHours": "Подтверждённые часы",
   "efficiency": "Эффективность",
   "complaint": "Жалобы",
@@ -132,6 +132,7 @@
   "changePin": "Изменить PIN-код",
   "pinCode": "PIN-код",
   "enterOldPin": "Введите старый PIN-код",
-  "pinMustBe4Digits": "PIN должен состоять из 4 цифр"
-
+  "pinMustBe4Digits": "PIN должен состоять из 4 цифр",
+  "noInternetConnection": "Нет соединения с интернетом",
+  "refreshPage": "Обновить страницу"
 }

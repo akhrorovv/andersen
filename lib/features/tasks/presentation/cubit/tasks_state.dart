@@ -23,9 +23,10 @@ class TasksLoaded extends TasksState {
 
 class TasksError extends TasksState {
   final String message;
+  final bool isNetworkError;
 
-  const TasksError(this.message);
+  const TasksError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

@@ -1,4 +1,6 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/default_widget.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
@@ -23,63 +25,75 @@ class TaskDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskDetailCubit, TaskDetailState>(
-      builder: (context, state) {
-        if (state is TaskDetailInitial || state is TaskDetailLoading) {
-          return LoadingIndicator();
-        } else if (state is TaskDetailError) {
-          return ErrorMessage(errorMessage: state.message);
-        } else if (state is TaskDetailLoaded) {
-          final task = state.task;
-          final status = TaskStatusX.fromString(task.status);
+    return BlocListener<ConnectivityCubit, ConnectivityState>(
+      listener: (context, connectivityState) {
+        // Retry when user presses "Обновить" button
+        if (connectivityState is RetryRequested) {
+          context.read<TaskDetailCubit>().getTaskDetail(taskId);
+        }
+      },
+      child: BlocBuilder<TaskDetailCubit, TaskDetailState>(
+        builder: (context, state) {
+          if (state is TaskDetailInitial || state is TaskDetailLoading) {
+            return const Scaffold(body: LoadingIndicator());
+          } else if (state is TaskDetailError) {
+            return Scaffold(
+              body: Center(child: ErrorMessage(errorMessage: state.message)),
+            );
+          } else if (state is TaskDetailLoaded) {
+            final task = state.task;
+            final status = TaskStatusX.fromString(task.status);
 
-          return Scaffold(
-            appBar: TaskDetailAppBar(task: task),
-            body: Column(
-              children: [
-                TaskDetailHeader(task: task),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 16.h,
-                        children: [
-                          TaskActivitiesSection(taskId: taskId),
-                          TaskDetailInfo(task: task, status: status),
-                        ],
+            return Scaffold(
+              appBar: TaskDetailAppBar(task: task),
+              body: Column(
+                children: [
+                  TaskDetailHeader(task: task),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 24.h,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 16.h,
+                          children: [
+                            TaskActivitiesSection(taskId: taskId),
+                            TaskDetailInfo(task: task, status: status),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              floatingActionButton:
+                  context.read<TaskDetailCubit>().isActivityCreatable(task)
+                  ? FloatingActionButton(
+                      backgroundColor: AppColors.primary,
+                      shape: CircleBorder(),
+                      onPressed: () async {
+                        final result = await showCupertinoModalBottomSheet<bool>(
+                          context: context,
+                          topRadius: Radius.circular(16.r),
+                          builder: (context) =>
+                              ActivityStartModalBottomSheet(task: task),
+                        );
 
-            floatingActionButton: context.read<TaskDetailCubit>().isActivityCreatable(task)
-                ? FloatingActionButton(
-                    backgroundColor: AppColors.primary,
-                    shape: CircleBorder(),
-                    onPressed: () async {
-                      final result = await showCupertinoModalBottomSheet<bool>(
-                        context: context,
-                        topRadius: Radius.circular(16.r),
-                        builder: (context) => ActivityStartModalBottomSheet(task: task),
-                      );
-
-                      if (result == true) {
-                        // Task qayta yuklash
-                        context.read<TaskDetailCubit>().getTaskDetail(taskId);
-                      }
-                    },
-
-                    child: Icon(Icons.add, color: AppColors.white),
-                  )
-                : null,
-          );
-        }
-        return DefaultWidget();
-      },
+                        if (result == true) {
+                          context.read<TaskDetailCubit>().getTaskDetail(taskId);
+                        }
+                      },
+                      child: Icon(Icons.add, color: AppColors.white),
+                    )
+                  : null,
+            );
+          }
+          return const Scaffold(body: DefaultWidget());
+        },
+      ),
     );
   }
 }

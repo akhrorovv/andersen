@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
 import 'package:andersen/features/activities/domain/entities/activity_entity.dart';
 import 'package:andersen/features/activities/domain/usecase/get_activities_usecase.dart';
@@ -30,7 +31,10 @@ class ActivitiesCubit extends Cubit<ActivitiesState> {
 
     result.fold(
       (failure) {
-        emit(ActivitiesError(failure.message));
+        emit(ActivitiesError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (activitiesEntity) {
         _activities = [..._activities, ...activitiesEntity.results];

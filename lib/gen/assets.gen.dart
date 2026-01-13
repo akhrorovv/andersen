@@ -148,6 +148,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/more.svg
   SvgGenImage get more => const SvgGenImage('assets/vectors/more.svg');
 
+  /// File path: assets/vectors/no_internet.svg
+  SvgGenImage get noInternet =>
+      const SvgGenImage('assets/vectors/no_internet.svg');
+
   /// File path: assets/vectors/notification.svg
   SvgGenImage get notification =>
       const SvgGenImage('assets/vectors/notification.svg');
@@ -220,6 +224,7 @@ class $AssetsVectorsGen {
     logout,
     moneyBag,
     more,
+    noInternet,
     notification,
     options,
     play,

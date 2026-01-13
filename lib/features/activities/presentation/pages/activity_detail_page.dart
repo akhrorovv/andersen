@@ -1,7 +1,9 @@
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/utils/format_date.dart';
 import 'package:andersen/core/utils/format_duration.dart';
 import 'package:andersen/core/widgets/basic_app_bar.dart';
-import 'package:andersen/core/widgets/default_widget.dart';
+import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_page.dart';
 import 'package:andersen/core/widgets/shadow_container.dart';
 import 'package:andersen/features/activities/presentation/cubit/activity_detail_cubit.dart';
@@ -25,66 +27,70 @@ class ActivityDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<ActivityDetailCubit>()..getActivityDetail(activityId),
-      child: BlocBuilder<ActivityDetailCubit, ActivityDetailState>(
-        builder: (context, state) {
-          if (state is ActivityDetailInitial || state is ActivityDetailLoading) {
-            return SizedBox.expand(child: LoadingPage());
-          } else if (state is ActivityDetailError) {
-            return Center(
-              child: Text(state.message, style: TextStyle(color: Colors.red)),
-            );
-          } else if (state is ActivityDetailLoaded) {
-            final activity = state.activity;
-
-            return Scaffold(
-              appBar: BasicAppBar(title: context.tr('activityDetail')),
-              body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-                child: Column(
-                  children: [
-                    ShadowContainer(
-                      child: Column(
-                        spacing: 16.h,
-                        children: [
-                          ActivityDetailItem(
-                            title: context.tr('relatedCase'),
-                            iconPath: Assets.vectors.briefcase.path,
-                            value: activity.matter?.name,
-                            isMatter: true,
-                          ),
-                          ActivityDetailItem(
-                            title: context.tr('description'),
-                            iconPath: Assets.vectors.textAlignLeft.path,
-                            value: activity.description,
-                          ),
-                          ActivityDetailItem(
-                            title: context.tr('relatedTime'),
-                            iconPath: Assets.vectors.clock.path,
-                            value: formatDuration(activity.userEnteredTimeInSeconds ?? 0),
-                          ),
-                          ActivityDetailItem(
-                            title: context.tr('date'),
-                            iconPath: Assets.vectors.clock.path,
-                            value: formatDueDate(activity.date, context),
-                            hasDivider: false,
-                          ),
-                          // ActivityDetailItem(
-                          //   title: "Invoice status",
-                          //   iconPath: Assets.vectors.file.path,
-                          //   value: activity.billingPeriodId,
-                          //   hasDivider: false,
-                          //   isInvoice: true,
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+      child: BlocListener<ConnectivityCubit, ConnectivityState>(
+        listener: (context, connectivityState) {
+          // Retry when user presses "Обновить" button
+          if (connectivityState is RetryRequested) {
+            context.read<ActivityDetailCubit>().getActivityDetail(activityId);
           }
-          return DefaultWidget();
         },
+        child: Scaffold(
+          appBar: BasicAppBar(title: context.tr('activityDetail')),
+          body: BlocBuilder<ActivityDetailCubit, ActivityDetailState>(
+            builder: (context, state) {
+              if (state is ActivityDetailInitial ||
+                  state is ActivityDetailLoading) {
+                return SizedBox.expand(child: LoadingPage());
+              } else if (state is ActivityDetailError) {
+                return Center(child: ErrorMessage(errorMessage: state.message));
+              } else if (state is ActivityDetailLoaded) {
+                final activity = state.activity;
+
+                return Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+                  child: Column(
+                    children: [
+                      ShadowContainer(
+                        child: Column(
+                          spacing: 16.h,
+                          children: [
+                            ActivityDetailItem(
+                              title: context.tr('relatedCase'),
+                              iconPath: Assets.vectors.briefcase.path,
+                              value: activity.matter?.name,
+                              isMatter: true,
+                            ),
+                            ActivityDetailItem(
+                              title: context.tr('description'),
+                              iconPath: Assets.vectors.textAlignLeft.path,
+                              value: activity.description,
+                            ),
+                            ActivityDetailItem(
+                              title: context.tr('relatedTime'),
+                              iconPath: Assets.vectors.clock.path,
+                              value: formatDuration(
+                                activity.userEnteredTimeInSeconds ?? 0,
+                              ),
+                            ),
+                            ActivityDetailItem(
+                              title: context.tr('date'),
+                              iconPath: Assets.vectors.clock.path,
+                              value: formatDueDate(activity.date, context),
+                              hasDivider: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return SizedBox.shrink();
+            },
+          ),
+        ),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
 import 'package:andersen/core/common/profile/cubit/profile_state.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/features/home/presentation/cubit/attendee_cubit.dart';
 import 'package:andersen/features/home/presentation/pages/notifications_page.dart';
@@ -65,13 +67,28 @@ class _HomePageState extends State<HomePage> {
         ),
         body: BlocProvider(
           create: (_) => sl<ProfileCubit>()..getProfile(),
-          child: BlocBuilder<ProfileCubit, ProfileState>(
-            builder: (context, state) {
-              if (state is ProfileInitial || state is ProfileLoading) {
-                return Center(child: CircularProgressIndicator(color: AppColors.primary));
-              } else if (state is ProfileLoadedError) {
-                return ErrorMessage(errorMessage: state.message);
-              } else if (state is ProfileLoadedSuccess) {
+          child: BlocListener<ConnectivityCubit, ConnectivityState>(
+            listener: (context, connectivityState) {
+              // Retry when user presses "Обновить" or connectivity restored
+              if (connectivityState is RetryRequested) {
+                context.read<ProfileCubit>().getProfile();
+              } else if (connectivityState is ConnectivityChanged &&
+                  connectivityState.isConnected) {
+                final profileState = context.read<ProfileCubit>().state;
+                if (profileState is ProfileLoadedError &&
+                    profileState.isNetworkError) {
+                  context.read<ProfileCubit>().getProfile();
+                }
+              }
+            },
+            child: BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                if (state is ProfileInitial || state is ProfileLoading) {
+                  return Center(
+                      child: CircularProgressIndicator(color: AppColors.primary));
+                } else if (state is ProfileLoadedError) {
+                  return ErrorMessage(errorMessage: state.message);
+                } else if (state is ProfileLoadedSuccess) {
                 final user = state.user;
                 return RefreshIndicator(
                   color: AppColors.primary,
@@ -111,8 +128,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               }
-              return SizedBox.shrink();
-            },
+                return SizedBox.shrink();
+              },
+            ),
           ),
         ),
       ),

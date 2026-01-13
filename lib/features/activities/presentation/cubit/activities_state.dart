@@ -23,9 +23,10 @@ class ActivitiesLoaded extends ActivitiesState {
 
 class ActivitiesError extends ActivitiesState {
   final String message;
+  final bool isNetworkError;
 
-  const ActivitiesError(this.message);
+  const ActivitiesError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

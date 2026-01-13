@@ -38,10 +38,15 @@ class TaskDetailRemoteDataSourceImpl implements TaskDetailRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? e.toString(),
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      // Check if it's a network error
+      if (e.error is NetworkException) {
+        throw e.error as NetworkException;
+      }
+      final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
+      final code = e.response?.statusCode ?? 500;
+      throw ServerException(message: msg, statusCode: code);
+    } on NetworkException {
+      rethrow;
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }
@@ -74,10 +79,15 @@ class TaskDetailRemoteDataSourceImpl implements TaskDetailRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw ServerException(
-        message: e.message ?? e.toString(),
-        statusCode: e.response?.statusCode ?? 500,
-      );
+      // Check if it's a network error
+      if (e.error is NetworkException) {
+        throw e.error as NetworkException;
+      }
+      final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
+      final code = e.response?.statusCode ?? 500;
+      throw ServerException(message: msg, statusCode: code);
+    } on NetworkException {
+      rethrow;
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }
@@ -100,9 +110,15 @@ class TaskDetailRemoteDataSourceImpl implements TaskDetailRemoteDataSource {
         );
       }
     } on DioException catch (e) {
+      // Check if it's a network error
+      if (e.error is NetworkException) {
+        throw e.error as NetworkException;
+      }
       final msg = e.response?.data["message"] ?? e.message ?? "Unexpected error";
       final code = e.response?.statusCode ?? 500;
       throw ServerException(message: msg, statusCode: code);
+    } on NetworkException {
+      rethrow;
     } catch (e) {
       throw ServerException(message: e.toString(), statusCode: 500);
     }

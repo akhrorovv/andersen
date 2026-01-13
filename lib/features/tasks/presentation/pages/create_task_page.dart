@@ -1,4 +1,3 @@
-
 import 'package:andersen/core/common/entities/client_entity.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/utils/db_service.dart';
@@ -74,7 +73,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           if (state is CreateTaskSuccess) {
             context.pop(true);
           } else if (state is CreateTaskError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -103,7 +104,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                     selectedItem: null,
                                     compareFn: (a, b) => a.id == b.id,
                                     itemAsString: (client) {
-                                      if (client.type == "COMPANY") return client.name ?? "";
+                                      if (client.type == "COMPANY")
+                                        return client.name ?? "";
                                       if (client.type == "PERSON") {
                                         final last = client.lastname ?? "";
                                         final first = client.name ?? "";
@@ -113,14 +115,20 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                       return "-";
                                     },
                                     items: (filter) async {
-                                      final result = await sl<ClientsRepository>().getClients(
-                                        limit: 10,
-                                        offset: 0,
-                                        search: (filter != null && filter.length >= 2)
-                                            ? filter
-                                            : null,
+                                      final result = await sl<ClientsRepository>()
+                                          .getClients(
+                                            limit: 50,
+                                            offset: 0,
+                                            search:
+                                                (filter != null &&
+                                                    filter.length >= 2)
+                                                ? filter
+                                                : null,
+                                          );
+                                      return result.fold(
+                                        (failure) => [],
+                                        (res) => res.clients,
                                       );
-                                      return result.fold((failure) => [], (res) => res.clients);
                                     },
                                     onChanged: (value) {
                                       if (value != null) {
@@ -144,16 +152,22 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                     itemAsString: (m) => m.name,
                                     items: (String? filter) async {
                                       if (clientId == null) return <MatterEntity>[];
-                                      final result = await sl<MattersRepository>().getMatters(
-                                        limit: 10,
-                                        offset: 0,
-                                        clientId: clientId!,
-                                        taskCreatable: true,
-                                        search: (filter != null && filter.length >= 2)
-                                            ? filter
-                                            : null,
+                                      final result = await sl<MattersRepository>()
+                                          .getMatters(
+                                            limit: 50,
+                                            offset: 0,
+                                            clientId: clientId!,
+                                            taskCreatable: true,
+                                            search:
+                                                (filter != null &&
+                                                    filter.length >= 2)
+                                                ? filter
+                                                : null,
+                                          );
+                                      return result.fold(
+                                        (failure) => [],
+                                        (res) => res.results,
                                       );
-                                      return result.fold((failure) => [], (res) => res.results);
                                     },
                                     onChanged: (m) {
                                       if (m != null) setState(() => matterId = m.id);
@@ -198,7 +212,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                           ? DateFormat("dd/MM/yyyy").format(dueAt!)
                                           : "DD/MM/YYYY",
                                       style: TextStyle(
-                                        color: dueAt != null ? AppColors.black : AppColors.black45,
+                                        color: dueAt != null
+                                            ? AppColors.black
+                                            : AppColors.black45,
                                         fontSize: 14.sp,
                                       ),
                                     ),
@@ -249,11 +265,12 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                     compareFn: (a, b) => a.id == b.id,
                                     itemAsString: (type) => type.name ?? '-',
                                     items: (filter) async {
-                                      final result = await sl<TaskTypesRepository>().getTypes(
-                                        limit: 50,
-                                        offset: 0,
+                                      final result = await sl<TaskTypesRepository>()
+                                          .getTypes(limit: 50, offset: 0);
+                                      return result.fold(
+                                        (failure) => [],
+                                        (res) => res.types,
                                       );
-                                      return result.fold((failure) => [], (res) => res.types);
                                     },
                                     onChanged: (value) {
                                       if (value != null) {
@@ -278,9 +295,11 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
                           if (matterId == null) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text(context.tr('caseMustBeSelected'))));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(context.tr('caseMustBeSelected')),
+                              ),
+                            );
                             return;
                           }
                           _onCreate();

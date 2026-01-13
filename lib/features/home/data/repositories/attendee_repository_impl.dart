@@ -15,6 +15,8 @@ class AttendeeStatusRepositoryImpl implements AttendeeStatusRepository {
     try {
       final result = await remoteDataSource.checkAttendeeStatus();
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {
@@ -35,6 +37,8 @@ class AttendeeStatusRepositoryImpl implements AttendeeStatusRepository {
         lateReason: lateReason,
       );
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {
@@ -47,6 +51,8 @@ class AttendeeStatusRepositoryImpl implements AttendeeStatusRepository {
     try {
       final result = await remoteDataSource.leave(earlyReason: earlyReason);
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

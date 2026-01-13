@@ -12,35 +12,3 @@ class LoadingIndicator extends StatelessWidget {
     );
   }
 }
-
-// class LoadingIndicator extends StatelessWidget {
-//   const LoadingIndicator({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: [
-//         Container(color: Colors.black.withOpacity(0.4)),
-//
-//         // markazda kartochka
-//         Center(
-//           child: Container(
-//             padding: const EdgeInsets.all(24),
-//             decoration: BoxDecoration(
-//               color: Colors.white,
-//               borderRadius: BorderRadius.circular(16),
-//               boxShadow: [
-//                 BoxShadow(
-//                   color: Colors.black.withOpacity(0.2),
-//                   blurRadius: 12,
-//                   offset: const Offset(0, 4),
-//                 ),
-//               ],
-//             ),
-//             child: const CircularProgressIndicator(),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

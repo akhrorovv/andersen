@@ -23,9 +23,10 @@ class ProfileLoadedSuccess extends ProfileState {
 
 class ProfileLoadedError extends ProfileState {
   final String message;
+  final bool isNetworkError;
 
-  const ProfileLoadedError(this.message);
+  const ProfileLoadedError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

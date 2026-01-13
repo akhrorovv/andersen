@@ -1,5 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/features/activities/presentation/cubit/activities_cubit.dart';
@@ -29,15 +31,30 @@ class ActivitiesPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (_) => sl<ActivitiesCubit>()..getActivities(),
-        child: BlocBuilder<ActivitiesCubit, ActivitiesState>(
-          builder: (context, state) {
-            if (state is ActivitiesInitial || state is ActivitiesLoading) {
-              return Center(child: CircularProgressIndicator(color: AppColors.primary));
-            } else if (state is ActivitiesError) {
-              return Center(
-                child: Text(state.message, style: TextStyle(color: Colors.red)),
-              );
-            } else if (state is ActivitiesLoaded) {
+        child: BlocListener<ConnectivityCubit, ConnectivityState>(
+          listener: (context, connectivityState) {
+            // Retry when user presses "Обновить" or connectivity restored
+            if (connectivityState is RetryRequested) {
+              context.read<ActivitiesCubit>().getActivities(refresh: true);
+            } else if (connectivityState is ConnectivityChanged &&
+                connectivityState.isConnected) {
+              final activitiesState = context.read<ActivitiesCubit>().state;
+              if (activitiesState is ActivitiesError &&
+                  activitiesState.isNetworkError) {
+                context.read<ActivitiesCubit>().getActivities(refresh: true);
+              }
+            }
+          },
+          child: BlocBuilder<ActivitiesCubit, ActivitiesState>(
+            builder: (context, state) {
+              if (state is ActivitiesInitial || state is ActivitiesLoading) {
+                return Center(
+                    child: CircularProgressIndicator(color: AppColors.primary));
+              } else if (state is ActivitiesError) {
+                return Center(
+                  child: Text(state.message, style: TextStyle(color: Colors.red)),
+                );
+              } else if (state is ActivitiesLoaded) {
               final activities = state.activities.results;
               if (activities.isEmpty) {
                 return Center(child: EmptyWidget());
@@ -78,8 +95,9 @@ class ActivitiesPage extends StatelessWidget {
                 ),
               );
             }
-            return SizedBox.shrink();
-          },
+              return SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );

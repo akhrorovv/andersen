@@ -11,33 +11,64 @@ class EventModel extends EventEntity {
     super.target,
     super.matter,
     super.createdById,
-    // super.matterId,
-    // super.createdAt,
-    // super.updatedAt,
-    // super.attendees,
-    // super.createdBy,
   });
 
+  // factory EventModel.fromJson(Map<String, dynamic> json) {
+  //   return EventModel(
+  //     id: json["id"] as int? ?? 0,
+  //     location: json["location"] as String? ?? '',
+  //     description: json["description"] as String? ?? '',
+  //     endsAt: json['endsAt'] != null ? DateTime.tryParse(json['endsAt']) : null,
+  //     startsAt: json['startsAt'] != null
+  //         ? DateTime.tryParse(json['startsAt'])
+  //         : null,
+  //     target: json["target"] as String? ?? '',
+  //     matter: json['matter'] != null
+  //         ? MatterModel.fromJson(json['matter'] as Map<String, dynamic>)
+  //         : null,
+  //     createdById: json["createdById"] as int? ?? 0,
+  //   );
+  // }
+
   factory EventModel.fromJson(Map<String, dynamic> json) {
-    return EventModel(
-      id: json["id"] as int,
-      location: json["location"] as String?,
-      description: json["description"] as String?,
-      endsAt: json['endsAt'] != null ? DateTime.tryParse(json['endsAt']) : null,
-      startsAt: json['startsAt'] != null ? DateTime.tryParse(json['startsAt']) : null,
-      target: json["target"] as String?,
-      matter: json['matter'] != null
-          ? MatterModel.fromJson(json['matter'] as Map<String, dynamic>)
-          : null,
-      createdById: json["createdById"] as int?,
-      // matterId: json["matterId"] as int?,
-      // createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
-      // updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
-      // attendees: (json['attendees'] as List<dynamic>? ?? [])
-      //     .map((t) => AttendeeModel.fromJson(t))
-      //     .toList(),
-      // createdBy: json["createdBy"] != null ? UserModel.fromJson(json["createdBy"]) : null,
-    );
+    try {
+      return EventModel(
+        // id ni har doim int ga o'girish (String kelsa ham)
+        id: json["id"] is int
+            ? json["id"]
+            : int.tryParse(json["id"]?.toString() ?? '0') ?? 0,
+
+        location: json["location"]?.toString() ?? '',
+        description: json["description"]?.toString() ?? '',
+
+        // DateTime parsingni xavfsiz qilish
+        endsAt: _parseDate(json['ends_at'] ?? json['endsAt']),
+        startsAt: _parseDate(json['starts_at'] ?? json['startsAt']),
+
+        target: json["target"]?.toString() ?? '',
+
+        matter: json['matter'] != null
+            ? MatterModel.fromJson(json['matter'] as Map<String, dynamic>)
+            : null,
+
+        createdById: json["createdById"] is int
+            ? json["createdById"]
+            : int.tryParse(json["createdById"]?.toString() ?? '0') ?? 0,
+      );
+    } catch (e, stack) {
+      // Qayerda xato bo'lganini aniq ko'rish uchun
+      print("Parsing error in EventModel: $e");
+      print("Stacktrace: $stack");
+      rethrow;
+    }
+  }
+
+  // Yordamchi funksiya
+  static DateTime? _parseDate(dynamic date) {
+    if (date == null) return null;
+    if (date is String) return DateTime.tryParse(date);
+    if (date is int) return DateTime.fromMillisecondsSinceEpoch(date);
+    return null;
   }
 
   Map<String, dynamic> toJson() => {
@@ -49,10 +80,5 @@ class EventModel extends EventEntity {
     "target": target,
     'matter': matter is MatterModel ? (matter as MatterModel).toJson() : null,
     "createdById": createdById,
-    // "matterId": matterId,
-    // "createdAt": createdAt?.toIso8601String(),
-    // "updatedAt": updatedAt?.toIso8601String(),
-    // "attendees": attendees?.map((x) => (x as AttendeeModel).toJson()).toList(),
-    // "createdBy": (createdBy as UserModel?)?.toJson(),
   };
 }

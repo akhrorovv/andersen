@@ -1,5 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
@@ -31,7 +33,6 @@ class EventDetailPage extends StatelessWidget {
           listener: (context, state) {
             if (state is DeleteEventSuccess) {
               context.pop(true);
-              // context.go(CalendarPage.path);
             } else if (state is DeleteEventLoading) {
               LoadingIndicator();
             } else if (state is DeleteEventError) {
@@ -39,14 +40,23 @@ class EventDetailPage extends StatelessWidget {
             }
           },
         ),
+        // Retry when user presses "Обновить" button
+        BlocListener<ConnectivityCubit, ConnectivityState>(
+          listener: (context, connectivityState) {
+            if (connectivityState is RetryRequested) {
+              context.read<EventDetailCubit>().getEventDetail(eventId);
+            }
+          },
+        ),
       ],
-
       child: BlocBuilder<EventDetailCubit, EventDetailState>(
         builder: (context, state) {
           if (state is EventDetailInitial || state is EventDetailLoading) {
-            return const LoadingIndicator();
+            return const Scaffold(body: LoadingIndicator());
           } else if (state is EventDetailError) {
-            return ErrorMessage(errorMessage: state.message);
+            return Scaffold(
+              body: Center(child: ErrorMessage(errorMessage: state.message)),
+            );
           } else if (state is EventDetailLoaded) {
             final event = state.event;
             return Scaffold(
@@ -57,7 +67,10 @@ class EventDetailPage extends StatelessWidget {
                   EventDetailHeader(event: event),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 24.h,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 12.h,
@@ -70,7 +83,9 @@ class EventDetailPage extends StatelessWidget {
                                 EventDetailItem(
                                   title: context.tr('eventType'),
                                   iconPath: Assets.vectors.calendarFav.path,
-                                  value: EventTargetX.fromString(event.target).label(context),
+                                  value: EventTargetX.fromString(
+                                    event.target,
+                                  ).label(context),
                                 ),
                                 EventDetailItem(
                                   title: context.tr('location'),
@@ -100,7 +115,7 @@ class EventDetailPage extends StatelessWidget {
               ),
             );
           }
-          return SizedBox.shrink();
+          return const Scaffold(body: SizedBox.shrink());
         },
       ),
     );

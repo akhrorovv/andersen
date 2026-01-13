@@ -1,3 +1,4 @@
+import 'package:andersen/core/network/connectivity_cubit.dart';
 import 'package:andersen/features/activities/presentation/cubit/activity_detail_cubit.dart';
 import 'package:andersen/features/auth/data/repositories/auth_repository.dart';
 import 'package:andersen/features/auth/data/sources/auth_remote_data_source.dart';
@@ -138,6 +139,9 @@ import 'features/tasks/presentation/cubit/tasks_cubit.dart';
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  // Connectivity
+  sl.registerLazySingleton(() => ConnectivityCubit());
+
   sl.registerSingleton<DioClient>(DioClient());
 
   _initAuth();
@@ -155,8 +159,12 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(() => GetProfileUseCase(sl<ProfileRepository>()))
     ..registerFactory(() => ProfileCubit(sl<GetProfileUseCase>()))
     /// Auth
-    ..registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl<AuthRemoteDataSource>()))
+    ..registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
+    )
     ..registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()))
     ..registerFactory(() => AuthCubit(sl<LoginUseCase>()))
     /// Matters & Clients & types
@@ -184,17 +192,23 @@ Future<void> _initAuth() async {
     )
     ..registerLazySingleton(() => MatterCubit(sl<GetMattersUsecase>()))
     /// Tasks
-    ..registerLazySingleton<TasksRemoteDataSource>(() => TasksRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerLazySingleton<TasksRemoteDataSource>(
+      () => TasksRemoteDataSourceImpl(sl<DioClient>()),
+    )
     ..registerLazySingleton<TaskDetailRemoteDataSource>(
       () => TaskDetailRemoteDataSourceImpl(sl<DioClient>()),
     )
-    ..registerLazySingleton<TasksRepository>(() => TasksRepositoryImpl(sl<TasksRemoteDataSource>()))
+    ..registerLazySingleton<TasksRepository>(
+      () => TasksRepositoryImpl(sl<TasksRemoteDataSource>()),
+    )
     ..registerLazySingleton<TaskDetailRepository>(
       () => TaskDetailRepositoryImpl(sl<TaskDetailRemoteDataSource>()),
     )
     ..registerLazySingleton(() => GetTasksUseCase(sl<TasksRepository>()))
     ..registerLazySingleton(() => GetTaskDetailUseCase(sl<TaskDetailRepository>()))
-    ..registerLazySingleton(() => GetTaskActivitiesUsecase(sl<TaskDetailRepository>()))
+    ..registerLazySingleton(
+      () => GetTaskActivitiesUsecase(sl<TaskDetailRepository>()),
+    )
     ..registerLazySingleton(() => UpdateTaskUsecase(sl<TaskDetailRepository>()))
     ..registerFactory(() => TasksCubit(sl<GetTasksUseCase>()))
     ..registerLazySingleton(() => TaskDetailCubit(sl<GetTaskDetailUseCase>()))
@@ -214,7 +228,9 @@ Future<void> _initAuth() async {
       () => ActivityDetailRepositoryImpl(sl<ActivityDetailRemoteDataSource>()),
     )
     ..registerLazySingleton(() => GetActivitiesUsecase(sl<ActivityRepository>()))
-    ..registerLazySingleton(() => GetActivityDetailUsecase(sl<ActivityDetailRepository>()))
+    ..registerLazySingleton(
+      () => GetActivityDetailUsecase(sl<ActivityDetailRepository>()),
+    )
     ..registerLazySingleton(() => ActivitiesCubit(sl<GetActivitiesUsecase>()))
     ..registerFactory(() => ActivityDetailCubit(sl<GetActivityDetailUsecase>()))
     /// Events
@@ -254,8 +270,12 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(() => CreateEventUsecase(sl<CreateEventRepository>()))
     ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()))
     /// Users
-    ..registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(sl<UsersRemoteDataSource>()))
+    ..registerLazySingleton<UsersRemoteDataSource>(
+      () => UsersRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerLazySingleton<UsersRepository>(
+      () => UsersRepositoryImpl(sl<UsersRemoteDataSource>()),
+    )
     ..registerLazySingleton(() => GetUsersUsecase(sl<UsersRepository>()))
     // ..registerFactory(() => CreateEventCubit(sl<CreateEventUsecase>()));
     /// Delete event
@@ -274,7 +294,9 @@ Future<void> _initAuth() async {
     ..registerLazySingleton<StartActivityRepository>(
       () => StartActivityRepositoryImpl(sl<StartActivityRemoteDataSource>()),
     )
-    ..registerLazySingleton(() => StartActivityUsecase(sl<StartActivityRepository>()))
+    ..registerLazySingleton(
+      () => StartActivityUsecase(sl<StartActivityRepository>()),
+    )
     ..registerFactory(() => ActivityStartCubit(sl<StartActivityUsecase>()))
     /// active activity
     ..registerFactory<ActiveActivityRemoteDataSource>(
@@ -311,17 +333,27 @@ Future<void> _initAuth() async {
     ..registerFactory(() => StopActivityUsecase(sl<StopActivityRepository>()))
     ..registerFactory(() => StopActivityCubit(sl<StopActivityUsecase>()))
     /// User kpi
-    ..registerFactory<KpiUserRemoteDataSource>(() => KpiUserRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerFactory<KpiUserRepository>(() => KpiUserRepositoryImpl(sl<KpiUserRemoteDataSource>()))
+    ..registerFactory<KpiUserRemoteDataSource>(
+      () => KpiUserRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<KpiUserRepository>(
+      () => KpiUserRepositoryImpl(sl<KpiUserRemoteDataSource>()),
+    )
     ..registerFactory(() => GetUserKpiUsecase(sl<KpiUserRepository>()))
     ..registerFactory(() => KpiUserCubit(sl<GetUserKpiUsecase>()))
     /// Kpi
-    ..registerFactory<KpiRemoteDataSource>(() => KpiRemoteDataSourceImpl(sl<DioClient>()))
-    ..registerFactory<KpiRepository>(() => KpiRepositoryImpl(sl<KpiRemoteDataSource>()))
+    ..registerFactory<KpiRemoteDataSource>(
+      () => KpiRemoteDataSourceImpl(sl<DioClient>()),
+    )
+    ..registerFactory<KpiRepository>(
+      () => KpiRepositoryImpl(sl<KpiRemoteDataSource>()),
+    )
     ..registerFactory(() => GetKpiUsecase(sl<KpiRepository>()))
     ..registerFactory(() => KpiCubit(sl<GetKpiUsecase>()))
     /// Workload
-    ..registerFactory<WorkloadRemoteDataSource>(() => WorkloadRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerFactory<WorkloadRemoteDataSource>(
+      () => WorkloadRemoteDataSourceImpl(sl<DioClient>()),
+    )
     ..registerFactory<WorkloadRepository>(
       () => WorkloadRepositoryImpl(sl<WorkloadRemoteDataSource>()),
     )
@@ -337,7 +369,9 @@ Future<void> _initAuth() async {
     ..registerFactory(() => GetComplaintsUsecase(sl<ComplaintsRepository>()))
     ..registerFactory(() => ComplaintsCubit(sl<GetComplaintsUsecase>()))
     /// Kpi tasks
-    ..registerFactory<KpiTasksRemoteDataSource>(() => KpiTasksRemoteDataSourceImpl(sl<DioClient>()))
+    ..registerFactory<KpiTasksRemoteDataSource>(
+      () => KpiTasksRemoteDataSourceImpl(sl<DioClient>()),
+    )
     ..registerFactory<KpiTasksRepository>(
       () => KpiTasksRepositoryImpl(sl<KpiTasksRemoteDataSource>()),
     )
@@ -361,7 +395,9 @@ Future<void> _initAuth() async {
     )
     ..registerFactory(() => ArriveAttendeeUsecase(sl<AttendeeStatusRepository>()))
     ..registerFactory(() => LeaveAttendeeUsecase(sl<AttendeeStatusRepository>()))
-    ..registerFactory(() => CheckAttendeeStatusUsecase(sl<AttendeeStatusRepository>()))
+    ..registerFactory(
+      () => CheckAttendeeStatusUsecase(sl<AttendeeStatusRepository>()),
+    )
     ..registerFactory(
       () => AttendeeCubit(
         sl<CheckAttendeeStatusUsecase>(),

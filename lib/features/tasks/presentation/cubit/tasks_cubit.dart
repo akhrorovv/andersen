@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/tasks/domain/entities/task_entity.dart';
 import 'package:andersen/features/tasks/domain/entities/tasks_entity.dart';
@@ -85,7 +86,10 @@ class TasksCubit extends Cubit<TasksState> {
 
     result.fold(
       (failure) {
-        emit(TasksError(failure.message));
+        emit(TasksError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (tasksEntity) {
         _tasks = [..._tasks, ...tasksEntity.results];

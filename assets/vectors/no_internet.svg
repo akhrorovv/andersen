@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- WiFi signal arcs -->
+  <path d="M60 85C65.5228 85 70 80.5228 70 75C70 69.4772 65.5228 65 60 65C54.4772 65 50 69.4772 50 75C50 80.5228 54.4772 85 60 85Z" fill="#A6ADB9"/>
+  <path d="M60 55C49.5066 55 40 60.8579 40 68" stroke="#A6ADB9" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M60 55C70.4934 55 80 60.8579 80 68" stroke="#A6ADB9" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M60 40C43.4315 40 30 50.2975 30 63" stroke="#A6ADB9" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M60 40C76.5685 40 90 50.2975 90 63" stroke="#A6ADB9" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+  <!-- Red X circle -->
+  <circle cx="90" cy="30" r="18" fill="#FF4D4F"/>
+  <path d="M82 22L98 38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M98 22L82 38" stroke="white" stroke-width="3" stroke-linecap="round"/>
+</svg>

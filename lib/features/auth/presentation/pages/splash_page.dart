@@ -2,8 +2,11 @@ import 'package:andersen/core/api/interceptors.dart';
 import 'package:andersen/core/common/profile/cubit/profile_cubit.dart';
 import 'package:andersen/core/common/profile/cubit/profile_state.dart';
 import 'package:andersen/core/config/theme/app_colors.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/core/widgets/basic_snack_bar.dart';
+import 'package:andersen/core/widgets/no_internet_widget.dart';
 import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
 import 'package:andersen/features/auth/presentation/pages/enter_pin_page.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
@@ -28,46 +31,74 @@ class SplashPage extends StatelessWidget {
     );
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: BlocListener<ProfileCubit, ProfileState>(
-        listener: (context, state) async {
-          if (state is ProfileLoadedSuccess) {
-            if (DBService.pin == null) {
-              context.go(SetPinPage.path);
-            } else {
-              context.go(EnterPinPage.path, extra: false);
-            }
-          } else if (state is ProfileLoadedError) {
-            if (state.message == "Device is blocked") {
-              BasicSnackBar.show(context, message: state.message, error: true);
-              context.go(CheckingPage.path);
-            } else if (state.message == "Device not found") {
-              BasicSnackBar.show(context, message: state.message, error: true);
-              await DBService.clear();
-              if (context.mounted) {
-                context.go(LoginPage.path);
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ProfileCubit, ProfileState>(
+            listener: (context, state) async {
+              if (state is ProfileLoadedSuccess) {
+                if (DBService.pin == null) {
+                  context.go(SetPinPage.path);
+                } else {
+                  context.go(EnterPinPage.path, extra: false);
+                }
+              } else if (state is ProfileLoadedError) {
+                // Don't logout on network error - show NoInternetWidget instead
+                if (state.isNetworkError) {
+                  return; // UI will show NoInternetWidget
+                }
+
+                if (state.message == "Device is blocked") {
+                  BasicSnackBar.show(context, message: state.message, error: true);
+                  context.go(CheckingPage.path);
+                } else if (state.message == "Device not found") {
+                  BasicSnackBar.show(context, message: state.message, error: true);
+                  await DBService.clear();
+                  if (context.mounted) {
+                    context.go(LoginPage.path);
+                  }
+                } else if (state.message == 'Unauthorized') {
+                  await DBService.clear();
+                  if (context.mounted) {
+                    context.go(LoginPage.path);
+                  }
+                } else {
+                  BasicSnackBar.show(context, message: state.message, error: true);
+                  await DBService.clear();
+                  if (context.mounted) {
+                    context.go(LoginPage.path);
+                  }
+                }
               }
-            } else if (state.message == 'Unauthorized') {
-              await DBService.clear();
-              if (context.mounted) {
-                context.go(LoginPage.path);
-              }
-            } else {
-              BasicSnackBar.show(context, message: state.message, error: true);
-              await DBService.clear();
-              if (context.mounted) {
-                context.go(LoginPage.path);
-              }
-            }
-          }
-        },
-        child: Center(
-          child: Container(
-            color: AppColors.white,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 80.w),
-              child: Assets.images.splash.image(),
-            ),
+            },
           ),
+          // Retry when user presses "Обновить" button
+          BlocListener<ConnectivityCubit, ConnectivityState>(
+            listener: (context, connectivityState) {
+              if (connectivityState is RetryRequested) {
+                context.read<ProfileCubit>().getProfile();
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            // Show NoInternetWidget on network error
+            if (state is ProfileLoadedError && state.isNetworkError) {
+              return NoInternetWidget(
+                onRetry: () => context.read<ProfileCubit>().getProfile(),
+              );
+            }
+
+            return Center(
+              child: Container(
+                color: AppColors.white,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 80.w),
+                  child: Assets.images.splash.image(),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

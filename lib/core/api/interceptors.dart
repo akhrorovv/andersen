@@ -1,10 +1,13 @@
 import 'dart:developer';
 
 import 'package:andersen/core/api/api_urls.dart';
+import 'package:andersen/core/error/exceptions.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/network/network_error_handler.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/auth/presentation/pages/checking_page.dart';
 import 'package:andersen/features/auth/presentation/pages/login_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
@@ -81,6 +84,11 @@ class TokenInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    // Skip if it's a network error - don't process auth logic
+    if (_isNetworkError(err)) {
+      return handler.next(err);
+    }
+
     final status = err.response?.statusCode;
     final data = err.response?.data;
 
@@ -118,7 +126,10 @@ class TokenInterceptor extends Interceptor {
       }
 
       try {
-        final response = await _dio.put(ApiUrls.renewAccess, data: {"refresh": refreshToken});
+        final response = await _dio.put(
+          ApiUrls.renewAccess,
+          data: {"refresh": refreshToken},
+        );
         final newAccess = response.data["access"];
 
         if (newAccess != null) {
@@ -130,6 +141,13 @@ class TokenInterceptor extends Interceptor {
 
           return handler.resolve(retryRequest);
         }
+      } on DioException catch (e) {
+        // If refresh fails due to network error, don't clear credentials
+        if (_isNetworkError(e)) {
+          return handler.next(err);
+        }
+        await DBService.clear();
+        return handler.next(err);
       } catch (e) {
         await DBService.clear();
         return handler.next(err);
@@ -137,5 +155,87 @@ class TokenInterceptor extends Interceptor {
     }
 
     return handler.next(err);
+  }
+
+  bool _isNetworkError(DioException err) {
+    return err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.connectionError ||
+        err.error is NetworkException;
+  }
+}
+
+class ConnectivityInterceptor extends Interceptor {
+  final Connectivity _connectivity;
+
+  ConnectivityInterceptor({Connectivity? connectivity})
+    : _connectivity = connectivity ?? Connectivity();
+
+  @override
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final result = await _connectivity.checkConnectivity();
+
+    if (result.contains(ConnectivityResult.none)) {
+      // Show global network error overlay
+      NetworkErrorHandler.instance.showError();
+
+      handler.reject(
+        DioException(
+          requestOptions: options,
+          error: NetworkException(),
+          type: DioExceptionType.connectionError,
+        ),
+      );
+      return;
+    }
+
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    // Convert timeout and connection errors to NetworkException
+    if (_isNetworkError(err)) {
+      // Show global network error overlay
+      NetworkErrorHandler.instance.showError();
+
+      handler.reject(
+        DioException(
+          requestOptions: err.requestOptions,
+          error: NetworkException(message: _getNetworkErrorMessage(err)),
+          type: DioExceptionType.connectionError,
+          response: err.response,
+        ),
+      );
+      return;
+    }
+    handler.next(err);
+  }
+
+  bool _isNetworkError(DioException err) {
+    return err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.connectionError ||
+        err.error is NetworkException;
+  }
+
+  String _getNetworkErrorMessage(DioException err) {
+    switch (err.type) {
+      case DioExceptionType.connectionTimeout:
+        return 'Connection timeout';
+      case DioExceptionType.sendTimeout:
+        return 'Send timeout';
+      case DioExceptionType.receiveTimeout:
+        return 'Receive timeout';
+      case DioExceptionType.connectionError:
+        return 'Connection error';
+      default:
+        return 'No internet connection';
+    }
   }
 }

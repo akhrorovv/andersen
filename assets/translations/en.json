@@ -132,5 +132,7 @@
   "changePin": "Change PIN code",
   "pinCode": "Pin code",
   "enterOldPin": "Enter the old PIN code",
-  "pinMustBe4Digits": "PIN must be 4 digits"
+  "pinMustBe4Digits": "PIN must be 4 digits",
+  "noInternetConnection": "No internet connection",
+  "refreshPage": "Refresh page"
 }

@@ -50,7 +50,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: SplashPage.path,
       builder: (context, state) {
-        return BlocProvider(create: (_) => sl<ProfileCubit>()..getProfile(), child: SplashPage());
+        return BlocProvider(
+          create: (_) => sl<ProfileCubit>()..getProfile(),
+          child: SplashPage(),
+        );
       },
     ),
 
@@ -67,7 +70,8 @@ final GoRouter router = GoRouter(
 
     /// Main page
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) => MainPage(navigationShell: navigationShell),
+      builder: (context, state, navigationShell) =>
+          MainPage(navigationShell: navigationShell),
       branches: [
         /// Home page
         StatefulShellBranch(
@@ -86,7 +90,9 @@ final GoRouter router = GoRouter(
 
         /// Tasks page
         StatefulShellBranch(
-          routes: [GoRoute(path: TasksPage.path, builder: (context, state) => TasksPage())],
+          routes: [
+            GoRoute(path: TasksPage.path, builder: (context, state) => TasksPage()),
+          ],
         ),
 
         /// Calendar page
@@ -96,7 +102,8 @@ final GoRouter router = GoRouter(
               path: CalendarPage.path,
               builder: (context, state) {
                 return BlocProvider(
-                  create: (_) => sl<EventsCubit>()..getEvents(focusedDay: DateTime.now()),
+                  create: (_) =>
+                      sl<EventsCubit>()..getEvents(focusedDay: DateTime.now()),
                   child: CalendarPage(),
                 );
               },
@@ -107,7 +114,10 @@ final GoRouter router = GoRouter(
         /// Activities page
         StatefulShellBranch(
           routes: [
-            GoRoute(path: ActivitiesPage.path, builder: (context, state) => ActivitiesPage()),
+            GoRoute(
+              path: ActivitiesPage.path,
+              builder: (context, state) => ActivitiesPage(),
+            ),
           ],
         ),
 
@@ -134,7 +144,10 @@ final GoRouter router = GoRouter(
 
     GoRoute(path: ReasonPage.path, builder: (context, state) => ReasonPage()),
     GoRoute(path: LanguagesPage.path, builder: (context, state) => LanguagesPage()),
-    GoRoute(path: NotificationsPage.path, builder: (context, state) => NotificationsPage()),
+    GoRoute(
+      path: NotificationsPage.path,
+      builder: (context, state) => NotificationsPage(),
+    ),
     GoRoute(path: SetPinPage.path, builder: (context, state) => SetPinPage()),
     GoRoute(path: BiometricPage.path, builder: (context, state) => BiometricPage()),
     GoRoute(path: ChangePinPage.path, builder: (context, state) => ChangePinPage()),
@@ -150,7 +163,7 @@ final GoRouter router = GoRouter(
       path: VerifyNewPinPage.path,
       builder: (context, state) {
         final pin = state.extra as String;
-        return VerifyNewPinPage(newPin: pin,);
+        return VerifyNewPinPage(newPin: pin);
       },
     ),
     GoRoute(
@@ -171,7 +184,9 @@ final GoRouter router = GoRouter(
         final activityId = state.extra as int;
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity()),
+            BlocProvider(
+              create: (_) => sl<ActivityStatusCubit>()..checkActiveActivity(),
+            ),
             BlocProvider(create: (_) => sl<StopActivityCubit>()),
           ],
           child: StopActivityPage(activityId: activityId),
@@ -196,7 +211,9 @@ final GoRouter router = GoRouter(
         final eventId = state.extra as int;
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => sl<EventDetailCubit>()..getEventDetail(eventId)),
+            BlocProvider(
+              create: (_) => sl<EventDetailCubit>()..getEventDetail(eventId),
+            ),
             BlocProvider(create: (_) => sl<DeleteEventCubit>()),
           ],
           child: EventDetailPage(eventId: eventId),
@@ -219,10 +236,12 @@ final GoRouter router = GoRouter(
 
 extension CupertinoSheetExtension on BuildContext {
   Future<T?> pushCupertinoSheet<T>(Widget page) {
-    return Navigator.of(this, rootNavigator: true).push(CupertinoSheetRoute(builder: (_) => page));
+    return Navigator.of(
+      this,
+      rootNavigator: true,
+    ).push(CupertinoSheetRoute(builder: (_) => page));
   }
 }
-
 
 // extension CupertinoSheetExtension on BuildContext {
 //   /// Push a page as a Cupertino modal sheet.

@@ -22,6 +22,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
       await DBService.saveUser(user);
 
       return Right(user);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

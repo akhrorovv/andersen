@@ -33,6 +33,8 @@ class EventsRepositoryImpl implements EventsRepository {
         matterId: matterId,
       );
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

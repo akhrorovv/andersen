@@ -31,6 +31,8 @@ class TasksRepositoryImpl implements TasksRepository {
         dueMax: dueMax,
       );
       return Right(result);
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure.fromException(e));
     } on ServerException catch (e) {
       return Left(ServerFailure.fromException(e));
     } catch (e) {

@@ -28,9 +28,10 @@ class EventsLoaded extends EventsState {
 
 class EventsError extends EventsState {
   final String message;
+  final bool isNetworkError;
 
-  const EventsError(this.message);
+  const EventsError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

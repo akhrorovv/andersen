@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/activities/domain/entities/activities_entity.dart';
 import 'package:andersen/features/activities/domain/entities/activity_entity.dart';
@@ -41,7 +42,10 @@ class KpiActivitiesCubit extends Cubit<KpiActivitiesState> {
 
     result.fold(
       (failure) {
-        emit(KpiActivitiesError(failure.message));
+        emit(KpiActivitiesError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (activitiesEntity) {
         _activities = [..._activities, ...activitiesEntity.results];

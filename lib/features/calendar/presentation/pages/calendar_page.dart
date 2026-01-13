@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/enum/event_target.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/error_message.dart';
 import 'package:andersen/core/widgets/loading_indicator.dart';
 import 'package:andersen/features/calendar/domain/entities/event_entity.dart';
@@ -17,7 +21,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -74,7 +77,10 @@ class _CalendarPageState extends State<CalendarPage> {
           TextButton(
             onPressed: () async {
               final created = await context.pushCupertinoSheet<bool>(
-                BlocProvider(create: (_) => sl<CreateEventCubit>(), child: CreateEventPage()),
+                BlocProvider(
+                  create: (_) => sl<CreateEventCubit>(),
+                  child: CreateEventPage(),
+                ),
               );
               if (context.mounted && created == true) {
                 context.read<EventsCubit>().getEvents(refresh: true);
@@ -136,7 +142,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
             onPageChanged: (focusedDay) {
               setState(() => _focusedDay = focusedDay);
-              context.read<EventsCubit>().getEvents(focusedDay: focusedDay, refresh: true);
+              context.read<EventsCubit>().getEvents(
+                focusedDay: focusedDay,
+                refresh: true,
+              );
             },
 
             eventLoader: (day) {
@@ -153,21 +162,35 @@ class _CalendarPageState extends State<CalendarPage> {
 
           /// Events
           Expanded(
-            child: BlocConsumer<EventsCubit, EventsState>(
-              listener: (context, state) {
-                if (state is EventsLoaded) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (!mounted) return;
-                    _scrollToSelectedDay();
-                  });
+            child: BlocListener<ConnectivityCubit, ConnectivityState>(
+              listener: (context, connectivityState) {
+                // Retry when user presses "Обновить" or connectivity restored
+                if (connectivityState is RetryRequested) {
+                  context.read<EventsCubit>().getEvents(refresh: true);
+                } else if (connectivityState is ConnectivityChanged &&
+                    connectivityState.isConnected) {
+                  final eventsState = context.read<EventsCubit>().state;
+                  if (eventsState is EventsError && eventsState.isNetworkError) {
+                    context.read<EventsCubit>().getEvents(refresh: true);
+                  }
                 }
               },
-              builder: (context, state) {
-                if (state is EventsInitial || state is EventsLoading) {
-                  return const LoadingIndicator();
-                } else if (state is EventsError) {
-                  return ErrorMessage(errorMessage: state.message);
-                } else if (state is EventsLoaded) {
+              child: BlocConsumer<EventsCubit, EventsState>(
+                listener: (context, state) {
+                  if (state is EventsLoaded) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      _scrollToSelectedDay();
+                    });
+                  }
+                },
+                builder: (context, state) {
+                  if (state is EventsInitial || state is EventsLoading) {
+                    return const LoadingIndicator();
+                  } else if (state is EventsError) {
+                    log("🛑 Error: ${state.message}");
+                    return ErrorMessage(errorMessage: state.message);
+                  } else if (state is EventsLoaded) {
                   final days = state.days;
                   return ScrollablePositionedList.builder(
                     itemScrollController: scrollController,
@@ -178,8 +201,9 @@ class _CalendarPageState extends State<CalendarPage> {
                     },
                   );
                 }
-                return const SizedBox.shrink();
-              },
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
         ],

@@ -23,9 +23,10 @@ class KpiActivitiesLoaded extends KpiActivitiesState {
 
 class KpiActivitiesError extends KpiActivitiesState {
   final String message;
+  final bool isNetworkError;
 
-  const KpiActivitiesError(this.message);
+  const KpiActivitiesError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, isNetworkError];
 }

@@ -1,3 +1,5 @@
+import 'package:andersen/core/config/env_config.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
 import 'package:andersen/core/utils/notif_service.dart';
 import 'package:andersen/core/utils/db_service.dart';
 import 'package:andersen/features/auth/presentation/cubit/auth_cubit.dart';
@@ -16,6 +18,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Load environment variables
+  await EnvConfig.init();
   // easy localization
   await EasyLocalization.ensureInitialized();
   // Hive init
@@ -49,6 +53,7 @@ class MyApp extends StatelessWidget {
       builder: (_, __) {
         return MultiBlocProvider(
           providers: [
+            BlocProvider(create: (context) => sl<ConnectivityCubit>()),
             BlocProvider(create: (context) => sl<AuthCubit>()),
             BlocProvider(create: (context) => sl<ProfileCubit>()),
           ],
@@ -60,7 +65,9 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             builder: (context, widget) {
               return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(1.0)),
                 child: widget!,
               );
             },

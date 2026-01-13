@@ -1,3 +1,4 @@
+import 'package:andersen/core/error/failure.dart';
 import 'package:andersen/features/kpi/domain/entities/complaint_entity.dart';
 import 'package:andersen/features/kpi/domain/entities/complaints_entity.dart';
 import 'package:andersen/features/kpi/domain/repositories/complaints_repository.dart';
@@ -33,7 +34,10 @@ class ComplaintsCubit extends Cubit<ComplaintsState> {
 
     result.fold(
       (failure) {
-        emit(ComplaintsError(failure.message));
+        emit(ComplaintsError(
+          failure.message,
+          isNetworkError: failure is NetworkFailure,
+        ));
       },
       (complaints) {
         _complaints = [..._complaints, ...complaints.results];

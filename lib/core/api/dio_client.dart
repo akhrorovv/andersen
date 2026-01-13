@@ -18,6 +18,7 @@ class DioClient {
       ),
     );
     _dio.interceptors.addAll([
+      ConnectivityInterceptor(),
       AuthorizationInterceptor(),
       TokenInterceptor(_dio),
       LoggerInterceptor(),

@@ -1,5 +1,7 @@
 import 'package:andersen/core/config/theme/app_colors.dart';
 import 'package:andersen/core/navigation/app_router.dart';
+import 'package:andersen/core/network/connectivity_cubit.dart';
+import 'package:andersen/core/network/connectivity_state.dart';
 import 'package:andersen/core/widgets/basic_divider.dart';
 import 'package:andersen/core/widgets/empty_widget.dart';
 import 'package:andersen/core/widgets/error_message.dart';
@@ -64,64 +66,87 @@ class _TasksPageState extends State<TasksPage> {
                   selected: selected,
                   onChanged: (status) {
                     setState(() => selected = status);
-                    context.read<TasksCubit>().getTasks(refresh: true, status: status);
+                    context.read<TasksCubit>().getTasks(
+                      refresh: true,
+                      status: status,
+                    );
                   },
                 ),
 
                 /// Tasks
-                BlocBuilder<TasksCubit, TasksState>(
-                  builder: (context, state) {
-                    if (state is TasksInitial || state is TasksLoading) {
-                      return Expanded(child: LoadingIndicator());
-                    } else if (state is TasksError) {
-                      return Expanded(child: ErrorMessage(errorMessage: state.message));
-                    } else if (state is TasksLoaded) {
-                      final tasks = state.tasks.results;
+                BlocListener<ConnectivityCubit, ConnectivityState>(
+                  listener: (context, connectivityState) {
+                    // Retry when user presses "Обновить" or connectivity restored
+                    if (connectivityState is RetryRequested) {
+                      context.read<TasksCubit>().getTasks(refresh: true);
+                    } else if (connectivityState is ConnectivityChanged &&
+                        connectivityState.isConnected) {
+                      final tasksState = context.read<TasksCubit>().state;
+                      if (tasksState is TasksError && tasksState.isNetworkError) {
+                        context.read<TasksCubit>().getTasks(refresh: true);
+                      }
+                    }
+                  },
+                  child: BlocBuilder<TasksCubit, TasksState>(
+                    builder: (context, state) {
+                      if (state is TasksInitial || state is TasksLoading) {
+                        return Expanded(child: LoadingIndicator());
+                      } else if (state is TasksError) {
+                        return Expanded(
+                          child: ErrorMessage(errorMessage: state.message),
+                        );
+                      } else if (state is TasksLoaded) {
+                        final tasks = state.tasks.results;
 
-                      return Expanded(
-                        child: tasks.isNotEmpty
-                            ? Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                child: NotificationListener<ScrollNotification>(
-                                  onNotification: (scrollInfo) {
-                                    if (scrollInfo.metrics.pixels >=
-                                        scrollInfo.metrics.maxScrollExtent - 200) {
-                                      context.read<TasksCubit>().loadMore();
-                                    }
-                                    return false;
-                                  },
-                                  child: RefreshIndicator(
-                                    color: AppColors.primary,
-                                    backgroundColor: Colors.white,
-                                    displacement: 50.h,
-                                    strokeWidth: 3,
-                                    onRefresh: () async {
-                                      await context.read<TasksCubit>().getTasks(refresh: true);
+                        return Expanded(
+                          child: tasks.isNotEmpty
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                  child: NotificationListener<ScrollNotification>(
+                                    onNotification: (scrollInfo) {
+                                      if (scrollInfo.metrics.pixels >=
+                                          scrollInfo.metrics.maxScrollExtent - 200) {
+                                        context.read<TasksCubit>().loadMore();
+                                      }
+                                      return false;
                                     },
-                                    child: ListView.separated(
-                                      padding: EdgeInsets.symmetric(vertical: 24.h),
-                                      itemBuilder: (context, index) {
-                                        return TaskCard(
-                                          task: tasks[index],
-                                          onTap: () async {
-                                            context.push(
-                                              TaskDetailPage.path,
-                                              extra: tasks[index].id,
-                                            );
-                                          },
+                                    child: RefreshIndicator(
+                                      color: AppColors.primary,
+                                      backgroundColor: Colors.white,
+                                      displacement: 50.h,
+                                      strokeWidth: 3,
+                                      onRefresh: () async {
+                                        await context.read<TasksCubit>().getTasks(
+                                          refresh: true,
                                         );
                                       },
-                                      separatorBuilder: (_, __) => BasicDivider(),
-                                      itemCount: tasks.length,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 24.h,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return TaskCard(
+                                            task: tasks[index],
+                                            onTap: () async {
+                                              context.push(
+                                                TaskDetailPage.path,
+                                                extra: tasks[index].id,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        separatorBuilder: (_, __) => BasicDivider(),
+                                        itemCount: tasks.length,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            : EmptyWidget(),
-                      );
-                    }
-                    return SizedBox.shrink();
-                  },
+                                )
+                              : EmptyWidget(),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -131,7 +156,10 @@ class _TasksPageState extends State<TasksPage> {
               shape: CircleBorder(),
               onPressed: () async {
                 final created = await context.pushCupertinoSheet<bool>(
-                  BlocProvider(create: (_) => sl<CreateTaskCubit>(), child: CreateTaskPage()),
+                  BlocProvider(
+                    create: (_) => sl<CreateTaskCubit>(),
+                    child: CreateTaskPage(),
+                  ),
                 );
                 if (context.mounted && created == true) {
                   context.read<TasksCubit>().getTasks(refresh: true);
